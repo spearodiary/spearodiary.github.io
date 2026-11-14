@@ -60,7 +60,7 @@ Auth uses email + password. Auth emails go out through a custom SMTP sender (the
 - Watch charts: `dlBuild` (all charts + insights), `dlogHtml` (grid), `dlOne` (single chart), `dlCombo` (overlay), `dlShow`;
   chart kit `dlFrame`/`dlBars`/`dlLine`/`dlScatter`; order + overlay choices in localStorage (`sn-dlord`, `sn-dlov`).
 - Forecast ("Mar e tempo"): `fcLoad` (Open-Meteo: weather 14 days, sea 8 days = the marine API maximum; cached 1 h), `drawForecast`, folded strip `fcStrip`, palettes `FCS_*` + `sn-fcpal`.
-  Hunting windows: `fwWindows` with the user's limits from Settings → Definições de mar e tempo (`sn-fcwin`, wind stored in knots).
+  Hunting windows: `fwWindows` with the user's limits from Settings → Definições de mar e tempo (`sn-fcwin2`, wind stored in knots; defaults 5 m/s, 1 m, 8 s, 2 h; clipped to exact sunrise–sunset).
 - Chart settings: hidden charts `sn-dlhide` (Settings → Definições dos gráficos); interactive dive map `dlMapOpen` (Leaflet from unpkg, Esri imagery; site only).
 - Social: `soMePage`, `soTagged`, `soShare`, `postSet`/`onBtn`/`canOnOff` (online/offline per post).
 - Share image: `scOpen`/`scPaint`; avatar crop `avCrop`.
