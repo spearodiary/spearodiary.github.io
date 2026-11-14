@@ -1440,7 +1440,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 /* phones: windows start right under the status band and use the full height */
 @media (max-width:700px){dialog:not(#viewer):not(.so-page){top:max(0px,calc(env(safe-area-inset-top,0px) - 6px));bottom:env(safe-area-inset-bottom,0px);max-height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 8px)}
   dialog:not(#viewer):not(.so-page) .sheet-in{max-height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 10px)}
-  #dlg,dialog.sheet:not(#scD):not(#avD):not(.dlog-d){height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 12px);margin-top:4px;margin-bottom:0}}
+  dialog#dlg:not(.so-page),dialog.sheet:not(#scD):not(#avD):not(.dlog-d){top:calc(max(0px,calc(env(safe-area-inset-top,0px) - 6px)) + 4px);bottom:8px;height:auto;max-height:none;margin:0 auto}
+  dialog#dlg .foot{padding-bottom:max(2px,calc(env(safe-area-inset-bottom,0px) - 18px))}
+  dialog.sheet:not(#scD):not(#avD):not(.dlog-d) .sheet-in{max-height:none;padding-bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 4px))}}
 
 .fc-pal{all:unset;cursor:pointer;margin-left:auto;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#f2c21d;flex:none;-webkit-tap-highlight-color:transparent}
 .fc-pal.mono{color:#f27a2a}.fc-pal:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
@@ -1457,7 +1459,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 /* hunting windows */
 .fwin{fill:#2fbf71;fill-opacity:.85}.fwint{font-size:10px;font-weight:700;fill:#fff}
 .sl-win{color:#1f9d5c;font-weight:600}
-.fwl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}.fwl .nl{margin-right:4px}
+.fwl{margin-top:8px}
+.fwl>summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer}
+.fwl>summary::-webkit-details-marker{display:none}
+.fwl>summary::before{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;margin:0 2px}
+.fwl[open]>summary::before{transform:rotate(45deg)}
+.fwl .fwn{font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 7px;line-height:18px}
+.fwl[open] .fwn{display:none}
+.fwb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+@media (min-width:561px){.fwl>summary{pointer-events:none}.fwl>summary::before{display:none}}.fwl .nl{margin-right:4px}
 .fwc{background:rgba(47,191,113,.16);color:var(--ink);border:1px solid rgba(47,191,113,.55);border-radius:999px;padding:2px 9px;font-size:13px;white-space:nowrap}
 .fw-set{display:flex;flex-direction:column;gap:8px}.fw-row,label.fw-row{display:flex!important;flex-direction:row!important;align-items:center;justify-content:space-between;gap:10px}
 .fw-row .wu-set{margin-left:0;width:100%;justify-content:space-between}
@@ -1687,7 +1697,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
       </div>
     </section>
     <section class="set-sec" id="setAccount" hidden>
-      <h3 data-i="setAccount"></h3>
+      <details class="so-sec so-fd set-data" id="accD"><summary data-i="accSetH"></summary><div class="cf-body acc-body">
       <div class="set-row"><span id="who"></span><button type="button" id="signOut" data-i="signOut"></button></div>
       <button type="button" class="link" id="chPassBtn" data-i="chPass" style="justify-self:start"></button>
       <form id="chPassForm" class="set-row" hidden style="flex-wrap:wrap">
@@ -1702,6 +1712,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
         <div class="set-row"><button type="button" class="danger" id="delAccGo" data-i="delAccGo" disabled></button><button type="button" id="delAccNo" data-i="cancel"></button></div>
         <span class="hint" id="delAccMsg" hidden></span>
       </div>
+      </div></details>
     </section>
     <section class="set-sec" id="setProfile" hidden>
       <details id="setProfD"><summary><h3 data-i="soProfH"></h3><span class="so-badge" id="profBadge" hidden></span></summary>
@@ -2726,8 +2737,8 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
 
 
 /* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
-Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',fwHint:'A app marca como janela de pesca o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a janela mínima. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwMin:'Janela mínima',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
-Object.assign(T.en,{fwSetH:'Sea & weather settings',fwHint:'The app marks as a hunting window the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest window. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwMin:'Shortest window',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
+Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',accSetH:'Definições da conta',fwHint:'A app marca como janela de pesca o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a janela mínima. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwMin:'Janela mínima',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
+Object.assign(T.en,{fwSetH:'Sea & weather settings',accSetH:'Account settings',fwHint:'The app marks as a hunting window the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest window. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwMin:'Shortest window',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
 const FW_DEF={w:5/0.514444,v:1,p:8,h:2};
 function fwGet(){try{const o=JSON.parse(localStorage.getItem('sn-fcwin2')||'null');return Object.assign({},FW_DEF,o||{})}catch(e){return Object.assign({},FW_DEF)}}
 function fwSave(o){try{localStorage.setItem('sn-fcwin2',JSON.stringify(o))}catch(e){}}
@@ -2836,11 +2847,13 @@ function drawForecast(){
     cw.temperature_2m!=null?ni('air',t('nAir'),f0(cw.temperature_2m)+' °C',''):'',
     (()=>{const p=moonAge(nowMs);return ni('moon',t('nMoon'),'<svg width="13" height="13" viewBox="0 0 14 14" style="vertical-align:-2px;margin-right:4px">'+moonSvg(7,7,6,p)+'</svg>'+Math.round((1-Math.cos(2*Math.PI*p))/2*100)+'%',esc(t(moonName(p))))})()].filter(Boolean).join('')+'</div>'
     +(()=>{const fd=new Intl.DateTimeFormat(locale(),{timeZone:TZ,weekday:'short',day:'numeric'}),up=FWIN.filter(x=>x.e>nowMs).slice(0,6);
-      return '<div class="fwl"><span class="nl">'+esc(t('fwNext'))+'</span>'+(up.length?up.map(x=>'<span class="fwc">'+esc((w=>w.charAt(0).toUpperCase()+w.slice(1,3))(fd.formatToParts(new Date(hrs[x.a])).find(p=>p.type==='weekday').value)+' '+fd.formatToParts(new Date(hrs[x.a])).find(p=>p.type==='day').value)+' · '+hhmm(Math.max(x.s,nowMs))+'–'+hhmm(x.e)+'</span>').join(''):'<span class="hint">'+esc(t('fwNone'))+'</span>')+'</div>'})()
+      const mob=matchMedia('(max-width:560px)').matches;let op=!mob;if(mob)try{op=localStorage.getItem('sn-fwopen')==='1'}catch(_){}
+      return '<details class="fwl"'+(op?' open':'')+'><summary><span class="nl">'+esc(t('fwNext'))+'</span><span class="fwn">'+(up.length?up.length:'0')+'</span></summary><div class="fwb">'+(up.length?up.map(x=>'<span class="fwc">'+esc((w=>w.charAt(0).toUpperCase()+w.slice(1,3))(fd.formatToParts(new Date(hrs[x.a])).find(p=>p.type==='weekday').value)+' '+fd.formatToParts(new Date(hrs[x.a])).find(p=>p.type==='day').value)+' · '+hhmm(Math.max(x.s,nowMs))+'–'+hhmm(x.e)+'</span>').join(''):'<span class="hint">'+esc(t('fwNone'))+'</span>')+'</div></details>'})()
     +(farT?'<br><span class="hint">'+esc(t('fcFarTide'))+'</span>':'')+(fcErr?'<br><span class="hint">'+esc(t(fcErr))+'</span>':(!D?'<br><span class="hint">'+esc(t('fcLoading'))+'</span>':''));
   $('fcStamp').textContent=D?t('fcUpdated')+' '+hhmm(D.at)+(fcLoading?' · …':''):'';
 }
 
+document.addEventListener('toggle',ev=>{const d=ev.target;if(d&&d.classList&&d.classList.contains('fwl')&&matchMedia('(max-width:560px)').matches)try{localStorage.setItem('sn-fwopen',d.open?'1':'0')}catch(_){}},true);
 function autoTide(){
   const d=$('eDate').value,sp=$('eSpot').value,gp=$('eGps').value;let did=false;
   const tf=d?tideFnFor(sp,gp):null;if(!tf)return;

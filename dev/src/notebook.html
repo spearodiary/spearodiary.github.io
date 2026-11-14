@@ -947,7 +947,9 @@ dialog .sheet-in,#dlg form{overscroll-behavior:contain}
 /* phones: windows start right under the status band and use the full height */
 @media (max-width:700px){dialog:not(#viewer):not(.so-page){top:max(0px,calc(env(safe-area-inset-top,0px) - 6px));bottom:env(safe-area-inset-bottom,0px);max-height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 8px)}
   dialog:not(#viewer):not(.so-page) .sheet-in{max-height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 10px)}
-  #dlg,dialog.sheet:not(#scD):not(#avD):not(.dlog-d){height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 12px);margin-top:4px;margin-bottom:0}}
+  dialog#dlg:not(.so-page),dialog.sheet:not(#scD):not(#avD):not(.dlog-d){top:calc(max(0px,calc(env(safe-area-inset-top,0px) - 6px)) + 4px);bottom:8px;height:auto;max-height:none;margin:0 auto}
+  dialog#dlg .foot{padding-bottom:max(2px,calc(env(safe-area-inset-bottom,0px) - 18px))}
+  dialog.sheet:not(#scD):not(#avD):not(.dlog-d) .sheet-in{max-height:none;padding-bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 4px))}}
 </style>
 
 <div class="wrap">
