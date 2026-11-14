@@ -59,7 +59,9 @@ Auth uses email + password. Auth emails go out through a custom SMTP sender (the
   Both build the same compact dive log (`fitLog` / `dlFromDives`) stored as `entry.dlog`.
 - Watch charts: `dlBuild` (all charts + insights), `dlogHtml` (grid), `dlOne` (single chart), `dlCombo` (overlay), `dlShow`;
   chart kit `dlFrame`/`dlBars`/`dlLine`/`dlScatter`; order + overlay choices in localStorage (`sn-dlord`, `sn-dlov`).
-- Forecast ("Mar e tempo"): `fcLoad` (Open-Meteo, 7 days, cached 1 h), `drawForecast`, folded week strip `fcStrip`, palettes `FCS_*` + `sn-fcpal`.
+- Forecast ("Mar e tempo"): `fcLoad` (Open-Meteo: weather 14 days, sea 8 days = the marine API maximum; cached 1 h), `drawForecast`, folded strip `fcStrip`, palettes `FCS_*` + `sn-fcpal`.
+  Hunting windows: `fwWindows` with the user's limits from Settings → Definições de mar e tempo (`sn-fcwin`, wind stored in knots).
+- Chart settings: hidden charts `sn-dlhide` (Settings → Definições dos gráficos); interactive dive map `dlMapOpen` (Leaflet from unpkg, Esri imagery; site only).
 - Social: `soMePage`, `soTagged`, `soShare`, `postSet`/`onBtn`/`canOnOff` (online/offline per post).
 - Share image: `scOpen`/`scPaint`; avatar crop `avCrop`.
 - Phone: windows pin the page behind them (body lock) and start under the status band.

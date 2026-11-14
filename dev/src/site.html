@@ -1451,6 +1451,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .fcs-r{display:flex;align-items:center;gap:8px}.fcs-b{flex:1;height:12px;border-radius:6px}.fcs-i{flex:none;width:22px;color:var(--muted);display:grid;place-items:center}
 .fcs-now{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink);border-radius:1px;box-shadow:0 0 0 1px var(--surface);pointer-events:none;left:0}
 .fcs-rows{--fcsw:1}
+
+/* hunting windows */
+.fwin{fill:#2fbf71;fill-opacity:.85}.fwint{font-size:10px;font-weight:700;fill:#fff}
+.sl-win{color:#1f9d5c;font-weight:600}
+.fwl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}.fwl .nl{margin-right:4px}
+.fwc{background:rgba(47,191,113,.16);color:var(--ink);border:1px solid rgba(47,191,113,.55);border-radius:999px;padding:2px 9px;font-size:13px;white-space:nowrap}
+.fw-set{display:flex;flex-direction:column;gap:8px}.fw-row,label.fw-row{display:flex!important;flex-direction:row!important;align-items:center;justify-content:space-between;gap:10px}
+.fw-row .wu-set{margin-left:0;width:100%;justify-content:space-between}
+.fw-in{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}.fw-in>span{min-width:2.6em}.fw-in input{width:84px;text-align:right}
 </style>
 </head>
 <body>
@@ -1672,7 +1681,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
         <button type="button" id="langPt" lang="pt">PT</button>
         <button type="button" id="langEn" lang="en">EN</button>
       </div>
-      <span class="wu-set"><span data-i="windU"></span><span class="wu-w" id="wuSetW"><button type="button" id="wuSet" class="wu-b" aria-haspopup="listbox"></button></span></span></div>
+      </div>
     </section>
     <section class="set-sec" id="setAccount" hidden>
       <h3 data-i="setAccount"></h3>
@@ -1720,6 +1729,17 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
         <details class="so-sec so-fd"><summary><span data-i="soFollowingL"></span> <span class="hint" id="soFingN"></span></summary><ul class="so-list" id="soFingUl"></ul></details>
       </div>
       </details>
+    </section>
+    <section class="set-sec">
+      <details class="so-sec so-fd set-data" id="fwSetD"><summary data-i="fwSetH"></summary><div class="cf-body fw-set">
+        <div class="fw-row"><span class="wu-set"><span data-i="windU"></span><span class="wu-w" id="wuSetW"><button type="button" id="wuSet" class="wu-b" aria-haspopup="listbox"></button></span></span></div>
+        <p class="hint" data-i="fwHint"></p>
+        <label class="fw-row"><span data-i="fwWind"></span><span class="fw-in"><input type="number" id="fwW" inputmode="decimal" min="0" step="1"><span id="fwWu"></span></span></label>
+        <label class="fw-row"><span data-i="fwWave"></span><span class="fw-in"><input type="number" id="fwV" inputmode="decimal" min="0" step="0.1"><span>m</span></span></label>
+        <label class="fw-row"><span data-i="fwSwell"></span><span class="fw-in"><input type="number" id="fwS" inputmode="decimal" min="0" step="0.1"><span>m</span></span></label>
+        <label class="fw-row"><span data-i="fwMin"></span><span class="fw-in"><input type="number" id="fwH" inputmode="numeric" min="1" max="12" step="1"><span>h</span></span></label>
+        <label class="chk"><input type="checkbox" id="fwDay"><span data-i="fwDay"></span></label>
+      </div></details>
     </section>
     <section class="set-sec">
       <details class="so-sec so-fd set-data" id="cfD"><summary data-i="cfH"></summary><div class="cf-body"><p class="hint" data-i="cfHint"></p><div id="cfBody"></div></div></details>
@@ -2575,13 +2595,13 @@ function fcFillSelect(){
 }
 async function fcGet(url){const r=await fetch(url);if(!r.ok)throw new Error('http '+r.status);return r.json()}
 async function fcLoad(force){
-  fcSpot=fcPick();const key='sn-fc5-'+fcSpot.lat.toFixed(3)+','+fcSpot.lon.toFixed(3);
+  fcSpot=fcPick();const key='sn-fc6-'+fcSpot.lat.toFixed(3)+','+fcSpot.lon.toFixed(3);
   if(!force){try{const c=JSON.parse(localStorage.getItem(key)||'null');if(c&&Date.now()-c.at<36e5){fcData=c;fcErr='';drawForecast();return}}catch(e){}}
   fcLoading=true;drawForecast();
   const ll='latitude='+fcSpot.lat.toFixed(4)+'&longitude='+fcSpot.lon.toFixed(4);
   try{
-    const w=await fcGet('https://api.open-meteo.com/v1/forecast?'+ll+'&hourly=weather_code,cloud_cover,precipitation,visibility,temperature_2m,wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&timeformat=unixtime&timezone=GMT&forecast_days=7&past_days=3');
-    const mq='&hourly=wave_height,wave_period,wave_direction,swell_wave_height,swell_wave_period,swell_wave_direction,sea_surface_temperature,sea_level_height_msl&timeformat=unixtime&timezone=GMT&forecast_days=7&past_days=3';
+    const w=await fcGet('https://api.open-meteo.com/v1/forecast?'+ll+'&hourly=weather_code,cloud_cover,precipitation,visibility,temperature_2m,wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kn&timeformat=unixtime&timezone=GMT&forecast_days=14&past_days=3');
+    const mq='&hourly=wave_height,wave_period,wave_direction,swell_wave_height,swell_wave_period,swell_wave_direction,sea_surface_temperature,sea_level_height_msl&timeformat=unixtime&timezone=GMT&forecast_days=8&past_days=3';
     let m=await fcGet('https://marine-api.open-meteo.com/v1/marine?'+ll+mq);
     const empty=x=>!x||!x.hourly||!(x.hourly.wave_height||[]).some(v=>v!=null);
     if(empty(m))m=await fcGet('https://marine-api.open-meteo.com/v1/marine?latitude='+fcSpot.lat.toFixed(4)+'&longitude='+(fcSpot.lon-.08).toFixed(4)+mq);
@@ -2702,12 +2722,32 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
   b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();fcsMono=!fcsMono;try{localStorage.setItem('sn-fcpal',fcsMono?'mono':'color')}catch(e){}sync();drawForecast()})})();
 (function(){const el=$('fcStrip');if(!el)return;const op=()=>{const c=$('fcCard');c.open=true};el.addEventListener('click',op);el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();op()}})})();
 
+
+/* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
+Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',fwHint:'Janelas de pesca: horas em que o vento, as ondas e a ondulação estão todos dentro destes limites. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Vento máximo',fwWave:'Ondas máximas',fwSwell:'Ondulação máxima',fwMin:'Janela mínima',fwDay:'Só com luz do dia',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
+Object.assign(T.en,{fwSetH:'Sea & weather settings',fwHint:'Hunting windows: hours when wind, waves and swell are all within these limits. They show in green on the Sea & weather chart.',fwWind:'Max wind',fwWave:'Max waves',fwSwell:'Max swell',fwMin:'Shortest window',fwDay:'Daylight only',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
+const FW_DEF={w:12,v:1,s:1,h:2,day:true};
+function fwGet(){try{const o=JSON.parse(localStorage.getItem('sn-fcwin')||'null');return Object.assign({},FW_DEF,o||{})}catch(e){return Object.assign({},FW_DEF)}}
+function fwSave(o){try{localStorage.setItem('sn-fcwin',JSON.stringify(o))}catch(e){}}
+const BFT=[1,4,7,11,17,22,28,34,41,48,56,64];
+const wInv=v=>wUnit==='bft'?(v>=12?64:BFT[Math.max(0,Math.round(v))]-0.01):v/WU[wUnit].f(1);
+function fwFill(){const o=fwGet(),W=$('fwW');if(!W)return;const u=wc(o.w);W.value=wUnit==='bft'?Math.round(u):Math.round(u*10)/10;W.step=wUnit==='bft'?1:wUnit==='kmh'?1:wUnit==='ms'?0.5:1;$('fwWu').textContent=WU[wUnit].l;$('fwV').value=o.v;$('fwS').value=o.s;$('fwH').value=o.h;$('fwDay').checked=!!o.day}
+(function(){const d=$('fwSetD');if(!d)return;d.addEventListener('toggle',()=>{if(d.open)fwFill()});
+  try{new MutationObserver(()=>{if(d.open)fwFill()}).observe($('wuSet'),{childList:true,characterData:true,subtree:true})}catch(e){}
+  const ch=()=>{const o=fwGet(),n=id=>{const v=parseFloat(String($(id).value).replace(',','.'));return isFinite(v)?v:null};
+    const w=n('fwW'),v=n('fwV'),sw=n('fwS'),h=n('fwH');if(w!=null&&w>=0)o.w=wInv(w);if(v!=null&&v>=0)o.v=v;if(sw!=null&&sw>=0)o.s=sw;if(h!=null&&h>=1)o.h=Math.min(12,Math.round(h));o.day=$('fwDay').checked;fwSave(o);try{drawForecast()}catch(e){}};
+  ['fwW','fwV','fwS','fwH','fwDay'].forEach(id=>$(id).addEventListener('change',ch))})();
+function fwWindows(hrs,wv,mv,ST,sp){const o=fwGet(),out=[];let cur=null;
+  hrs.forEach((t,i)=>{const w=wv[i]||{},m=mv[i]||{};let ok=w.wind_speed_10m!=null&&m.wave_height!=null&&w.wind_speed_10m<=o.w+1e-9&&m.wave_height<=o.v+1e-9&&(m.swell_wave_height==null||m.swell_wave_height<=o.s+1e-9);
+    if(ok&&o.day){const st=sunTimes(t,sp.lat,sp.lon);ok=!!st&&t>=st.rise-18e5&&t<=st.set}
+    if(ok){if(cur)cur.b=i;else cur={a:i,b:i}}else if(cur){out.push(cur);cur=null}});if(cur)out.push(cur);
+  return out.filter(x=>(x.b-x.a+1)*ST>=o.h)}
 function drawForecast(){
   try{fcStrip()}catch(e){}
   const card=$('fcCard');if(!card||!card.open)return;
   const box=$('fcBox'),nowEl=$('fcNow'),nowMs=Date.now(),p=lisbonParts(nowMs),t0=nowMs-((p.hour*60+p.minute)*60+p.second)*1000-nowMs%1000;
-  const ST=fcStep(),HALF=ST*18e5,NH=72/ST,CW=32,W=NH*CW,cx=i=>i*CW+CW/2,XT=t=>(t-t0)/(36e5*ST)*CW+CW/2;
-  const R=[['day',22],['hour',20],['sun',22],['sky',34],['air',20],['g0',10],['wind',22],['windA',48],['g1',22],['wave',16],['waveA',48],['gc',10],['clar',30],['g2',10],['sst',16],['g3',8],['tide',60]];
+  const lastW=fcData&&fcData.w&&fcData.w.time?fcData.w.time[fcData.w.time.length-1]*1000:t0+3*864e5,DAYS=Math.max(3,Math.min(14,Math.ceil((lastW-t0)/864e5))),ST=fcStep(),HALF=ST*18e5,NH=DAYS*24/ST,CW=32,W=NH*CW,cx=i=>i*CW+CW/2,XT=t=>(t-t0)/(36e5*ST)*CW+CW/2;
+  const R=[['day',22],['hour',20],['win',20],['sun',22],['sky',34],['air',20],['g0',10],['wind',22],['windA',48],['g1',22],['wave',16],['waveA',48],['gc',10],['clar',30],['g2',10],['sst',16],['g3',8],['tide',60]];
   const sp0=fcSpot||FC_DEF,tst=tideStation(sp0.lat,sp0.lon);let farT=false;
   if(tst.d<=150)LT=tideLocal(tst);
   else{const fit=fcData?(fcData._lt!==undefined?fcData._lt:(fcData._lt=ltFit(fcData.m))):null;
@@ -2727,8 +2767,8 @@ function drawForecast(){
   // day + hour labels
   const fmtD=new Intl.DateTimeFormat(locale(),{timeZone:TZ,weekday:'long',day:'numeric',month:'short'});
   let dayHtml='';const FKd=1.2;
-  for(let d=0;d<3;d++){const st=t0+d*864e5,lab=esc(fmtD.format(new Date(st+432e5)));const da=XT(st)-CW/2,db=da+24/ST*CW;if(ST===1)dayHtml+='<div class="dseg" style="left:'+(da*FKd).toFixed(1)+'px;width:'+((db-da)*FKd).toFixed(1)+'px"><span>'+lab+'</span></div>';else g+='<text x="'+((da+db)/2)+'" y="15" text-anchor="middle" class="sday">'+lab+'</text>'}
-  {const tEnd0=t0+72*36e5;for(let d=-1;d<=3;d++){const day=t0+d*864e5+432e5,st=sunTimes(day,sp0.lat,sp0.lon),nx=sunTimes(day+864e5,sp0.lat,sp0.lon);if(!st||!nx)continue;
+  for(let d=0;d<DAYS;d++){const st=t0+d*864e5,lab=esc(fmtD.format(new Date(st+432e5)));const da=XT(st)-CW/2,db=da+24/ST*CW;if(ST===1)dayHtml+='<div class="dseg" style="left:'+(da*FKd).toFixed(1)+'px;width:'+((db-da)*FKd).toFixed(1)+'px"><span>'+lab+'</span></div>';else g+='<text x="'+((da+db)/2)+'" y="15" text-anchor="middle" class="sday">'+lab+'</text>'}
+  {const tEnd0=t0+DAYS*864e5;for(let d=-1;d<=DAYS;d++){const day=t0+d*864e5+432e5,st=sunTimes(day,sp0.lat,sp0.lon),nx=sunTimes(day+864e5,sp0.lat,sp0.lon);if(!st||!nx)continue;
     const a=Math.max(st.set,t0-HALF),b=Math.min(nx.rise,tEnd0-HALF);if(b>a)g+='<rect x="'+XT(a).toFixed(1)+'" y="'+Y.hour[0]+'" width="'+(XT(b)-XT(a)).toFixed(1)+'" height="'+(HT-Y.hour[0])+'" class="night"/>';
     {const da=Math.max(st.rise,t0-HALF),db=Math.min(st.set,tEnd0-HALF);if(db>da)g+='<rect x="'+XT(da).toFixed(1)+'" y="'+Y.hour[0]+'" width="'+(XT(db)-XT(da)).toFixed(1)+'" height="3" rx="1.5" class="dayl"/>'}
     {const nt=(st.set+nx.rise)/2,mx=XT(nt);if(nt>=t0-HALF&&nt<=tEnd0-HALF){const mp=moonAge(nt),il=Math.round((1-Math.cos(2*Math.PI*mp))/2*100);g+=moonSvg(mx-12,Y.sun[0]+11,6.5,mp)+'<text x="'+(mx-2)+'" y="'+(Y.sun[0]+15)+'" class="mtx"><title>'+esc(t(moonName(mp)))+'</title>'+il+'%'+(ST===1?' · '+esc(t(moonName(mp))):'')+'</text>'}}
@@ -2748,13 +2788,15 @@ function drawForecast(){
   // waves chart
   const mv=hrs.map(t=>near(mm,t)||{}),hasW=mv.some(m=>m.wave_height!=null),hmax=Math.max(1.5,1.2*Math.max(...mv.map(m=>Math.max(m.wave_height||0,m.swell_wave_height||0)))),vTop=Y.wave[0]+14,vBot=Y.wave[0]+Y.wave[1]-4,VY=v=>vBot-(v/hmax)*(vBot-vTop);
   mv.forEach((m,i)=>{const y=Y.waveA[0];if(m.wave_height!=null)g+='<rect x="'+(i*CW+2)+'" y="'+(y+2)+'" width="'+(CW-4)+'" height="'+(Y.waveA[1]-4)+'" rx="5" class="cvb" style="fill:'+fcsCol(fcsSc('v'),m.wave_height)+'" fill-opacity=".55"/>';if(m.wave_direction!=null)g+=arrow(cx(i),y+10,m.wave_direction,'fa2',1);if(m.wave_height!=null)g+='<text x="'+cx(i)+'" y="'+(y+29)+'" text-anchor="middle" class="sv">'+f1(m.wave_height)+'</text><text x="'+cx(i)+'" y="'+(y+42)+'" text-anchor="middle" class="ss">'+f0(m.wave_period)+'s</text>'});
+  const FWIN=fwWindows(hrs,wv,mv,ST,sp0);
+  FWIN.forEach(x=>{const xa=x.a*CW+1,xb=(x.b+1)*CW-1,y=Y.win[0];g+='<rect x="'+xa+'" y="'+(y+3)+'" width="'+(xb-xa)+'" height="'+(Y.win[1]-6)+'" rx="6" class="fwin"/>';if(xb-xa>=60)g+='<text x="'+((xa+xb)/2)+'" y="'+(y+14)+'" text-anchor="middle" class="fwint">'+hhmm(hrs[x.a])+'–'+hhmm(hrs[x.b]+ST*36e5)+'</text>'});
   const cl=hrs.map(t=>clarity(t,wm,mm,near,farT));
   cl.forEach((c,i)=>{if(!c)return;const y=Y.clar[0];g+='<rect x="'+(i*CW+1)+'" y="'+(y+5)+'" width="'+(CW-2)+'" height="'+(Y.clar[1]-10)+'" rx="3" class="vc vc-'+c.k+'"/>';const prev=cl[i-1];if((!prev||prev.k!==c.k||lisbonParts(hrs[i]).hour%3===0)&&cl._l!==i-1){cl._l=i;g+='<text x="'+cx(i)+'" y="'+(y+Y.clar[1]/2+4)+'" text-anchor="middle" class="vct">'+esc(t('vc_'+c.k))+'</text>'}});
   mv.forEach((m,i)=>{if(m.sea_surface_temperature!=null)g+='<text x="'+cx(i)+'" y="'+(Y.sst[0]+12)+'" text-anchor="middle" class="ssst">'+f0(m.sea_surface_temperature)+'°</text>'});
   // tide
   const tTop=Y.tide?Y.tide[0]+17:0,tBot=Y.tide?Y.tide[0]+Y.tide[1]-15:0,TY=h=>tBot-((h-LT.lo)/(LT.hi-LT.lo))*(tBot-tTop);
   if(!farT){
-  const tEnd=t0+72*36e5;
+  const tEnd=t0+DAYS*864e5;
   let tp='';for(let t=t0-HALF;t<=tEnd-HALF;t+=9e5)tp+=(tp?'L':'M')+XT(t).toFixed(1)+' '+TY(ltH(t)).toFixed(1);
   g+='<path d="'+tp+'L'+XT(tEnd-HALF)+' '+tBot+'L'+XT(t0-HALF)+' '+tBot+'Z" class="ta"/><path d="'+tp+'" class="tc"/>';
   ltEx(t0,tEnd).forEach(e=>{const x=XT(e.t),y=TY(e.h);if(x<0||x>W)return;g+='<circle cx="'+x+'" cy="'+y+'" r="3" class="te"/><text x="'+Math.min(W-44,Math.max(44,x))+'" y="'+(e.high?y-6:y+14)+'" text-anchor="middle" class="tx">'+hhmm(e.t)+' <tspan class="th">'+fmt(Math.round(e.h*10)/10)+' m</tspan></text>'});
@@ -2763,7 +2805,7 @@ function drawForecast(){
   // now
   const nx=XT(nowMs);g+='<defs><linearGradient id="ngl" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="var(--accent)" stop-opacity="0"/><stop offset=".5" stop-color="var(--accent)" stop-opacity=".3"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><rect x="'+(nx-3.5)+'" y="'+Y.hour[0]+'" width="7" height="'+(HT-Y.hour[0])+'" fill="url(#ngl)"/><line x1="'+nx+'" x2="'+nx+'" y1="'+Y.hour[0]+'" y2="'+HT+'" class="tn"/>'+(farT?'':'<circle cx="'+nx+'" cy="'+TY(ltH(nowMs)).toFixed(1)+'" r="4" class="tnd"/>');
   // left labels
-  const L={sun:t('sSun')+' · '+t('nMoon'),clar:t('sClar'),hour:t('sHour'),sky:t('fcSkyS'),rain:t('sRain'),air:t('sAir'),vis:t('sVis'),wind:t('fcWindT'),windA:t('sWindA'),wave:t('fcWavesT'),waveA:t('sWaveA'),sst:(s=>s.charAt(0).toUpperCase()+s.slice(1))(t('fcWater'))+' °C',tide:''};
+  const L={win:t('fwRow'),sun:t('sSun')+' · '+t('nMoon'),clar:t('sClar'),hour:t('sHour'),sky:t('fcSkyS'),rain:t('sRain'),air:t('sAir'),vis:t('sVis'),wind:t('fcWindT'),windA:t('sWindA'),wave:t('fcWavesT'),waveA:t('sWaveA'),sst:(s=>s.charAt(0).toUpperCase()+s.slice(1))(t('fcWater'))+' °C',tide:''};
   const STK={windA:t('sWindA').split('|'),waveA:t('sWaveA').split('|'),clar:t('sClarS').split('|'),tide:[t('nTide')+' m',LT.name||'']};
   const nol=(()=>{try{return localStorage.getItem('sn-fc-nol')==='1'}catch(e){return false}})(),FK=1.2;
   const gi1=R.findIndex(r=>r[0]==='g1');
@@ -2791,6 +2833,8 @@ function drawForecast(){
     cm.sea_surface_temperature!=null?ni('sst',t('nWater'),f0(cm.sea_surface_temperature)+' °C',''):'',
     cw.temperature_2m!=null?ni('air',t('nAir'),f0(cw.temperature_2m)+' °C',''):'',
     (()=>{const p=moonAge(nowMs);return ni('moon',t('nMoon'),'<svg width="13" height="13" viewBox="0 0 14 14" style="vertical-align:-2px;margin-right:4px">'+moonSvg(7,7,6,p)+'</svg>'+Math.round((1-Math.cos(2*Math.PI*p))/2*100)+'%',esc(t(moonName(p))))})()].filter(Boolean).join('')+'</div>'
+    +(()=>{const fd=new Intl.DateTimeFormat(locale(),{timeZone:TZ,weekday:'short',day:'numeric'}),up=FWIN.filter(x=>hrs[x.b]+ST*36e5>nowMs).slice(0,6);
+      return '<div class="fwl"><span class="nl">'+esc(t('fwNext'))+'</span>'+(up.length?up.map(x=>'<span class="fwc">'+esc((w=>w.charAt(0).toUpperCase()+w.slice(1,3))(fd.formatToParts(new Date(hrs[x.a])).find(p=>p.type==='weekday').value)+' '+fd.formatToParts(new Date(hrs[x.a])).find(p=>p.type==='day').value)+' · '+hhmm(Math.max(hrs[x.a],nowMs-nowMs%36e5))+'–'+hhmm(hrs[x.b]+ST*36e5)+'</span>').join(''):'<span class="hint">'+esc(t('fwNone'))+'</span>')+'</div>'})()
     +(farT?'<br><span class="hint">'+esc(t('fcFarTide'))+'</span>':'')+(fcErr?'<br><span class="hint">'+esc(t(fcErr))+'</span>':(!D?'<br><span class="hint">'+esc(t('fcLoading'))+'</span>':''));
   $('fcStamp').textContent=D?t('fcUpdated')+' '+hhmm(D.at)+(fcLoading?' · …':''):'';
 }
