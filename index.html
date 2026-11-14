@@ -1423,6 +1423,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 @media (max-width:700px){dialog:not(#viewer):not(.so-page){top:max(0px,calc(env(safe-area-inset-top,0px) - 6px));bottom:env(safe-area-inset-bottom,0px);max-height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 8px)}
   dialog:not(#viewer):not(.so-page) .sheet-in{max-height:calc(100dvh - max(0px,calc(env(safe-area-inset-top,0px) - 6px)) - env(safe-area-inset-bottom,0px) - 10px)}}
 
+.fc-pal{all:unset;cursor:pointer;margin-left:auto;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#f2c21d;flex:none;-webkit-tap-highlight-color:transparent}
+.fc-pal.mono{color:#f27a2a}.fc-pal:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
 /* folded forecast strip */
 .fcs{cursor:pointer;margin:2px 2px 4px;padding:2px 0 4px;--fcsw:1;-webkit-tap-highlight-color:transparent}
 .fcs-d{display:grid;margin-right:30px;text-align:center;line-height:1.15;margin-bottom:6px}
@@ -1430,7 +1432,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .fcs-d b{font-size:11px;font-weight:700;letter-spacing:.04em}.fcs-d i{font-style:normal;font-size:14px;font-weight:600}
 .fcs-rows{position:relative;display:flex;flex-direction:column;gap:5px}
 .fcs-r{display:flex;align-items:center;gap:8px}.fcs-b{flex:1;height:12px;border-radius:6px}.fcs-i{flex:none;width:22px;color:var(--muted);display:grid;place-items:center}
-.fcs-now{position:absolute;top:-3px;bottom:-3px;width:16px;margin-left:-8px;border:2px solid var(--surface);border-radius:6px;box-shadow:0 0 0 1.5px var(--ink);pointer-events:none;left:0}
+.fcs-now{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink);border-radius:1px;box-shadow:0 0 0 1px var(--surface);pointer-events:none;left:0}
 .fcs-rows{--fcsw:1}
 </style>
 </head>
@@ -1482,7 +1484,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
     <div id="so_feed" class="so-view so-scroll"></div>
   </details>
   <details class="tidecard" id="fcCard" open>
-    <summary id="fcSum"><svg class="fc-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg><span data-i="fcTitleA"></span> <button type="button" class="fc-step" id="fcStepBtn" aria-haspopup="true"></button></summary>
+    <summary id="fcSum"><svg class="fc-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg><span data-i="fcTitleA"></span> <button type="button" class="fc-step" id="fcStepBtn" aria-haspopup="true"></button><button type="button" class="fc-pal" id="fcPal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></button></summary>
     <div class="fc-head"><select id="fcSpot" data-al="spot"></select><button type="button" class="link" id="fcDel" hidden data-i="fcDelSpot"></button><span class="hint" id="fcStamp"></span></div>
     <div class="fc-find" id="fcFind" hidden><input id="fcQ" type="search" data-ph="fcFindPh" data-al="fcFindPh" autocomplete="off"><button type="button" id="fcGo" data-i="fcFindGo"></button><button type="button" class="link" id="fcCancel" data-i="cancel"></button><ul class="fc-res" id="fcRes"></ul></div>
     <div class="tide-now" id="fcNow"></div>
@@ -2654,13 +2656,16 @@ function fcStep(){try{return localStorage.getItem('sn-fc-step')==='3'?3:1}catch(
 /* folded "Mar e tempo": a Windy-style week strip — days on top, wind colours, then wave colours */
 const FCS_W=[[0,'#3f63c8'],[4,'#4fb0e2'],[8,'#5cc9c0'],[11,'#3ccf4e'],[15,'#9bdc26'],[19,'#f0e11d'],[24,'#f3a31b'],[29,'#ec5528'],[35,'#d23173'],[45,'#8a3fc7']];
 const FCS_V=[[0,'#3f63c8'],[.4,'#4fb0e2'],[.8,'#5cc9c0'],[1.2,'#3ccf4e'],[1.7,'#9bdc26'],[2.3,'#f0e11d'],[3,'#f3a31b'],[4,'#ec5528'],[5.5,'#d23173'],[8,'#8a3fc7']];
+const FCS_MW=[[0,'#8b97a3'],[8,'#a59a8c'],[16,'#d0935c'],[24,'#f27a2a'],[32,'#ff5f12']],FCS_MV=[[0,'#8b97a3'],[.8,'#a59a8c'],[1.6,'#d0935c'],[2.6,'#f27a2a'],[4,'#ff5f12']];
+let fcsMono=false;try{fcsMono=localStorage.getItem('sn-fcpal')==='mono'}catch(e){}
+const fcsSc=k=>k==='w'?(fcsMono?FCS_MW:FCS_W):(fcsMono?FCS_MV:FCS_V);
 function fcsCol(sc,v){if(v==null)return null;if(v<=sc[0][0])return sc[0][1];for(let i=1;i<sc.length;i++)if(v<=sc[i][0]){const[a,ca]=sc[i-1],[b,cb]=sc[i],f=(v-a)/(b-a),h=x=>parseInt(x,16),c=k=>Math.round(h(ca.substr(k,2))*(1-f)+h(cb.substr(k,2))*f);return 'rgb('+c(1)+','+c(3)+','+c(5)+')'}return sc[sc.length-1][1]}
 function fcStrip(){const el=$('fcStrip'),card=$('fcCard');if(!el||!card)return;const D=fcData;
   if(card.open||!D||!D.w||!D.w.time){el.hidden=true;return}
   const nowMs=Date.now(),p=lisbonParts(nowMs),t0=nowMs-((p.hour*60+p.minute)*60+p.second)*1000-nowMs%1000;
   const ser=(h,k)=>{const m=new Map();if(h&&h.time)h.time.forEach((s,i)=>{if(h[k]&&h[k][i]!=null)m.set(s*1000,h[k][i])});return m};
   const W=ser(D.w,'wind_speed_10m'),G=ser(D.w,'wind_gusts_10m'),V=ser(D.m,'wave_height');
-  const last=m=>Math.max(t0,...[...m.keys()]),end=Math.max(last(W),last(V)),nd=Math.max(1,Math.min(7,Math.ceil((end-t0+36e5)/864e5))),T1=t0+nd*864e5,span=T1-t0;
+  const last=m=>Math.max(t0,...[...m.keys()]),end=Math.max(last(W),last(V)),nd=Math.max(1,Math.min(5,Math.ceil((end-t0+36e5)/864e5))),T1=t0+nd*864e5,span=T1-t0;
   const NA='rgba(128,142,156,.45)';
   const grad=(m,sc)=>{const st=[];for(let t=t0;t<T1;t+=36e5){const c=fcsCol(sc,m.get(t))||NA,a=((t-t0)/span*100).toFixed(2),b=((t+36e5-t0)/span*100).toFixed(2);st.push(c+' '+a+'%',c+' '+b+'%')}return 'linear-gradient(90deg,'+st.join(',')+')'};
   const wd=new Intl.DateTimeFormat(locale(),{timeZone:TZ,weekday:'short'}),dn=new Intl.DateTimeFormat(locale(),{timeZone:TZ,day:'numeric'});
@@ -2670,10 +2675,13 @@ function fcStrip(){const el=$('fcStrip'),card=$('fcCard');if(!el||!card)return;c
   const IV='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>';
   const wmax=Math.max(0,...[...G.values()].filter((_,i)=>true)),vmax=Math.max(0,...[...V.values()]);
   const hdr=(t('fcsWind')||'')+' · '+(t('fcsWave')||'');
-  el.innerHTML='<div class="fcs-d" style="grid-template-columns:repeat('+nd+',1fr)">'+days+'</div><div class="fcs-rows"><div class="fcs-r"><div class="fcs-b" style="background:'+grad(W,FCS_W)+'"></div><span class="fcs-i" title="'+esc(t('fcsWind'))+'">'+IW+'</span></div><div class="fcs-r"><div class="fcs-b" style="background:'+grad(V,FCS_V)+'"></div><span class="fcs-i" title="'+esc(t('fcsWave'))+'">'+IV+'</span></div>'+(nowX>=0&&nowX<=100?'<i class="fcs-now" style="left:calc((100% - 30px) * '+(nowX/100).toFixed(4)+')"></i>':'')+'</div>';
+  el.innerHTML='<div class="fcs-d" style="grid-template-columns:repeat('+nd+',1fr)">'+days+'</div><div class="fcs-rows"><div class="fcs-r"><div class="fcs-b" style="background:'+grad(W,fcsSc('w'))+'"></div><span class="fcs-i" title="'+esc(t('fcsWind'))+'">'+IW+'</span></div><div class="fcs-r"><div class="fcs-b" style="background:'+grad(V,fcsSc('v'))+'"></div><span class="fcs-i" title="'+esc(t('fcsWave'))+'">'+IV+'</span></div>'+(nowX>=0&&nowX<=100?'<i class="fcs-now" style="left:calc((100% - 30px) * '+(nowX/100).toFixed(4)+')"></i>':'')+'</div>';
   el.title=hdr;el.setAttribute('aria-label',hdr);el.hidden=false}
+Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento → laranja',fcsPalC:'Cores: arco-íris'});Object.assign(T.en,{fcsWind:'Wind',fcsWave:'Waves',fcsPalM:'Colours: grey → orange',fcsPalC:'Colours: rainbow'});
+(function(){const b=$('fcPal');if(!b)return;const sync=()=>{b.classList.toggle('mono',fcsMono);const l=t(fcsMono?'fcsPalC':'fcsPalM');b.title=l;b.setAttribute('aria-label',l);b.setAttribute('aria-pressed',String(fcsMono))};sync();
+  b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();fcsMono=!fcsMono;try{localStorage.setItem('sn-fcpal',fcsMono?'mono':'color')}catch(e){}sync();drawForecast()})})();
 (function(){const el=$('fcStrip');if(!el)return;const op=()=>{const c=$('fcCard');c.open=true};el.addEventListener('click',op);el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();op()}})})();
-Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas'});Object.assign(T.en,{fcsWind:'Wind',fcsWave:'Waves'});
+
 function drawForecast(){
   try{fcStrip()}catch(e){}
   const card=$('fcCard');if(!card||!card.open)return;
@@ -2716,10 +2724,10 @@ function drawForecast(){
   // wind chart
   const wv=hrs.map(t=>{const w=near(wm,t)||{};return{...w,ws:wc(w.wind_speed_10m),wg:wc(w.wind_gusts_10m)}}),U=WU[wUnit],wmax=Math.max(wc(15),...wv.map(w=>w.wg||0)),wTop=Y.wind[0]+8,wBot=Y.wind[0]+Y.wind[1]-4,WY=v=>wBot-(v/wmax)*(wBot-wTop);
   const ln=(vals,Yf)=>{let d='';vals.forEach((v,i)=>{if(v==null)return;d+=(d?'L':'M')+cx(i).toFixed(1)+' '+Yf(v).toFixed(1)});return d};
-  wv.forEach((w,i)=>{const y=Y.windA[0];if(w.wind_speed_10m!=null)g+='<rect x="'+(i*CW+2)+'" y="'+(y+2)+'" width="'+(CW-4)+'" height="'+(Y.windA[1]-4)+'" rx="5" class="cwb" style="fill:'+fcsCol(FCS_W,w.wind_speed_10m)+'" fill-opacity=".55"/>';if(w.wind_direction_10m!=null)g+=arrow(cx(i),y+10,w.wind_direction_10m,'fa',1);if(w.ws!=null)g+='<text x="'+cx(i)+'" y="'+(y+29)+'" text-anchor="middle" class="sv">'+f0(w.ws)+'</text><text x="'+cx(i)+'" y="'+(y+42)+'" text-anchor="middle" class="ss">'+f0(w.wg)+'</text>'});
+  wv.forEach((w,i)=>{const y=Y.windA[0];if(w.wind_speed_10m!=null)g+='<rect x="'+(i*CW+2)+'" y="'+(y+2)+'" width="'+(CW-4)+'" height="'+(Y.windA[1]-4)+'" rx="5" class="cwb" style="fill:'+fcsCol(fcsSc('w'),w.wind_speed_10m)+'" fill-opacity=".55"/>';if(w.wind_direction_10m!=null)g+=arrow(cx(i),y+10,w.wind_direction_10m,'fa',1);if(w.ws!=null)g+='<text x="'+cx(i)+'" y="'+(y+29)+'" text-anchor="middle" class="sv">'+f0(w.ws)+'</text><text x="'+cx(i)+'" y="'+(y+42)+'" text-anchor="middle" class="ss">'+f0(w.wg)+'</text>'});
   // waves chart
   const mv=hrs.map(t=>near(mm,t)||{}),hasW=mv.some(m=>m.wave_height!=null),hmax=Math.max(1.5,1.2*Math.max(...mv.map(m=>Math.max(m.wave_height||0,m.swell_wave_height||0)))),vTop=Y.wave[0]+14,vBot=Y.wave[0]+Y.wave[1]-4,VY=v=>vBot-(v/hmax)*(vBot-vTop);
-  mv.forEach((m,i)=>{const y=Y.waveA[0];if(m.wave_height!=null)g+='<rect x="'+(i*CW+2)+'" y="'+(y+2)+'" width="'+(CW-4)+'" height="'+(Y.waveA[1]-4)+'" rx="5" class="cvb" style="fill:'+fcsCol(FCS_V,m.wave_height)+'" fill-opacity=".55"/>';if(m.wave_direction!=null)g+=arrow(cx(i),y+10,m.wave_direction,'fa2',1);if(m.wave_height!=null)g+='<text x="'+cx(i)+'" y="'+(y+29)+'" text-anchor="middle" class="sv">'+f1(m.wave_height)+'</text><text x="'+cx(i)+'" y="'+(y+42)+'" text-anchor="middle" class="ss">'+f0(m.wave_period)+'s</text>'});
+  mv.forEach((m,i)=>{const y=Y.waveA[0];if(m.wave_height!=null)g+='<rect x="'+(i*CW+2)+'" y="'+(y+2)+'" width="'+(CW-4)+'" height="'+(Y.waveA[1]-4)+'" rx="5" class="cvb" style="fill:'+fcsCol(fcsSc('v'),m.wave_height)+'" fill-opacity=".55"/>';if(m.wave_direction!=null)g+=arrow(cx(i),y+10,m.wave_direction,'fa2',1);if(m.wave_height!=null)g+='<text x="'+cx(i)+'" y="'+(y+29)+'" text-anchor="middle" class="sv">'+f1(m.wave_height)+'</text><text x="'+cx(i)+'" y="'+(y+42)+'" text-anchor="middle" class="ss">'+f0(m.wave_period)+'s</text>'});
   const cl=hrs.map(t=>clarity(t,wm,mm,near,farT));
   cl.forEach((c,i)=>{if(!c)return;const y=Y.clar[0];g+='<rect x="'+(i*CW+1)+'" y="'+(y+5)+'" width="'+(CW-2)+'" height="'+(Y.clar[1]-10)+'" rx="3" class="vc vc-'+c.k+'"/>';const prev=cl[i-1];if((!prev||prev.k!==c.k||lisbonParts(hrs[i]).hour%3===0)&&cl._l!==i-1){cl._l=i;g+='<text x="'+cx(i)+'" y="'+(y+Y.clar[1]/2+4)+'" text-anchor="middle" class="vct">'+esc(t('vc_'+c.k))+'</text>'}});
   mv.forEach((m,i)=>{if(m.sea_surface_temperature!=null)g+='<text x="'+cx(i)+'" y="'+(Y.sst[0]+12)+'" text-anchor="middle" class="ssst">'+f0(m.sea_surface_temperature)+'°</text>'});
@@ -4154,7 +4162,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794672814';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794673279';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
