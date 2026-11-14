@@ -1,0 +1,4 @@
+<divelog program='subsurface' version='3'><dives>
+<dive number='1' date='2026-11-07' time='08:40:00' duration='1:10 min'><location gps='38.643900 -9.233100'>Costa</location><divecomputer model='Mares'><depth max='11.3 m' mean='6 m'/><temperature water='16.5 C'/><sample time='0:00 min' depth='0.0 m'/><sample time='0:35 min' depth='11.3 m' temp='15.0 C'/></divecomputer></dive>
+<dive number='2' date='2026-11-07' time='09:55:00' duration='0:55 min'><divecomputer><depth max='7.8 m'/></divecomputer></dive>
+</dives></divelog>

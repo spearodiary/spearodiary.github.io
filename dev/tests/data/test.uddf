@@ -1,0 +1,4 @@
+<?xml version="1.0"?><uddf version="3.2.0"><profiledata><repetitiongroup>
+<dive><informationbeforedive><datetime>2026-11-06T10:05:00</datetime></informationbeforedive><samples><waypoint><divetime>0</divetime><depth>0</depth><temperature>290.15</temperature></waypoint><waypoint><divetime>30</divetime><depth>9.4</depth><temperature>287.15</temperature></waypoint><waypoint><divetime>62</divetime><depth>0</depth></waypoint></samples><informationafterdive><greatestdepth>9.4</greatestdepth><diveduration>62</diveduration></informationafterdive></dive>
+<dive><informationbeforedive><datetime>2026-11-06T11:20:00</datetime></informationbeforedive><informationafterdive><greatestdepth>14.2</greatestdepth><diveduration>85</diveduration><lowesttemperature>286.65</lowesttemperature></informationafterdive></dive>
+</repetitiongroup></profiledata></uddf>
