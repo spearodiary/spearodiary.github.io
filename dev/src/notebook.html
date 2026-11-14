@@ -382,6 +382,8 @@ dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-in
 .dls .dmsc{font-size:9.5px;fill:#fff;text-anchor:start;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2.5px}
 .dls .dsb{stroke:#fff!important;stroke-width:2.5px;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.8))}
 .dls .dpt{stroke:#fff!important;stroke-width:1.5px}
+.dls .dtb{fill:var(--sea);fill-opacity:.16}.dls .dtl{fill:none;stroke:var(--sea);stroke-width:2;stroke-linejoin:round}.dls .dtr{fill:transparent}.dls rect.dtr:hover{fill:var(--ink)!important;fill-opacity:.07!important;stroke:none!important;opacity:1!important}.dls .dtp{fill:var(--sea);stroke:var(--surface);stroke-width:1.2}.dls .dtb{fill:var(--sea);fill-opacity:.28}
+.dlk .kl{width:14px;height:0;border-top:2px solid var(--sea);border-radius:0}.dlk .kb{background:var(--sea);opacity:.3}
 .dlnote{font-size:.8rem;color:var(--muted);margin-top:10px!important}
 
 .dlc{cursor:pointer;transition:border-color .15s}.dlc:hover{border-color:var(--sea)}.dlc:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
@@ -3305,7 +3307,7 @@ Object.assign(T.pt,{dlBtn:'Gráficos do relógio',dlHas:n=>'Dados do relógio: '
     'Velocidade média de descida (até chegar ao fundo) e de subida (do fundo à superfície), em metros por segundo.',
     'Todos os mergulhos sobrepostos a partir do segundo zero. Mergulhos em V são descer e subir; os em U mostram espera no fundo. A cor vai de azul (primeiros) a amarelo (últimos).',
     'Pulsação mínima e máxima dentro de cada mergulho. Quanto mais baixa a mínima, mais forte o reflexo de mergulho e mais relaxado estava.',
-    'Cada ponto é uma leitura de temperatura a uma profundidade. Se a temperatura cai a partir de certa profundidade, aí está a termoclina. O relógio mede em graus inteiros.',
+    'A linha é a temperatura média da água em cada metro de profundidade; a faixa clara vai da leitura mais fria à mais quente nesse metro. Onde a linha vira para o frio está a termoclina (tracejado). O relógio mede em graus inteiros, por isso a média de muitas leituras mostra a mudança aos poucos.',
     'Cada ponto é um mergulho: duração no eixo horizontal e profundidade no vertical. Pontos à direita e em baixo são os mergulhos mais exigentes.',
     'Cada ponto é um mergulho: a sua duração e o descanso que veio a seguir. Normalmente mergulhos mais longos pedem descansos mais longos.',
     'Onde cada mergulho foi feito (posição GPS ao voltar à superfície). O tamanho e a cor escura mostram a profundidade. A escala no canto dá a distância.',
@@ -3313,7 +3315,7 @@ Object.assign(T.pt,{dlBtn:'Gráficos do relógio',dlHas:n=>'Dados do relógio: '
     'Tempo debaixo de água a somar-se ao longo da sessão. Partes planas são descansos ou deslocações; degraus íngremes são séries de mergulhos.',
     'Cada ponto é um mergulho: a profundidade máxima e a pulsação mais baixa. Mostra se nos mergulhos mais fundos o coração abranda mais.',
     'Todos os mergulhos com os valores principais.'],
-  dlBack:'Todos os gráficos',dlNote:'Valores de profundidade abaixo de 0,45 m são ignorados (ruído do sensor à superfície).',dlOv:'Sobrepor com',dlNone:'— nenhum —',dlAx:{tmin:'Tempo, min',diveMax:'Mergulho nº (no ponto mais fundo)',dep:'Profundidade, m',dur:'Duração, min:s',rest:'Descanso, min',ratio:'Descanso ÷ mergulho, ×',hang:'No fundo, min:s',spd:'Velocidade, m/s',hr:'FC, bpm',hrmin:'FC mínima, bpm',temp:'Temperatura, °C',dive:'Mergulho nº',clock:'Hora',sec:'Segundos desde o início do mergulho',under:'Debaixo de água, min',time:'Tempo, min:s'},dlAll:'Todos os mergulhos',dlZone:'Zona',dlTip:'Passe o rato ou toque no gráfico para ver valores',dlDive:'Mergulho',
+  dlBack:'Todos os gráficos',dlNote:'Valores de profundidade abaixo de 0,45 m são ignorados (ruído do sensor à superfície).',dlOv:'Sobrepor com',dlThermo:'termoclina',dlReads:'leituras',dlAvgT:'média',dlRangeT:'mín.–máx.',dlNone:'— nenhum —',dlAx:{tmin:'Tempo, min',diveMax:'Mergulho nº (no ponto mais fundo)',dep:'Profundidade, m',dur:'Duração, min:s',rest:'Descanso, min',ratio:'Descanso ÷ mergulho, ×',hang:'No fundo, min:s',spd:'Velocidade, m/s',hr:'FC, bpm',hrmin:'FC mínima, bpm',temp:'Temperatura, °C',dive:'Mergulho nº',clock:'Hora',sec:'Segundos desde o início do mergulho',under:'Debaixo de água, min',time:'Tempo, min:s'},dlAll:'Todos os mergulhos',dlZone:'Zona',dlTip:'Passe o rato ou toque no gráfico para ver valores',dlDive:'Mergulho',
   dlU:{min:'min',s:'s',m:'m',bpm:'bpm',ms:'m/s'},dlDesc:'descida',dlAsc:'subida',dlRule:'regra 2×',dlDepth:'Profundidade',dlHR:'FC',dlTemp:'Temperatura',dlDur:'Duração',dlRest:'Descanso',dlHang:'No fundo',dlRatio:'Rácio',dlUnder:'Debaixo de água',
   dlCols:['#','Início','Máx.','Duração','Fundo','Desc.','Sub.','FC','Temp.','Descanso'],
   dlI:{n:(n,d)=>n+' mergulhos em '+d,pct:p=>p+' % do tempo debaixo de água',deep:(k,m,h)=>'Mais fundo: #'+k+' com '+m+' m às '+h,avg:v=>'Média: '+v,max:(k,v)=>'Máximo: #'+k+' com '+v,min:(k,v)=>'Mínimo: #'+k+' com '+v,tot:v=>'Total: '+v,
@@ -3332,7 +3334,7 @@ Object.assign(T.en,{dlBtn:'Watch charts',dlHas:n=>'Watch data: '+n+' dives',
     'Average descent speed (down to the bottom) and ascent speed (bottom to surface), in metres per second.',
     'All dives overlaid from second zero. V shapes are straight down and up; U shapes show waiting on the bottom. Colour goes from blue (first) to yellow (last).',
     'Lowest and highest heart rate inside each dive. The lower the minimum, the stronger the dive reflex and the more relaxed you were.',
-    'Each dot is a temperature reading at a depth. If it drops below some depth, that is the thermocline. The watch measures whole degrees.',
+    'The line is the average water temperature at each metre of depth; the light band runs from the coldest to the warmest reading at that metre. Where the line turns colder is the thermocline (dashed). The watch reads whole degrees, so averaging many readings shows the gradual change.',
     'Each dot is a dive: duration across, depth down. Dots right and low are the hardest dives.',
     'Each dot is a dive: its duration and the rest that followed. Longer dives usually need longer rests.',
     'Where each dive was made (GPS fix when back at the surface). Size and darker colour show depth. The scale bar gives distance.',
@@ -3340,7 +3342,7 @@ Object.assign(T.en,{dlBtn:'Watch charts',dlHas:n=>'Watch data: '+n+' dives',
     'Underwater time adding up over the session. Flat parts are rests or moves; steep steps are series of dives.',
     'Each dot is a dive: max depth and lowest heart rate. Shows whether the heart slows more on deeper dives.',
     'All dives with their main values.'],
-  dlBack:'All charts',dlNote:'Depth readings under 0.45 m are ignored (sensor noise at the surface).',dlOv:'Overlay with',dlNone:'— none —',dlAx:{tmin:'Time, min',diveMax:'Dive no. (at its deepest point)',dep:'Depth, m',dur:'Duration, min:s',rest:'Rest, min',ratio:'Rest ÷ dive, ×',hang:'Bottom, min:s',spd:'Speed, m/s',hr:'HR, bpm',hrmin:'Lowest HR, bpm',temp:'Temperature, °C',dive:'Dive no.',clock:'Time of day',sec:'Seconds since the dive started',under:'Underwater, min',time:'Time, min:s'},dlAll:'All dives',dlZone:'Area',dlTip:'Hover or tap the chart to see values',dlDive:'Dive',
+  dlBack:'All charts',dlNote:'Depth readings under 0.45 m are ignored (sensor noise at the surface).',dlOv:'Overlay with',dlThermo:'thermocline',dlReads:'readings',dlAvgT:'average',dlRangeT:'min–max',dlNone:'— none —',dlAx:{tmin:'Time, min',diveMax:'Dive no. (at its deepest point)',dep:'Depth, m',dur:'Duration, min:s',rest:'Rest, min',ratio:'Rest ÷ dive, ×',hang:'Bottom, min:s',spd:'Speed, m/s',hr:'HR, bpm',hrmin:'Lowest HR, bpm',temp:'Temperature, °C',dive:'Dive no.',clock:'Time of day',sec:'Seconds since the dive started',under:'Underwater, min',time:'Time, min:s'},dlAll:'All dives',dlZone:'Area',dlTip:'Hover or tap the chart to see values',dlDive:'Dive',
   dlU:{min:'min',s:'s',m:'m',bpm:'bpm',ms:'m/s'},dlDesc:'descent',dlAsc:'ascent',dlRule:'2× rule',dlDepth:'Depth',dlHR:'HR',dlTemp:'Temperature',dlDur:'Duration',dlRest:'Rest',dlHang:'Bottom',dlRatio:'Ratio',dlUnder:'Underwater',
   dlCols:['#','Start','Max','Time','Bottom','Desc.','Asc.','HR','Temp','Rest'],
   dlI:{n:(n,d)=>n+' dives in '+d,pct:p=>p+' % of the time underwater',deep:(k,m,h)=>'Deepest: #'+k+' at '+m+' m, '+h,avg:v=>'Average: '+v,max:(k,v)=>'Max: #'+k+' with '+v,min:(k,v)=>'Min: #'+k+' with '+v,tot:v=>'Total: '+v,
@@ -3452,8 +3454,20 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
      i:()=>{const k=arg(x=>x.dur),w=arg(x=>x.hang/x.dur);return [I.deep(deep+1,fmt(D[deep].max),tm(D[deep].s)),I.max(k+1,dlMs(D[k].dur)),w>=0?t('dlHang')+': #'+(w+1)+' '+Math.round(D[w].hang/D[w].dur*100)+' %':null]}},
     {f:()=>D.some(x=>x.hn!=null)?dlBars(D.map(x=>[x.hn,x.hx]),{yu:A.hr,min:Math.max(0,Math.min(...D.map(x=>x.hn).filter(v=>v!=null))-15),tf:v=>v+' '+u.bpm,names:['min','max'],tipX,tipMore:i=>t('dlDepth')+': '+fmt(D[i].max)+' m'})+'<div class="dlk"><i class="k1"></i>min <i class="k2"></i>max</div>':'',
      i:()=>{const k=argMin(x=>x.hn),d=arg(x=>x.hx!=null&&x.hn!=null?x.hx-x.hn:null);return [k>=0?I.min(k+1,D[k].hn+' '+u.bpm):null,d>=0?I.hrDrop(d+1,D[d].hx-D[d].hn):null]}},
-    {dep:1,f:()=>{const pts=[];D.forEach((x,i)=>x.p.forEach((v,j)=>{const tt=x.tp[j];if(tt!=null&&v>=10&&j%3===0)pts.push([tt,v/10,i+1])}));return pts.length>3?dlScatter(pts,{inv:true,y0:0,r:2.2,depth:true,yu:A.dep,xu:A.temp,yf:v=>fmt(v),xf:v=>fmt(v)+'°',xn:t('dlTemp'),yn:t('dlDepth'),ytf:v=>r1(v)+' m',xtf:v=>fmt(v)+' °C'}):''},
-     i:()=>{const tt=[];D.forEach(x=>x.p.forEach((v,j)=>{if(x.tp[j]!=null&&v>=10)tt.push([x.tp[j],v/10])}));if(!tt.length)return [];const a=Math.max(...tt.map(p=>p[0])),b=Math.min(...tt.map(p=>p[0]));if(a-b<1)return [I.noThermo+' ('+a+' °C)'];const c=tt.filter(p=>p[0]===b).map(p=>p[1]);return [I.thermo(a+' °C',b+' °C'),'≥ '+r1(Math.min(...c))+' m → '+b+' °C']}},
+    {dep:1,f:()=>{const P=tProf(DLBIG?1:2);if(P.rows.length<2)return '';
+      const lo=Math.floor(P.tmin-0.3),hi=Math.ceil(P.tmax+0.3),st=hi-lo>4?1:0.5,xt=[];for(let v=lo;v<=hi+1e-9;v+=st)xt.push(+v.toFixed(1));
+      const F=dlFrame(lo,hi,0,Math.ceil(P.maxD/5)*5||5,{inv:true,depth:true,yu:A.dep,xu:A.temp,xt,xf:v=>fmt(v)+'°'});let b='';
+            /* min–max band, then the mean line */
+      const rh0=Math.max(3,F.sy(P.bs)-F.sy(0));P.rows.forEach(r=>{if(r.mx>r.mn)b+='<rect x="'+F.sx(r.mn).toFixed(1)+'" y="'+(F.sy(r.d)-rh0/2+1).toFixed(1)+'" width="'+(F.sx(r.mx)-F.sx(r.mn)).toFixed(1)+'" height="'+(rh0-2).toFixed(1)+'" rx="2" class="dtb"/>'});
+      let ln='';P.rows.forEach(r=>{ln+=(ln?'L':'M')+F.sx(r.avg).toFixed(1)+' '+F.sy(r.d).toFixed(1)});b+='<path d="'+ln+'" class="dtl"/>';
+      if(P.th!=null){const y=F.sy(P.th);b+='<line x1="'+F.P.l+'" x2="'+(F.W-F.P.r)+'" y1="'+y+'" y2="'+y+'" class="dref"/><text x="'+(F.P.l+4)+'" y="'+(y+12)+'" class="dy" style="fill:var(--accent);text-anchor:start">'+esc(t('dlThermo'))+' ≈ '+fmt(P.th)+' m</text>'}
+      const rh=Math.max(4,F.sy(P.bs)-F.sy(0));
+      P.rows.forEach(r=>{const y=F.sy(r.d),tip=r.d0+'–'+(r.d0+P.bs)+' m\n'+t('dlTemp')+': '+fmt(Math.round(r.avg*10)/10)+' °C'+(r.mx>r.mn?' ('+r.mn+'–'+r.mx+')':'')+'\n'+r.n+' '+t('dlReads');
+        b+='<rect x="'+F.P.l+'" y="'+(y-rh/2).toFixed(1)+'" width="'+F.iw+'" height="'+rh.toFixed(1)+'" class="dtr" data-t="'+dlA(tip)+'"/><circle cx="'+F.sx(r.avg).toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(DLBIG?4:3)+'" class="dtp" pointer-events="none"/>'});
+      return dlSvg(F,b)+'<div class="dlk"><i class="kl"></i>'+esc(t('dlAvgT'))+' <i class="kb"></i>'+esc(t('dlRangeT'))+'</div>'},
+     i:()=>{const P=tProf(1);if(!P.rows.length)return [];const a=P.tmax,b2=P.tmin;const out=[I.thermo(fmt(Math.round(P.rows[0].avg*10)/10)+' °C ('+P.rows[0].d0+'–'+(P.rows[0].d0+1)+' m)',fmt(Math.round(P.rows[P.rows.length-1].avg*10)/10)+' °C ('+P.rows[P.rows.length-1].d0+'–'+(P.rows[P.rows.length-1].d0+1)+' m)')];
+       out.push(P.th!=null?t('dlThermo')+' ≈ '+fmt(P.th)+' m':I.noThermo);
+       const av=P.rows.map(r=>r.avg);if(Math.max(...av)-Math.min(...av)<0.5)return [I.noThermo+' ('+fmt(Math.round(av.reduce((a,b)=>a+b,0)/av.length*10)/10)+' °C)'];return out}},
     {dep:1,f:()=>dlScatter(D.map((x,i)=>[x.dur,x.max,i+1,null,tm(x.s)]),{inv:true,y0:0,depth:true,yu:A.dep,xu:A.dur,lab:true,fit:DLBIG,xf:dlMs,xn:t('dlDur'),yn:t('dlDepth'),ytf:v=>fmt(v)+' m'}),
      i:()=>[dlCorrTxt(D.map(x=>[x.dur,x.max]))]},
     {f:()=>dlScatter(D.filter(x=>x.surf!=null).map(x=>[x.dur,x.surf/60,D.indexOf(x)+1,null,tm(x.s)]),{lab:true,y0:0,x0:0,fit:DLBIG,xf:dlMs,yu:A.rest,xu:A.dur,xn:t('dlDur'),yn:t('dlRest'),ytf:v=>dlMs(v*60)}),
@@ -3490,6 +3504,11 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
     {dep:1,f:()=>D.some(x=>x.hn!=null)?dlScatter(D.filter(x=>x.hn!=null).map(x=>[x.hn,x.max,D.indexOf(x)+1,null,tm(x.s)]),{lab:true,inv:true,y0:0,depth:true,fit:DLBIG,yu:A.dep,xu:A.hrmin,xn:t('dlHR'),yn:t('dlDepth'),xtf:v=>v+' '+u.bpm,ytf:v=>fmt(v)+' m'}):'',
      i:()=>[dlCorrTxt(D.filter(x=>x.hn!=null).map(x=>[x.hn,x.max]))]},
     {f:()=>{const c=t('dlCols');return '<div class="dltw"><table class="dlt"><thead><tr>'+c.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+D.map((x,i)=>'<tr'+(i===deep?' class="dlhi"':'')+'><td>'+(i+1)+'</td><td>'+tm(x.s)+'</td><td>'+fmt(x.max)+' m</td><td>'+dlMs(x.dur)+'</td><td>'+dlMs(x.hang)+'</td><td>'+(x.dr!=null?fmt(x.dr):'—')+'</td><td>'+(x.ar!=null?fmt(x.ar):'—')+'</td><td>'+(x.hn!=null?x.hn+'–'+x.hx:'—')+'</td><td>'+(x.tb!=null?x.tb+'°':'—')+'</td><td>'+(x.surf!=null?dlMs(x.surf):'—')+'</td></tr>').join('')+'</tbody></table></div>'},i:()=>[]}];
+  function tProf(bs){const B=new Map();let mn=Infinity,mx=-Infinity,maxD=0;D.forEach(x=>x.p.forEach((v,j)=>{const tt=x.tp[j];if(tt==null||v<5)return;const k=Math.floor(v/10/bs);const o=B.get(k)||{s:0,n:0,mn:Infinity,mx:-Infinity};o.s+=tt;o.n++;o.mn=Math.min(o.mn,tt);o.mx=Math.max(o.mx,tt);B.set(k,o);mn=Math.min(mn,tt);mx=Math.max(mx,tt);maxD=Math.max(maxD,v/10)}));
+    const rows=[...B.entries()].filter(([,o])=>o.n>=3).sort((a,b)=>a[0]-b[0]).map(([k,o])=>({d0:k*bs,d:k*bs+bs/2,avg:o.s/o.n,mn:o.mn,mx:o.mx,n:o.n}));
+    let th=null;if(rows.length>2){const top=rows.slice(0,Math.max(1,Math.ceil(rows.length/4))),t0=top.reduce((a,r)=>a+r.avg,0)/top.length;const r=rows.find(r=>t0-r.avg>=0.5);if(r)th=r.d0}
+    return {rows,tmin:mn,tmax:mx,maxD,bs,th}}
+  const mixT=(v,lo,hi)=>{const f=Math.max(0,Math.min(1,(v-lo)/((hi-lo)||1))),c=(a,b)=>Math.round(a+(b-a)*f);return 'rgb('+c(63,232)+','+c(143,85)+','+c(216,58)+')'};
   const cum=()=>{let acc=0;const pts=[[0,0]];D.forEach(x=>{pts.push([x.s/60,acc/60]);acc+=x.dur;pts.push([(x.s+x.dur)/60,acc/60])});pts.push([span/60,acc/60]);return pts};
   C[0].ov={x:'s',name:t('dlDepth'),yu:A.dep,inv:true,y0:0,area:true,pts:()=>L.d.map((v,i)=>[i*L.dt/60,v==null?null:v/10]),vf:v=>r1(v)+' m'};
   if(hrs.length)C[1].ov={x:'s',grid:[10,20],name:t('dlHR'),yu:A.hr,pts:()=>L.h.map((v,i)=>[i*L.dt/60,v]),vf:v=>Math.round(v)+' '+u.bpm};
