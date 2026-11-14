@@ -50,7 +50,7 @@ SQL files in `dev/sql/`, in the order they were introduced:
 Status: everything up to `supabase-online.sql` has been run. **`supabase-tags.sql` — not confirmed** (needed so tagged friends can see shared photos).
 
 Free-plan limits to watch (Usage page): 500 MB database, 1 GB file storage, 5 GB egress; no automatic backups; project pauses after a week without activity.
-Auth uses email + password. The built-in Supabase mailer only sends to the project team (2/hour) — real users need a custom SMTP sender.
+Auth uses email + password. Auth emails go out through a custom SMTP sender (the owner's Gmail with an app password), not Supabase's built-in mailer, which only reaches the project team (2/hour). Watch: Supabase's own limit for custom SMTP (Auth → Rate Limits, 30 emails/hour by default) and Gmail's daily sending cap.
 
 ## Code map (site.html)
 
