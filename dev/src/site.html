@@ -1736,9 +1736,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
         <p class="hint" data-i="fwHint"></p>
         <label class="fw-row"><span data-i="fwWind"></span><span class="fw-in"><input type="number" id="fwW" inputmode="decimal" min="0" step="1"><span id="fwWu"></span></span></label>
         <label class="fw-row"><span data-i="fwWave"></span><span class="fw-in"><input type="number" id="fwV" inputmode="decimal" min="0" step="0.1"><span>m</span></span></label>
-        <label class="fw-row"><span data-i="fwSwell"></span><span class="fw-in"><input type="number" id="fwS" inputmode="decimal" min="0" step="0.1"><span>m</span></span></label>
-        <label class="fw-row"><span data-i="fwMin"></span><span class="fw-in"><input type="number" id="fwH" inputmode="numeric" min="1" max="12" step="1"><span>h</span></span></label>
-        <label class="chk"><input type="checkbox" id="fwDay"><span data-i="fwDay"></span></label>
+        <label class="fw-row"><span data-i="fwPer"></span><span class="fw-in"><input type="number" id="fwP" inputmode="decimal" min="0" step="1"><span>s</span></span></label>
       </div></details>
     </section>
     <section class="set-sec">
@@ -2724,24 +2722,24 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
 
 
 /* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
-Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',fwHint:'Janelas de pesca: horas em que o vento, as ondas e a ondulação estão todos dentro destes limites. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Vento máximo',fwWave:'Ondas máximas',fwSwell:'Ondulação máxima',fwMin:'Janela mínima',fwDay:'Só com luz do dia',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
-Object.assign(T.en,{fwSetH:'Sea & weather settings',fwHint:'Hunting windows: hours when wind, waves and swell are all within these limits. They show in green on the Sea & weather chart.',fwWind:'Max wind',fwWave:'Max waves',fwSwell:'Max swell',fwMin:'Shortest window',fwDay:'Daylight only',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
-const FW_DEF={w:12,v:1,s:1,h:2,day:true};
+Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',fwHint:'A app marca como janela de pesca as horas de luz do dia (do nascer ao pôr do sol oficial) em que o vento e as ondas estão dentro destes limites. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
+Object.assign(T.en,{fwSetH:'Sea & weather settings',fwHint:'The app marks as a hunting window the daylight hours (official sunrise to sunset) when wind and waves are within these limits. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
+const FW_DEF={w:12,v:1,p:12};const FW_MINH=2;
 function fwGet(){try{const o=JSON.parse(localStorage.getItem('sn-fcwin')||'null');return Object.assign({},FW_DEF,o||{})}catch(e){return Object.assign({},FW_DEF)}}
 function fwSave(o){try{localStorage.setItem('sn-fcwin',JSON.stringify(o))}catch(e){}}
 const BFT=[1,4,7,11,17,22,28,34,41,48,56,64];
 const wInv=v=>wUnit==='bft'?(v>=12?64:BFT[Math.max(0,Math.round(v))]-0.01):v/WU[wUnit].f(1);
-function fwFill(){const o=fwGet(),W=$('fwW');if(!W)return;const u=wc(o.w);W.value=wUnit==='bft'?Math.round(u):Math.round(u*10)/10;W.step=wUnit==='bft'?1:wUnit==='kmh'?1:wUnit==='ms'?0.5:1;$('fwWu').textContent=WU[wUnit].l;$('fwV').value=o.v;$('fwS').value=o.s;$('fwH').value=o.h;$('fwDay').checked=!!o.day}
+function fwFill(){const o=fwGet(),W=$('fwW');if(!W)return;const u=wc(o.w);W.value=wUnit==='bft'?Math.round(u):Math.round(u*10)/10;W.step=wUnit==='bft'?1:wUnit==='kmh'?1:wUnit==='ms'?0.5:1;$('fwWu').textContent=WU[wUnit].l;$('fwV').value=o.v;$('fwP').value=o.p}
 (function(){const d=$('fwSetD');if(!d)return;d.addEventListener('toggle',()=>{if(d.open)fwFill()});
   try{new MutationObserver(()=>{if(d.open)fwFill()}).observe($('wuSet'),{childList:true,characterData:true,subtree:true})}catch(e){}
   const ch=()=>{const o=fwGet(),n=id=>{const v=parseFloat(String($(id).value).replace(',','.'));return isFinite(v)?v:null};
-    const w=n('fwW'),v=n('fwV'),sw=n('fwS'),h=n('fwH');if(w!=null&&w>=0)o.w=wInv(w);if(v!=null&&v>=0)o.v=v;if(sw!=null&&sw>=0)o.s=sw;if(h!=null&&h>=1)o.h=Math.min(12,Math.round(h));o.day=$('fwDay').checked;fwSave(o);try{drawForecast()}catch(e){}};
-  ['fwW','fwV','fwS','fwH','fwDay'].forEach(id=>$(id).addEventListener('change',ch))})();
+    const w=n('fwW'),v=n('fwV'),pp=n('fwP');if(w!=null&&w>=0)o.w=wInv(w);if(v!=null&&v>=0)o.v=v;if(pp!=null&&pp>=0)o.p=pp;fwSave(o);try{drawForecast()}catch(e){}};
+  ['fwW','fwV','fwP'].forEach(id=>$(id).addEventListener('change',ch))})();
 function fwWindows(hrs,wv,mv,ST,sp){const o=fwGet(),out=[];let cur=null;
-  hrs.forEach((t,i)=>{const w=wv[i]||{},m=mv[i]||{};let ok=w.wind_speed_10m!=null&&m.wave_height!=null&&w.wind_speed_10m<=o.w+1e-9&&m.wave_height<=o.v+1e-9&&(m.swell_wave_height==null||m.swell_wave_height<=o.s+1e-9);
-    if(ok&&o.day){const st=sunTimes(t,sp.lat,sp.lon);ok=!!st&&t>=st.rise-18e5&&t<=st.set}
+  hrs.forEach((t,i)=>{const w=wv[i]||{},m=mv[i]||{};let ok=w.wind_speed_10m!=null&&m.wave_height!=null&&w.wind_speed_10m<=o.w+1e-9&&m.wave_height<=o.v+1e-9&&(m.wave_period==null||m.wave_period<=o.p+1e-9);
+    if(ok){const st=sunTimes(t,sp.lat,sp.lon);ok=!!st&&t>=st.rise&&t+ST*36e5<=st.set+1}
     if(ok){if(cur)cur.b=i;else cur={a:i,b:i}}else if(cur){out.push(cur);cur=null}});if(cur)out.push(cur);
-  return out.filter(x=>(x.b-x.a+1)*ST>=o.h)}
+  return out.filter(x=>(x.b-x.a+1)*ST>=FW_MINH)}
 function drawForecast(){
   try{fcStrip()}catch(e){}
   const card=$('fcCard');if(!card||!card.open)return;
