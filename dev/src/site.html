@@ -726,6 +726,14 @@ dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-in
 .dls .dpt{stroke:#fff!important;stroke-width:1.5px}
 .dls .dtb{fill:var(--sea);fill-opacity:.16}.dls .dtl{fill:none;stroke:var(--sea);stroke-width:2;stroke-linejoin:round}.dls .dtr{fill:transparent}.dls rect.dtr:hover{fill:var(--ink)!important;fill-opacity:.07!important;stroke:none!important;opacity:1!important}.dls .dtp{fill:var(--sea);stroke:var(--surface);stroke-width:1.2}.dls .dtb{fill:var(--sea);fill-opacity:.28}
 .dlk .kl{width:14px;height:0;border-top:2px solid var(--sea);border-radius:0}.dlk .kb{background:var(--sea);opacity:.3}
+.dl1tt{flex:1;min-width:0}.dlhide{all:unset;cursor:pointer;flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;color:var(--muted)}.dlhide:hover{color:var(--ink);background:var(--line)}
+.dlset{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px 12px}
+.dls.dlmapo{cursor:zoom-in}.dlmhint{font-size:.78rem;color:var(--muted);margin:0 2px 8px}
+.dlmf{position:fixed;inset:0;z-index:30;background:#000}.dlmf-m{position:absolute;inset:0}
+.dlmf-x{all:unset;cursor:pointer;position:absolute;z-index:1000;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(10,30,38,.85);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.dlmf .leaflet-top.leaflet-left{top:env(safe-area-inset-top,0px);left:env(safe-area-inset-left,0px)}
+.dlmk span{display:grid;place-items:center;border-radius:50%;border:2px solid #fff;color:#fff;font:700 12px/1 system-ui,sans-serif;box-shadow:0 1px 6px rgba(0,0,0,.5);box-sizing:border-box}
+.dlmk{background:none;border:none}
 .dlnote{font-size:.8rem;color:var(--muted);margin-top:10px!important}
 
 .dlc{cursor:pointer;transition:border-color .15s}.dlc:hover{border-color:var(--sea)}.dlc:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
@@ -1715,6 +1723,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
     </section>
     <section class="set-sec">
       <details class="so-sec so-fd set-data" id="cfD"><summary data-i="cfH"></summary><div class="cf-body"><p class="hint" data-i="cfHint"></p><div id="cfBody"></div></div></details>
+    </section>
+    <section class="set-sec">
+      <details class="so-sec so-fd set-data" id="dlSetD"><summary data-i="dlSetH"></summary><div class="cf-body"><p class="hint" data-i="dlSetHint"></p><div id="dlSetBody" class="dlset"></div></div></details>
     </section>
     <section class="set-sec">
       <details class="so-sec so-fd set-data"><summary data-i="setData"></summary>
@@ -4903,7 +4914,7 @@ Object.assign(T.pt,{dlBtn:'Gráficos do relógio',dlHas:n=>'Dados do relógio: '
     'Tempo debaixo de água a somar-se ao longo da sessão. Partes planas são descansos ou deslocações; degraus íngremes são séries de mergulhos.',
     'Cada ponto é um mergulho: a profundidade máxima e a pulsação mais baixa. Mostra se nos mergulhos mais fundos o coração abranda mais.',
     'Todos os mergulhos com os valores principais.'],
-  dlBack:'Todos os gráficos',dlNote:'Valores de profundidade abaixo de 0,45 m são ignorados (ruído do sensor à superfície).',dlOv:'Sobrepor com',dlThermo:'termoclina',dlReads:'leituras',dlAvgT:'média',dlRangeT:'mín.–máx.',dlNone:'— nenhum —',dlAx:{tmin:'Tempo, min',diveMax:'Mergulho nº (no ponto mais fundo)',dep:'Profundidade, m',dur:'Duração, min:s',rest:'Descanso, min',ratio:'Descanso ÷ mergulho, ×',hang:'No fundo, min:s',spd:'Velocidade, m/s',hr:'FC, bpm',hrmin:'FC mínima, bpm',temp:'Temperatura, °C',dive:'Mergulho nº',clock:'Hora',sec:'Segundos desde o início do mergulho',under:'Debaixo de água, min',time:'Tempo, min:s'},dlAll:'Todos os mergulhos',dlZone:'Zona',dlTip:'Passe o rato ou toque no gráfico para ver valores',dlDive:'Mergulho',
+  dlBack:'Voltar',dlHide:'Ocultar este gráfico',dlHidden:'Gráfico oculto — pode voltar a mostrá-lo em Definições → Definições dos gráficos',dlSetH:'Definições dos gráficos',dlSetHint:'Escolha os gráficos que a app mostra para os dados do relógio. Os dados ficam guardados na caçada, por isso um gráfico que volte a ligar aparece logo em todas as caçadas com dados do relógio.',dlMapTap:'Toque no mapa para o abrir, ampliar e mover.',dlMapClose:'Fechar mapa',dlNote:'Valores de profundidade abaixo de 0,45 m são ignorados (ruído do sensor à superfície).',dlOv:'Sobrepor com',dlThermo:'termoclina',dlReads:'leituras',dlAvgT:'média',dlRangeT:'mín.–máx.',dlNone:'— nenhum —',dlAx:{tmin:'Tempo, min',diveMax:'Mergulho nº (no ponto mais fundo)',dep:'Profundidade, m',dur:'Duração, min:s',rest:'Descanso, min',ratio:'Descanso ÷ mergulho, ×',hang:'No fundo, min:s',spd:'Velocidade, m/s',hr:'FC, bpm',hrmin:'FC mínima, bpm',temp:'Temperatura, °C',dive:'Mergulho nº',clock:'Hora',sec:'Segundos desde o início do mergulho',under:'Debaixo de água, min',time:'Tempo, min:s'},dlAll:'Todos os mergulhos',dlZone:'Zona',dlTip:'Passe o rato ou toque no gráfico para ver valores',dlDive:'Mergulho',
   dlU:{min:'min',s:'s',m:'m',bpm:'bpm',ms:'m/s'},dlDesc:'descida',dlAsc:'subida',dlRule:'regra 2×',dlDepth:'Profundidade',dlHR:'FC',dlTemp:'Temperatura',dlDur:'Duração',dlRest:'Descanso',dlHang:'No fundo',dlRatio:'Rácio',dlUnder:'Debaixo de água',
   dlCols:['#','Início','Máx.','Duração','Fundo','Desc.','Sub.','FC','Temp.','Descanso'],
   dlI:{n:(n,d)=>n+' mergulhos em '+d,pct:p=>p+' % do tempo debaixo de água',deep:(k,m,h)=>'Mais fundo: #'+k+' com '+m+' m às '+h,avg:v=>'Média: '+v,max:(k,v)=>'Máximo: #'+k+' com '+v,min:(k,v)=>'Mínimo: #'+k+' com '+v,tot:v=>'Total: '+v,
@@ -4930,7 +4941,7 @@ Object.assign(T.en,{dlBtn:'Watch charts',dlHas:n=>'Watch data: '+n+' dives',
     'Underwater time adding up over the session. Flat parts are rests or moves; steep steps are series of dives.',
     'Each dot is a dive: max depth and lowest heart rate. Shows whether the heart slows more on deeper dives.',
     'All dives with their main values.'],
-  dlBack:'All charts',dlNote:'Depth readings under 0.45 m are ignored (sensor noise at the surface).',dlOv:'Overlay with',dlThermo:'thermocline',dlReads:'readings',dlAvgT:'average',dlRangeT:'min–max',dlNone:'— none —',dlAx:{tmin:'Time, min',diveMax:'Dive no. (at its deepest point)',dep:'Depth, m',dur:'Duration, min:s',rest:'Rest, min',ratio:'Rest ÷ dive, ×',hang:'Bottom, min:s',spd:'Speed, m/s',hr:'HR, bpm',hrmin:'Lowest HR, bpm',temp:'Temperature, °C',dive:'Dive no.',clock:'Time of day',sec:'Seconds since the dive started',under:'Underwater, min',time:'Time, min:s'},dlAll:'All dives',dlZone:'Area',dlTip:'Hover or tap the chart to see values',dlDive:'Dive',
+  dlBack:'Back',dlHide:'Hide this chart',dlHidden:'Chart hidden — turn it back on in Settings → Chart settings',dlSetH:'Chart settings',dlSetHint:'Choose which charts the app shows for watch data. The data stays saved with the entry, so a chart you turn back on appears right away in every entry with watch data.',dlMapTap:'Tap the map to open it, zoom and pan.',dlMapClose:'Close map',dlNote:'Depth readings under 0.45 m are ignored (sensor noise at the surface).',dlOv:'Overlay with',dlThermo:'thermocline',dlReads:'readings',dlAvgT:'average',dlRangeT:'min–max',dlNone:'— none —',dlAx:{tmin:'Time, min',diveMax:'Dive no. (at its deepest point)',dep:'Depth, m',dur:'Duration, min:s',rest:'Rest, min',ratio:'Rest ÷ dive, ×',hang:'Bottom, min:s',spd:'Speed, m/s',hr:'HR, bpm',hrmin:'Lowest HR, bpm',temp:'Temperature, °C',dive:'Dive no.',clock:'Time of day',sec:'Seconds since the dive started',under:'Underwater, min',time:'Time, min:s'},dlAll:'All dives',dlZone:'Area',dlTip:'Hover or tap the chart to see values',dlDive:'Dive',
   dlU:{min:'min',s:'s',m:'m',bpm:'bpm',ms:'m/s'},dlDesc:'descent',dlAsc:'ascent',dlRule:'2× rule',dlDepth:'Depth',dlHR:'HR',dlTemp:'Temperature',dlDur:'Duration',dlRest:'Rest',dlHang:'Bottom',dlRatio:'Ratio',dlUnder:'Underwater',
   dlCols:['#','Start','Max','Time','Bottom','Desc.','Asc.','HR','Temp','Rest'],
   dlI:{n:(n,d)=>n+' dives in '+d,pct:p=>p+' % of the time underwater',deep:(k,m,h)=>'Deepest: #'+k+' at '+m+' m, '+h,avg:v=>'Average: '+v,max:(k,v)=>'Max: #'+k+' with '+v,min:(k,v)=>'Min: #'+k+' with '+v,tot:v=>'Total: '+v,
@@ -5066,7 +5077,7 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
       const tilesOK=!/claude|anthropic/.test(location.hostname);
       const panel=(G,lab)=>{const la=G.reduce((a,x)=>a+x.lat,0)/G.length,lo=G.reduce((a,x)=>a+x.lng,0)/G.length;
         const W=DLW,H=Math.round(DLH*(DLBIG?1.15:1.2)),wx=(lng,z)=>(lng+180)/360*256*2**z,wy=(lat,z)=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*256*2**z};
-        let z=18;for(;z>2;z--){const xs=G.map(x=>wx(x.lng,z)),ys=G.map(x=>wy(x.lat,z));if((Math.max(...xs)-Math.min(...xs))*1.35<=W-40&&(Math.max(...ys)-Math.min(...ys))*1.35<=H-50)break}z=Math.min(z,17);
+        let z=18;for(;z>2;z--){const xs=G.map(x=>wx(x.lng,z)),ys=G.map(x=>wy(x.lat,z));if((Math.max(...xs)-Math.min(...xs))*1.35<=W-40&&(Math.max(...ys)-Math.min(...ys))*1.35<=H-50)break}z=Math.min(z,lab&&lab!==t('dlAll')?16:17);
         const xs=G.map(x=>wx(x.lng,z)),ys=G.map(x=>wy(x.lat,z)),cx=(Math.max(...xs)+Math.min(...xs))/2,cy=(Math.max(...ys)+Math.min(...ys))/2,L=cx-W/2,T=cy-(H-6)/2,X=lng=>wx(lng,z)-L,Y=lat=>wy(lat,z)-T;
         const id='dmc'+(DLREG.length)+'_'+Math.round(cx)+'_'+z;let b='<defs><clipPath id="'+id+'"><rect x="0" y="0" width="'+W+'" height="'+H+'" rx="8"/></clipPath></defs><rect x="0" y="0" width="'+W+'" height="'+H+'" class="dmap" rx="8"/>';
         if(tilesOK){let im='';const n=2**z;for(let tx=Math.floor(L/256);tx<=Math.floor((L+W)/256);tx++)for(let ty=Math.floor(T/256);ty<=Math.floor((T+H)/256);ty++){if(ty<0||ty>=n)continue;const xx=((tx%n)+n)%n;
@@ -5077,9 +5088,10 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
         const mpp=156543.03392*Math.cos(la*Math.PI/180)/2**z,sb=dlNice(0,W*0.22*mpp,2)[1]||10,sbp=sb/mpp;
         b+='<line x1="12" x2="'+(12+sbp).toFixed(1)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" class="dsb"/><text x="'+(16+sbp).toFixed(1)+'" y="'+(H-8)+'" class="dmsc">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
         const lk='<a class="dlmap" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+la.toFixed(5)+','+lo.toFixed(5)+'">'+la.toFixed(5)+', '+lo.toFixed(5)+'</a>';
-        return '<svg viewBox="0 0 '+W+' '+H+'" class="dls" role="img">'+b+'</svg>'+lk};
-      if(!DLBIG||Z.length<2)return panel(g,Z.length>1?'':'');
-      return '<div class="dlmaps">'+panel(g,t('dlAll'))+Z.map((z,i)=>panel(z,t('dlZone')+' '+(i+1)+' · #'+z.map(x=>D.indexOf(x)+1).join(', #'))).join('')+'</div>'},
+        return '<svg viewBox="0 0 '+W+' '+H+'" class="dls'+(tilesOK&&DLBIG?' dlmapo':'')+'" role="img"'+(tilesOK&&DLBIG?' data-mapo="'+esc(G.map(x=>D.indexOf(x)).join(','))+'"':'')+'>'+b+'</svg>'+lk};
+      const hint=tilesOK&&DLBIG?'<p class="dlmhint">'+esc(t('dlMapTap'))+'</p>':'';
+      if(!DLBIG||Z.length<2)return panel(g,Z.length>1?'':'')+hint;
+      return hint+'<div class="dlmaps">'+panel(g,t('dlAll'))+Z.map((z,i)=>panel(z,t('dlZone')+' '+(i+1)+' · #'+z.map(x=>D.indexOf(x)+1).join(', #'))).join('')+'</div>'},
      i:()=>{const g=D.filter(x=>x.lat!=null);if(g.length<2)return [];const dist=(a,b)=>{const k=111320,dx=(a.lng-b.lng)*k*Math.cos(a.lat*Math.PI/180),dy=(a.lat-b.lat)*k;return Math.hypot(dx,dy)};let m=0;g.forEach(a=>g.forEach(b=>m=Math.max(m,dist(a,b))));
        const Z=[];g.forEach(a=>{const z=Z.find(z=>dist(z[0],a)<300);z?z.push(a):Z.push([a])});return [I.span(m>=1000?r1(m/1000)+' km':Math.round(m)+' m'),I.zones(Z.length)]}},
     {dep:1,f:()=>{const bs=DLBIG?1:5,bk=[];D.forEach(x=>x.p.forEach(v=>{const i=Math.floor(v/(bs*10));bk[i]=(bk[i]||0)+1}));for(let i=0;i<bk.length;i++)bk[i]=bk[i]||0;const tot=bk.reduce((a,b)=>a+b,0)||1;
@@ -5111,6 +5123,8 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
 /* chart order is the viewer's own; numbers follow the position */
 const DLOK='sn-dlord';
 function dlOrd(){let a=[];try{a=JSON.parse(localStorage.getItem(DLOK)||'[]')}catch(_){}a=(Array.isArray(a)?a:[]).filter((v,i,x)=>Number.isInteger(v)&&v>=0&&v<18&&x.indexOf(v)===i);for(let i=0;i<18;i++)if(!a.includes(i))a.splice(Math.min(i,a.length),0,i);return a}
+function dlHid(){try{const a=JSON.parse(localStorage.getItem('sn-dlhide')||'[]');return Array.isArray(a)?a.filter(Number.isInteger):[]}catch(_){return []}}
+function dlHidSet(a){try{localStorage.setItem('sn-dlhide',JSON.stringify(a))}catch(_){}}
 function dlOrdSave(a){try{localStorage.setItem(DLOK,JSON.stringify(a))}catch(_){}}
 /* overlay: one chart drawn on top of another that shares its horizontal axis */
 const DLOVK='sn-dlov';
@@ -5126,16 +5140,33 @@ function dlTitle(B,k){const j=dlOvGet(B,k);return t('dlT')[k]+(j!=null?' + '+t('
 const DLZ='<svg class="dlz" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg>';
 function dlogHtml(L){DLREG=[];DLW=340;DLH=190;DLBIG=false;const B=dlBuild(L);
   let h='<div class="dlst">'+B.st.map((s,i)=>'<div><b>'+esc(String(s[0]))+'</b><span>'+esc(t('dlS')[i])+(s[1]?' · '+s[1]:'')+'</span></div>').join('')+'</div><div class="dlg">';let n=0;
-  h+=dlOrd().map(i=>{const body=dlBody(B,i);return body?'<figure class="dlc'+(i===17?' dlwide':'')+'" data-k="'+i+'" tabindex="0" role="button"><figcaption><span class="dln">'+(++n)+'</span>'+esc(dlTitle(B,i))+DLZ+'</figcaption>'+body+'</figure>':''}).join('')+'</div>';return h}
+  const hid=dlHid();h+=dlOrd().filter(i=>!hid.includes(i)).map(i=>{const body=dlBody(B,i);return body?'<figure class="dlc'+(i===17?' dlwide':'')+'" data-k="'+i+'" tabindex="0" role="button"><figcaption><span class="dln">'+(++n)+'</span>'+esc(dlTitle(B,i))+DLZ+'</figcaption>'+body+'</figure>':''}).join('')+'</div>';return h}
 function dlOne(L,k){DLREG=[];const big=innerWidth>=700;DLW=big?680:340;DLH=DLHF||(big?360:250);DLBIG=true;const B=dlBuild(L),c=B.C[k],oj=dlOvGet(B,k),ins=(c.i()||[]).concat(oj!=null?B.C[oj].i()||[]:[]).filter(Boolean);
-  const avail=dlOrd().filter(i=>{DLREG=[];return i===k||!!B.C[i].f()});DLREG=[];
+  const hid=dlHid(),avail=dlOrd().filter(i=>{DLREG=[];return i===k||(!hid.includes(i)&&!!B.C[i].f())});DLREG=[];
   const body=dlBody(B,k),j=avail.indexOf(k),pv=avail[j-1],nx=avail[j+1];
   const comp=c.ov?avail.filter(i=>i!==k&&B.C[i].ov&&B.C[i].ov.x===c.ov.x):[];
   const sel=comp.length?'<label class="dlov">'+esc(t('dlOv'))+'<select data-ov="'+k+'"><option value="">'+esc(t('dlNone'))+'</option>'+comp.map(i=>'<option value="'+i+'"'+(oj===i?' selected':'')+'>'+esc(t('dlT')[i])+'</option>').join('')+'</select></label>':'';
   const arr=(i,d)=>'<button type="button" class="dlnav" '+(i==null?'disabled':'data-go="'+i+'"')+' data-d="'+d+'" aria-label="'+(d<0?'‹':'›')+'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+(d<0?'M15 6l-6 6 6 6':'M9 6l6 6-6 6')+'"/></svg></button>';
   return '<div class="dl1h"><button type="button" class="dlback" data-back="1"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>'+esc(t('dlBack'))+'</button><span class="dl1n">'+arr(pv,-1)+'<b>'+(j+1)+' / '+avail.length+'</b>'+arr(nx,1)+'</span></div>'+
-    '<h3 class="dl1t"><span class="dln">'+(j+1)+'</span>'+esc(dlTitle(B,k))+'</h3>'+sel+'<div class="dl1c">'+body+'</div>'+
+    '<h3 class="dl1t"><span class="dln">'+(j+1)+'</span><span class="dl1tt">'+esc(dlTitle(B,k))+'</span><button type="button" class="dlhide" data-hide="'+k+'" title="'+esc(t('dlHide'))+'" aria-label="'+esc(t('dlHide'))+'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c5 0 9 4.5 10 7-.4 1-1.2 2.3-2.4 3.5M6.3 6.3C4.2 7.7 2.7 9.8 2 12c1 2.5 5 7 10 7 1.7 0 3.3-.5 4.7-1.3"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></h3>'+sel+'<div class="dl1c">'+body+'</div>'+
     '<div class="dl1x">'+(t('dlX')[k]?'<p>'+esc(t('dlX')[k])+'</p>':'')+(oj!=null&&t('dlX')[oj]?'<p>'+esc(t('dlX')[oj])+'</p>':'')+(ins.length?'<ul>'+ins.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>':'')+((c.dep||(oj!=null&&B.C[oj].dep))?'<p class="dlnote">'+esc(t('dlNote'))+'</p>':'')+'</div>'}
+function dlLeaf(){if(window.L&&window.L.map)return Promise.resolve(window.L);return new Promise((ok,no)=>{const c=document.createElement('link');c.rel='stylesheet';c.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(c);const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>ok(window.L);s.onerror=no;document.head.appendChild(s)})}
+let dlMap=null;
+function dlMapClose(){const o=document.querySelector('.dlmf');if(dlMap){try{dlMap.remove()}catch(_){}dlMap=null}if(o)o.remove()}
+function dlMapOpen(ids){const L0=DLCUR;if(!L0)return;const D=L0.dv||[],sel=String(ids||'').split(',').map(Number).filter(i=>D[i]&&D[i].lat!=null);if(!sel.length)return;
+  dlMapClose();const o=document.createElement('div');o.className='dlmf';o.innerHTML='<div class="dlmf-m"></div><button type="button" class="dlmf-x" aria-label="'+esc(t('dlMapClose'))+'"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>';$('dlogD').appendChild(o);
+  o.querySelector('.dlmf-x').addEventListener('click',dlMapClose);
+  const mxD=Math.max(...D.map(x=>x.max)),tm=s=>{const d=new Date(L0.t0+s*1000);return String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')};
+  dlLeaf().then(L=>{if(!o.isConnected)return;const m=L.map(o.querySelector('.dlmf-m'),{zoomControl:true,attributionControl:true});dlMap=m;
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(m);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,opacity:.9}).addTo(m);
+    const pts=[];D.forEach((x,i)=>{if(x.lat==null)return;const q=x.max/mxD,r=Math.round(22+q*14),on=sel.includes(i);pts.push([x.lat,x.lng]);
+      const ic=L.divIcon({className:'dlmk',html:'<span style="width:'+r+'px;height:'+r+'px;background:hsl(195 75% '+(60-q*30)+'%);opacity:'+(on?1:.55)+'">'+(i+1)+'</span>',iconSize:[r,r],iconAnchor:[r/2,r/2]});
+      L.marker([x.lat,x.lng],{icon:ic,zIndexOffset:Math.round(q*100)}).addTo(m).bindPopup('<b>'+esc(t('dlDive'))+' #'+(i+1)+'</b> · '+tm(x.s)+'<br>'+esc(t('dlDepth'))+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'<br><span style="opacity:.7">'+x.lat.toFixed(5)+', '+x.lng.toFixed(5)+'</span>')});
+    const fb=sel.map(i=>[D[i].lat,D[i].lng]);if(fb.length===1)m.setView(fb[0],17);else m.fitBounds(fb,{padding:[50,50],maxZoom:18})
+  }).catch(()=>{o.querySelector('.dlmf-m').textContent='—'})}
+function dlSetSync(){const w=$('dlSetBody');if(!w)return;const h=dlHid();w.querySelectorAll('input[data-dl]').forEach(c=>{c.checked=!h.includes(+c.dataset.dl)})}
+function dlSetBuild(){const w=$('dlSetBody');if(!w)return;const T=t('dlT');w.innerHTML=dlOrd().filter(i=>T[i]).map(i=>'<label class="chk"><input type="checkbox" data-dl="'+i+'"><span>'+esc(T[i])+'</span></label>').join('');dlSetSync()}
 function dlShow(k){const b=$('dlogBody');DLHF=0;b.innerHTML=k==null?dlogHtml(DLCUR):dlOne(DLCUR,k);b.dataset.k=k==null?'':k;$('dlogD').querySelector('.sheet-in').scrollTop=0;try{$('dlogD').scrollTop=0}catch(_){}
   /* phone turned sideways: squeeze the chart's height so it fits on screen without scrolling */
   if(k!=null&&innerWidth>innerHeight&&innerHeight<600){const sv=b.querySelector('.dl1c svg'),c=b.querySelector('.dl1c');if(sv&&c){const r=sv.getBoundingClientRect(),extra=c.getBoundingClientRect().bottom-r.bottom,dB=$('dlogD').getBoundingClientRect().bottom,avail=Math.min(innerHeight,dB)-r.top-extra-16;
@@ -5175,7 +5206,9 @@ $('dlogClose').addEventListener('click',()=>$('dlogD').close());
   document.addEventListener('pointerup',endDrag);document.addEventListener('pointercancel',endDrag);
   body.addEventListener('touchmove',ev=>{if(dr&&dr.on)ev.preventDefault()},{passive:false});
   body.addEventListener('contextmenu',ev=>{if(ev.target.closest('figure.dlc'))ev.preventDefault()});
-  body.addEventListener('click',ev=>{if(Date.now()-noClick<400){ev.preventDefault();return}const g=ev.target.closest('[data-go]');if(g){clear();dlShow(+g.dataset.go);return}if(ev.target.closest('[data-back]')){clear();dlShow(null);return}
+  body.addEventListener('click',ev=>{if(Date.now()-noClick<400){ev.preventDefault();return}const g=ev.target.closest('[data-go]');if(g){clear();dlShow(+g.dataset.go);return}if(ev.target.closest('[data-back]')){clear();const from=body.dataset.k;dlShow(null);const f=body.querySelector('figure[data-k="'+from+'"]');if(f)f.scrollIntoView({block:'center'});return}
+    const hb=ev.target.closest('[data-hide]');if(hb){clear();const k=+hb.dataset.hide,h=dlHid();if(!h.includes(k)){h.push(k);dlHidSet(h)}dlSetSync();const nx=body.querySelector('[data-go][data-d="1"]')||body.querySelector('[data-go][data-d="-1"]');if(nx)dlShow(+nx.dataset.go);else dlShow(null);try{toast(t('dlHidden'))}catch(_){}return}
+    const mo=ev.target.closest('[data-mapo]');if(mo){clear();dlMapOpen(mo.dataset.mapo);return}
     if(ev.target.closest('a'))return;const f=ev.target.closest('figure.dlc[data-k]');if(f){clear();dlShow(+f.dataset.k)}});
   /* swipe left / right in the single-chart view to go to the next / previous chart (on the plot itself only a quick flick counts, so slow drags still read values) */
   let sw=null;body.addEventListener('touchstart',ev=>{if(body.dataset.k===''||ev.touches.length!==1){sw=null;return}const p=ev.touches[0];sw={x:p.clientX,y:p.clientY,t:Date.now(),plot:!!ev.target.closest('.dl1c svg')}},{passive:true});
@@ -5184,7 +5217,8 @@ $('dlogClose').addEventListener('click',()=>$('dlogD').close());
   body.addEventListener('change',ev=>{const sl=ev.target.closest&&ev.target.closest('select[data-ov]');if(!sl)return;const k=+sl.dataset.ov;dlOvSet(k,sl.value===''?null:+sl.value);clear();dlShow(k)});
   body.addEventListener('keydown',ev=>{const f=ev.target.closest('figure.dlc[data-k]');if(f&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();dlShow(+f.dataset.k)}});
   $('dlogD').addEventListener('keydown',ev=>{if(body.dataset.k==='')return;if(ev.key==='ArrowRight'||ev.key==='ArrowLeft'){const go=body.querySelector('[data-go][data-d="'+(ev.key==='ArrowRight'?1:-1)+'"]');if(go){clear();dlShow(+go.dataset.go)}}});
-  $('dlogD').addEventListener('close',()=>{clear();DLCUR=null})})();
+  $('dlogD').addEventListener('close',()=>{clear();dlMapClose();DLCUR=null})})();
+(function(){const d=$('dlSetD');if(!d)return;d.addEventListener('toggle',()=>{if(d.open)dlSetBuild()});$('dlSetBody').addEventListener('change',ev=>{const c=ev.target.closest('input[data-dl]');if(!c)return;const k=+c.dataset.dl;let h=dlHid().filter(x=>x!==k);if(!c.checked)h.push(k);dlHidSet(h)})})();
 function dlogChip(){const b=$('eDlogX');if(!b)return;const L=form.dlog;b.hidden=!L;if(L){const s=t('dlHas')((L.dv||[]).length)+' — '+t('dlBtn');b.title=s;b.setAttribute('aria-label',s);b.querySelector('sub').textContent=(L.dv||[]).length}}
 $('eDlogX').addEventListener('click',()=>{if(form.dlog)dlogOpen({dlog:form.dlog,spot:$('eSpot').value.trim(),date:$('eDate').value})});
 function dlIcon(){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4v16h18"/><path d="M6.5 8.5l3.5 6 3-3.5 3.5 5.5 3-9"/></svg>'}
