@@ -719,6 +719,11 @@ dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-in
 #dlogTitle{padding-left:9px!important}.dlog-d .dl1h,.dlog-d .dl1t,.dlog-d .dlov,.dlog-d .dl1x{padding-left:9px!important;padding-right:9px!important}.dlog-d .dlback{margin-left:-4px}
 @keyframes dlsr{from{transform:translateX(36px);opacity:.2}to{transform:none;opacity:1}}@keyframes dlsl{from{transform:translateX(-36px);opacity:.2}to{transform:none;opacity:1}}
 #dlogBody.dlsr{animation:dlsr .22s ease-out}#dlogBody.dlsl{animation:dlsl .22s ease-out}
+.dls .dattr{font-size:7px;fill:#fff;fill-opacity:.85;text-anchor:end;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:2px}
+.dls .dmlab{font-size:10px;font-weight:700;fill:#fff;text-anchor:start;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:3px}
+.dls .dmsc{font-size:9.5px;fill:#fff;text-anchor:start;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2.5px}
+.dls .dsb{stroke:#fff!important;stroke-width:2.5px;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.8))}
+.dls .dpt{stroke:#fff!important;stroke-width:1.5px}
 .dlnote{font-size:.8rem;color:var(--muted);margin-top:10px!important}
 
 .dlc{cursor:pointer;transition:border-color .15s}.dlc:hover{border-color:var(--sea)}.dlc:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
@@ -4164,7 +4169,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794676222';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794678587';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
@@ -5043,12 +5048,20 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
      i:()=>[dlCorrTxt(D.filter(x=>x.surf!=null).map(x=>[x.dur,x.surf]))]},
     {f:()=>{const g=D.filter(x=>x.lat!=null);if(g.length<2)return '';const dist=(a,b)=>Math.hypot((a.lng-b.lng)*111320*Math.cos(a.lat*Math.PI/180),(a.lat-b.lat)*111320);
       const Z=[];g.forEach(a=>{const z=Z.find(z=>dist(z[0],a)<300);z?z.push(a):Z.push([a])});const mxD=Math.max(...g.map(x=>x.max));
-      const panel=(G,lab)=>{const la=G.reduce((a,x)=>a+x.lat,0)/G.length,lo=G.reduce((a,x)=>a+x.lng,0)/G.length,k=111320,kx=k*Math.cos(la*Math.PI/180);
-        const pts=G.map(x=>[(x.lng-lo)*kx,(x.lat-la)*k,D.indexOf(x)+1,x.max,x]);const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),r=Math.max(15,(Math.max(...xs)-Math.min(...xs))/2,(Math.max(...ys)-Math.min(...ys))/2)*1.3,cx=(Math.max(...xs)+Math.min(...xs))/2,cy=(Math.max(...ys)+Math.min(...ys))/2;
-        const W=DLW,H=Math.round(DLH*(DLBIG?1.15:1.2)),s=Math.min(W-30,H-40)/(2*r),X=v=>W/2+(v-cx)*s,Y=v=>(H-14)/2-(v-cy)*s;
-        const sb=dlNice(0,r,2)[1]||10;let b='<rect x="0" y="0" width="'+W+'" height="'+H+'" class="dmap" rx="8"/>'+(lab?'<text x="10" y="16" class="dy" style="text-anchor:start;font-weight:600">'+esc(lab)+'</text>':'');
-        pts.sort((a,b)=>a[3]-b[3]).forEach(p=>{const q=p[3]/mxD,x=p[4];b+='<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="'+((5+q*6)*(DLBIG?1.3:1))+'" style="fill:hsl(195 70% '+(62-q*32)+'%)" class="dpt" data-t="'+dlA(t('dlDive')+' #'+p[2]+' · '+tm(x.s)+'\n'+t('dlDepth')+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'\n'+x.lat.toFixed(5)+', '+x.lng.toFixed(5))+'"/><text x="'+X(p[0])+'" y="'+(Y(p[1])+3.5)+'" class="dmn">'+p[2]+'</text>'});
-        b+='<line x1="12" x2="'+(12+sb*s)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" class="dsb"/><text x="'+(16+sb*s)+'" y="'+(H-8)+'" class="dy" style="text-anchor:start">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
+      /* satellite tiles under the dive points (web-mercator, like every web map); the Claude version can't load tiles, so it keeps the plain panel */
+      const tilesOK=!/claude|anthropic/.test(location.hostname);
+      const panel=(G,lab)=>{const la=G.reduce((a,x)=>a+x.lat,0)/G.length,lo=G.reduce((a,x)=>a+x.lng,0)/G.length;
+        const W=DLW,H=Math.round(DLH*(DLBIG?1.15:1.2)),wx=(lng,z)=>(lng+180)/360*256*2**z,wy=(lat,z)=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*256*2**z};
+        let z=18;for(;z>2;z--){const xs=G.map(x=>wx(x.lng,z)),ys=G.map(x=>wy(x.lat,z));if((Math.max(...xs)-Math.min(...xs))*1.35<=W-40&&(Math.max(...ys)-Math.min(...ys))*1.35<=H-50)break}z=Math.min(z,17);
+        const xs=G.map(x=>wx(x.lng,z)),ys=G.map(x=>wy(x.lat,z)),cx=(Math.max(...xs)+Math.min(...xs))/2,cy=(Math.max(...ys)+Math.min(...ys))/2,L=cx-W/2,T=cy-(H-6)/2,X=lng=>wx(lng,z)-L,Y=lat=>wy(lat,z)-T;
+        const id='dmc'+(DLREG.length)+'_'+Math.round(cx)+'_'+z;let b='<defs><clipPath id="'+id+'"><rect x="0" y="0" width="'+W+'" height="'+H+'" rx="8"/></clipPath></defs><rect x="0" y="0" width="'+W+'" height="'+H+'" class="dmap" rx="8"/>';
+        if(tilesOK){let im='';const n=2**z;for(let tx=Math.floor(L/256);tx<=Math.floor((L+W)/256);tx++)for(let ty=Math.floor(T/256);ty<=Math.floor((T+H)/256);ty++){if(ty<0||ty>=n)continue;const xx=((tx%n)+n)%n;
+            im+='<image href="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/'+z+'/'+ty+'/'+xx+'" x="'+(tx*256-L).toFixed(1)+'" y="'+(ty*256-T).toFixed(1)+'" width="256.6" height="256.6" preserveAspectRatio="none"/>'}
+          b+='<g clip-path="url(#'+id+')">'+im+'</g><text x="'+(W-6)+'" y="'+(H-5)+'" class="dattr">Esri, Maxar, Earthstar Geographics</text>'}
+        if(lab)b+='<text x="10" y="17" class="dmlab">'+esc(lab)+'</text>';
+        G.slice().sort((a,b)=>a.max-b.max).forEach(x=>{const q=x.max/mxD,k=D.indexOf(x)+1,px=X(x.lng),py=Y(x.lat);b+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+((5+q*6)*(DLBIG?1.3:1))+'" style="fill:hsl(195 75% '+(60-q*30)+'%)" class="dpt" data-t="'+dlA(t('dlDive')+' #'+k+' · '+tm(x.s)+'\n'+t('dlDepth')+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'\n'+x.lat.toFixed(5)+', '+x.lng.toFixed(5))+'"/><text x="'+px.toFixed(1)+'" y="'+(py+3.5).toFixed(1)+'" class="dmn">'+k+'</text>'});
+        const mpp=156543.03392*Math.cos(la*Math.PI/180)/2**z,sb=dlNice(0,W*0.22*mpp,2)[1]||10,sbp=sb/mpp;
+        b+='<line x1="12" x2="'+(12+sbp).toFixed(1)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" class="dsb"/><text x="'+(16+sbp).toFixed(1)+'" y="'+(H-8)+'" class="dmsc">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
         const lk='<a class="dlmap" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+la.toFixed(5)+','+lo.toFixed(5)+'">'+la.toFixed(5)+', '+lo.toFixed(5)+'</a>';
         return '<svg viewBox="0 0 '+W+' '+H+'" class="dls" role="img">'+b+'</svg>'+lk};
       if(!DLBIG||Z.length<2)return panel(g,Z.length>1?'':'');
