@@ -700,13 +700,15 @@ header h1{position:relative;padding-top:1.07em}
 .dlk .k5{background:var(--good)}.dlk .kr{width:14px;height:0;border-top:2px dashed var(--ink);border-radius:0}
 .dlog-d{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.dlog-d select{-webkit-user-select:auto;user-select:auto}.dls{-webkit-tap-highlight-color:transparent}
 /* watch charts: use the width */
-.dlog-d.sheet-wide{width:min(1280px,calc(100vw - 16px))!important}
+.dlog-d.sheet-wide{width:min(1280px,calc(100vw - 16px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))!important}
 .dlog-d .sheet-in{padding:12px 10px}
 .dlog-d .dlg{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
 .dlog-d .dlc{padding:8px 4px 6px}.dlog-d .dlc figcaption{padding:0 4px}
 .dlog-d .dl1c{padding:6px 2px}
 .dlog-d .dlst{gap:6px}
-.dlog-d.sheet-wide{max-width:calc(100vw - 8px)}
+.dlog-d.sheet-wide{max-width:calc(100vw - 8px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}
+/* notch side in landscape: no window reaches under it */
+dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}
 @media (max-width:600px){.dlog-d.sheet-wide{width:calc(100vw - 8px)!important;margin-left:auto!important;margin-right:auto!important}.dlog-d .sheet-in{padding:10px 6px}.dlog-d .dl1h,.dlog-d .dl1t,.dlog-d .dlov,.dlog-d .dl1x{padding:0 6px}}
 @media (orientation:landscape) and (max-height:600px){.dlog-d.sheet-wide{max-height:calc(100dvh - 8px)}.dlog-d .sheet-in{padding:6px 10px;gap:6px;max-height:calc(100dvh - 10px)}.dlog-d .sheet-head h2{font-size:1rem}
   .dlog-d .dl1h{margin-bottom:2px}.dlog-d .dlnav{width:28px;height:28px}.dlog-d .dl1t{font-size:.95rem;margin:0 0 4px}.dlog-d .dlov{margin:0 0 4px;flex-wrap:nowrap;white-space:nowrap}.dlog-d .dlov select{padding:3px 6px}.dlog-d .dl1c{padding:2px}}
@@ -4162,7 +4164,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794673279';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794674519';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
@@ -5104,7 +5106,7 @@ function dlOne(L,k){DLREG=[];const big=innerWidth>=700;DLW=big?680:340;DLH=DLHF|
     '<div class="dl1x">'+(t('dlX')[k]?'<p>'+esc(t('dlX')[k])+'</p>':'')+(oj!=null&&t('dlX')[oj]?'<p>'+esc(t('dlX')[oj])+'</p>':'')+(ins.length?'<ul>'+ins.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>':'')+((c.dep||(oj!=null&&B.C[oj].dep))?'<p class="dlnote">'+esc(t('dlNote'))+'</p>':'')+'</div>'}
 function dlShow(k){const b=$('dlogBody');DLHF=0;b.innerHTML=k==null?dlogHtml(DLCUR):dlOne(DLCUR,k);b.dataset.k=k==null?'':k;$('dlogD').querySelector('.sheet-in').scrollTop=0;try{$('dlogD').scrollTop=0}catch(_){}
   /* phone turned sideways: squeeze the chart's height so it fits on screen without scrolling */
-  if(k!=null&&innerWidth>innerHeight&&innerHeight<600){const sv=b.querySelector('.dl1c svg'),c=b.querySelector('.dl1c');if(sv&&c){const r=sv.getBoundingClientRect(),extra=c.getBoundingClientRect().bottom-r.bottom,avail=innerHeight-r.top-extra-16;
+  if(k!=null&&innerWidth>innerHeight&&innerHeight<600){const sv=b.querySelector('.dl1c svg'),c=b.querySelector('.dl1c');if(sv&&c){const r=sv.getBoundingClientRect(),extra=c.getBoundingClientRect().bottom-r.bottom,dB=$('dlogD').getBoundingClientRect().bottom,avail=Math.min(innerHeight,dB)-r.top-extra-16;
     if(r.height>avail&&avail>60){DLHF=Math.max(110,Math.floor(DLH*avail/r.height));b.innerHTML=dlOne(DLCUR,k);DLHF=0}}}}
 let dlRz=0;addEventListener('resize',()=>{clearTimeout(dlRz);dlRz=setTimeout(()=>{const d=$('dlogD');if(!d||!d.open||!DLCUR)return;const k=$('dlogBody').dataset.k;dlShow(k===''?null:+k)},180)});
 function dlogOpen(e){if(!e||!e.dlog)return;DLCUR=e.dlog;$('dlogTitle').textContent=[e.spot,e.date?fmtDate(e.date):''].filter(Boolean).join(' · ');try{dlShow(null)}catch(err){$('dlogBody').textContent=String(err)}$('dlogD').showModal()}
