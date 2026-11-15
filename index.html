@@ -733,16 +733,18 @@ dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-in
 .dlmf,.dlmf-m,.dlmf-m *{touch-action:none}
 .gpin{line-height:0;cursor:pointer;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
 .gpin-l{background:none;border:0;line-height:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
-.dlmf-g{position:absolute;z-index:1000;right:calc(124px + env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));height:40px;padding:0 14px;border-radius:20px;display:grid;place-items:center;background:rgba(0,0,0,.65);color:#fff;font:600 13.5px var(--display,system-ui);text-decoration:none}
-.dlmf-fix{all:unset;cursor:pointer;position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));top:calc(12px + env(safe-area-inset-top,0px));height:40px;padding:0 14px;border-radius:20px;display:grid;place-items:center;background:rgba(0,0,0,.65);color:#fff;font:600 13.5px var(--display,system-ui)}
-.dlmf-fix[hidden]{display:none}
 .dlmf-cross{display:none;position:absolute;z-index:999;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.5)}
 .dlmf-cross::before,.dlmf-cross::after{content:"";position:absolute;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
 .dlmf-cross::before{left:50%;top:-12px;bottom:-12px;width:2px;margin-left:-1px}.dlmf-cross::after{top:50%;left:-12px;right:-12px;height:2px;margin-top:-1px}
 .dlmf.picking .dlmf-cross{display:block}
 .dlmf-bar{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.94);color:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;font-size:14px}
 .dlmf-bar[hidden]{display:none}.dlmf-bb{display:flex;gap:8px}
-.dlmf-sw{all:unset;cursor:pointer;position:absolute;z-index:1000;top:calc(10px + env(safe-area-inset-top,0px));right:calc(64px + env(safe-area-inset-right,0px));height:44px;padding:0 14px;border-radius:22px;display:grid;place-items:center;background:rgba(0,0,0,.6);color:#fff;font:700 14px var(--display,system-ui)}
+.dlmf-top{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(64px + env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));display:flex;flex-wrap:wrap;gap:8px;pointer-events:none}
+.dlmf-top>*{all:unset;pointer-events:auto;cursor:pointer;box-sizing:border-box;height:40px;padding:0 14px;border-radius:20px;display:grid;place-items:center;background:rgba(0,0,0,.65);color:#fff;font:600 13.5px var(--display,system-ui);white-space:nowrap;text-decoration:none}
+.dlmf-top>[hidden]{display:none}
+.dlmf-z{position:absolute;z-index:1000;right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px}
+.dlmf-z>button{all:unset;cursor:pointer;box-sizing:border-box;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.65);color:#fff;font:600 24px/1 system-ui,sans-serif}
+.dlmf-z>.dlmf-sw{font:700 14px var(--display,system-ui)}
 .dlmf-i{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.92);color:#fff;border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.45}
 .dlmf-x{all:unset;cursor:pointer;position:absolute;z-index:1000;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(10,30,38,.85);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4)}
 .dlmf .leaflet-top.leaflet-left{top:env(safe-area-inset-top,0px);left:env(safe-area-inset-left,0px)}
@@ -2751,8 +2753,8 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
 
 
 /* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
-Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',geoLook:'A procurar no mapa…',fixBtn:'📍 Corrigir ponto',fixHint:'Mova o mapa até o ponto exato ficar na mira.',fixSave:'Guardar',fixCancel:'Cancelar',fixDone:'Coordenadas guardadas na entrada.',geoMiss2:'Não encontrei este local. Mova o mapa até ao ponto e toque em Guardar.',geoMiss:'Não encontrei este local. Abra no Google Maps (botão em cima) ou adicione coordenadas à caçada.',accSetH:'Definições da conta',fwHint:'A app marca como janela de pesca o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a janela mínima. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwMin:'Janela mínima',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
-Object.assign(T.en,{fwSetH:'Sea & weather settings',geoLook:'Looking it up on the map…',fixBtn:'📍 Fix the spot',fixHint:'Move the map so the exact spot is under the crosshair.',fixSave:'Save',fixCancel:'Cancel',fixDone:'Coordinates saved to the entry.',geoMiss2:'Couldn\'t find this place. Move the map to the spot and tap Save.',geoMiss:'Couldn\'t find this place. Open it in Google Maps (button at the top) or add coordinates to the entry.',accSetH:'Account settings',fwHint:'The app marks as a hunting window the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest window. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwMin:'Shortest window',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
+Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',geoLook:'A procurar no mapa…',fixBtn:'📍 Corrigir',fixHint:'Mova o mapa até o ponto exato ficar na mira.',fixSave:'Guardar',fixCancel:'Cancelar',fixDone:'Coordenadas guardadas na entrada.',geoMiss2:'Não encontrei este local. Mova o mapa até ao ponto e toque em Guardar.',geoMiss:'Não encontrei este local. Abra no Google Maps (botão em cima) ou adicione coordenadas à caçada.',accSetH:'Definições da conta',fwHint:'A app marca como janela de pesca o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a janela mínima. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwMin:'Janela mínima',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
+Object.assign(T.en,{fwSetH:'Sea & weather settings',geoLook:'Looking it up on the map…',fixBtn:'📍 Fix spot',fixHint:'Move the map so the exact spot is under the crosshair.',fixSave:'Save',fixCancel:'Cancel',fixDone:'Coordinates saved to the entry.',geoMiss2:'Couldn\'t find this place. Move the map to the spot and tap Save.',geoMiss:'Couldn\'t find this place. Open it in Google Maps (button at the top) or add coordinates to the entry.',accSetH:'Account settings',fwHint:'The app marks as a hunting window the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest window. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwMin:'Shortest window',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
 const FW_DEF={w:5/0.514444,v:1,p:8,h:2};
 function fwGet(){try{const o=JSON.parse(localStorage.getItem('sn-fcwin2')||'null');return Object.assign({},FW_DEF,o||{})}catch(e){return Object.assign({},FW_DEF)}}
 function fwSave(o){try{localStorage.setItem('sn-fcwin2',JSON.stringify(o))}catch(e){}}
@@ -4271,7 +4273,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794739110';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794739816';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
@@ -5263,13 +5265,15 @@ function pinSvg(p){const r=p.r,h=r/2,fs=Math.round(r*.46);return '<svg xmlns="ht
 function pinEl(p){const d=document.createElement('div');d.className='gpin';d.innerHTML=pinSvg(p);return d}
 function mapOverlay(host,ext){dlMapClose();const o=document.createElement('div');o.className='dlmf';
   o.innerHTML='<div class="dlmf-m"></div><button type="button" class="dlmf-x" aria-label="'+esc(t('dlMapClose'))+'"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'
-    +(ext?'<a class="dlmf-g" href="'+esc(ext)+'" target="_blank" rel="noopener">Google Maps ↗</a>':'')+'<div class="dlmf-i" hidden></div>';
-  host.appendChild(o);o.querySelector('.dlmf-x').addEventListener('click',dlMapClose);return o}
+    +'<div class="dlmf-top">'+(ext?'<a class="dlmf-g" href="'+esc(ext)+'" target="_blank" rel="noopener">Google Maps ↗</a>':'')+'</div>'
+    +'<div class="dlmf-z"><button type="button" data-z="1" aria-label="+">+</button><button type="button" data-z="-1" aria-label="−">−</button></div><div class="dlmf-i" hidden></div>';
+  host.appendChild(o);o.querySelector('.dlmf-x').addEventListener('click',dlMapClose);
+  o.querySelectorAll('[data-z]').forEach(b=>b.addEventListener('click',()=>{o._zoom&&o._zoom(+b.dataset.z)}));return o}
 /* pts: [{lat,lng,c,r,g,dim,z,info}], sel: indexes to frame; info0: text shown at start */
 function mapView(o,pts,sel,info0,far){if(!o.isConnected)return;if(dlMap){try{dlMap.remove()}catch(_){}dlMap=null}
   const box=o.querySelector('.dlmf-m'),info=o.querySelector('.dlmf-i'),mode=gMode();box.innerHTML='';o._re=()=>mapView(o,pts,sel,info0,far);o._center=null;
   const say=h=>{info.innerHTML=h;info.hidden=!h};say(info0||'');
-  let sw=o.querySelector('.dlmf-sw');if(typeof GKEY!=='undefined'&&GKEY){if(!sw){sw=document.createElement('button');sw.type='button';sw.className='dlmf-sw';o.appendChild(sw)}
+  o._zoom=null;let sw=o.querySelector('.dlmf-sw');if(typeof GKEY!=='undefined'&&GKEY){if(!sw){sw=document.createElement('button');sw.type='button';sw.className='dlmf-sw';o.querySelector('.dlmf-z').prepend(sw)}
     sw.textContent=mode==='3d'?'2D':'3D';sw.onclick=()=>{G3OFF=false;try{localStorage.setItem('sn-map3d',mode==='3d'?'0':'1')}catch(_){}mapView(o,pts,sel,info0,far)}}
   const F=sel.length?sel.map(i=>pts[i]):[{lat:(o._far||[39.6])[0],lng:(o._far||[0,-8.4])[1]}],la=F.reduce((a,x)=>a+x.lat,0)/F.length,ln=F.reduce((a,x)=>a+x.lng,0)/F.length,
     spread=Math.max(0,...F.map(x=>Math.hypot((x.lat-la)*111e3,(x.lng-ln)*111e3*Math.cos(la*Math.PI/180))));
@@ -5281,13 +5285,13 @@ function mapView(o,pts,sel,info0,far){if(!o.isConnected)return;if(dlMap){try{dlM
       pts.forEach(p=>{const mk=new Marker3DInteractiveElement({position:{lat:p.lat,lng:p.lng,altitude:0},altitudeMode:AltitudeMode?AltitudeMode.CLAMP_TO_GROUND:'CLAMP_TO_GROUND',zIndex:p.z||0});
         const tp=document.createElement('template'),im=document.createElement('img');im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(pinSvg(p));im.width=p.r;im.height=p.r;tp.content.append(im);mk.append(tp);
         mk.addEventListener('gmp-click',()=>say(p.info));m.append(mk)});
-      m.addEventListener('gmp-click',()=>{if(!o.classList.contains('picking'))say('')});box.appendChild(m);o._center=()=>{const c=m.center;return c?{lat:c.lat,lng:c.lng}:null}}).catch(fail);return}
+      m.addEventListener('gmp-click',()=>{if(!o.classList.contains('picking'))say('')});box.appendChild(m);o._center=()=>{const c=m.center;return c?{lat:c.lat,lng:c.lng}:null};o._zoom=d=>{m.range=Math.max(120,Math.min(3e6,(m.range||1000)*(d>0?.5:2)))}}).catch(fail);return}
   if(mode==='2d'){dlGLoad().then(()=>Promise.all([google.maps.importLibrary('maps'),google.maps.importLibrary('marker')])).then(([MM,MK])=>{if(!o.isConnected)return;
-      const m=new MM.Map(box,{center:{lat:la,lng:ln},zoom:far?7:17,mapTypeId:'hybrid',mapId:'DEMO_MAP_ID',gestureHandling:'greedy',disableDefaultUI:true,zoomControl:true,clickableIcons:false,tilt:0});
+      const m=new MM.Map(box,{center:{lat:la,lng:ln},zoom:far?7:17,mapTypeId:'hybrid',mapId:'DEMO_MAP_ID',gestureHandling:'greedy',disableDefaultUI:true,zoomControl:false,clickableIcons:false,tilt:0});
       pts.forEach(p=>{const mk=new MK.AdvancedMarkerElement({map:m,position:{lat:p.lat,lng:p.lng},content:pinEl(p),zIndex:p.z||0});mk.addListener('click',()=>say(p.info))});
-      m.addListener('click',()=>{if(!o.classList.contains('picking'))say('')});o._center=()=>{const c=m.getCenter();return {lat:c.lat(),lng:c.lng()}};
+      m.addListener('click',()=>{if(!o.classList.contains('picking'))say('')});o._center=()=>{const c=m.getCenter();return {lat:c.lat(),lng:c.lng()}};o._zoom=d=>m.setZoom(m.getZoom()+d);
       if(F.length>1){const b=new google.maps.LatLngBounds();F.forEach(x=>b.extend({lat:x.lat,lng:x.lng}));m.fitBounds(b,60)}}).catch(fail);return}
-  dlLeaf().then(L=>{if(!o.isConnected)return;const m=L.map(box,{zoomControl:true,attributionControl:true});dlMap=m;
+  dlLeaf().then(L=>{if(!o.isConnected)return;const m=L.map(box,{zoomControl:false,attributionControl:true});dlMap=m;o._zoom=d=>d>0?m.zoomIn():m.zoomOut();
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(m);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,opacity:.9}).addTo(m);
     pts.forEach(p=>{const ic=L.divIcon({className:'gpin-l',html:pinSvg(p),iconSize:[p.r,p.r],iconAnchor:[p.r/2,p.r/2]});L.marker([p.lat,p.lng],{icon:ic,zIndexOffset:p.z||0}).addTo(m).on('click',()=>say(p.info))});
@@ -5296,10 +5300,10 @@ function mapView(o,pts,sel,info0,far){if(!o.isConnected)return;if(dlMap){try{dlM
 /* one place on the map, inside the app; Google Maps button for directions */
 function spotMapOpen(lat,lng,title,eid,far){const o=mapOverlay(document.querySelector('dialog[open]')||document.body,far?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(title||''):'https://www.google.com/maps/search/?api=1&query='+lat.toFixed(6)+','+lng.toFixed(6));
   const inf=(title?'<b>'+esc(title)+'</b><br>':'')+(far?esc(t('geoMiss2')):'<span style="opacity:.75">'+lat.toFixed(5)+', '+lng.toFixed(5)+'</span>');
-  mapView(o,far?[]:[{lat,lng,c:'#0C8A9C',r:30,info:inf}],far?[]:[0],inf,far);
+  mapView(o,far?[]:[{lat,lng,c:'#0C8A9C',r:20,info:inf}],far?[]:[0],inf,far);
   if(far){o._far=[lat,lng]}
   /* fix the point: move the map under the crosshair and save the centre into the entry's GPS field */
-  if(eid&&store&&entries.some(e=>e.id===eid)){const fx=document.createElement('button');fx.type='button';fx.className='dlmf-fix';fx.textContent=t('fixBtn');o.appendChild(fx);
+  if(eid&&store&&entries.some(e=>e.id===eid)){const fx=document.createElement('button');fx.type='button';fx.className='dlmf-fix';fx.textContent=t('fixBtn');o.querySelector('.dlmf-top').prepend(fx);
     const cross=document.createElement('div');cross.className='dlmf-cross';o.appendChild(cross);
     const bar=document.createElement('div');bar.className='dlmf-bar';bar.hidden=true;bar.innerHTML='<span>'+esc(t('fixHint'))+'</span><span class="dlmf-bb"><button type="button" class="btn sm" data-x>'+esc(t('fixCancel'))+'</button><button type="button" class="btn sm primary" data-s>'+esc(t('fixSave'))+'</button></span>';o.appendChild(bar);
     const on=v=>{o.classList.toggle('picking',v);bar.hidden=!v;fx.hidden=v;const i=o.querySelector('.dlmf-i');if(v)i.hidden=true};
@@ -5326,7 +5330,7 @@ document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.clos
 function dlMapOpen(ids){const L0=DLCUR;if(!L0)return;const D=L0.dv||[],sel=String(ids||'').split(',').map(Number).filter(i=>D[i]&&D[i].lat!=null);if(!sel.length)return;
   const mxD=Math.max(...D.map(x=>x.max)),tm=s=>{const d=new Date(L0.t0+s*1000);return String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')};
   const pts=[],idx=[];D.forEach((x,i)=>{if(x.lat==null)return;const q=x.max/mxD;idx[i]=pts.length;
-    pts.push({lat:x.lat,lng:x.lng,g:String(i+1),r:Math.round(24+q*10),c:'hsl(195 75% '+Math.round(58-q*30)+'%)',dim:!sel.includes(i),z:Math.round(q*100),
+    pts.push({lat:x.lat,lng:x.lng,g:String(i+1),r:Math.round(20+q*8),c:'hsl(195 75% '+Math.round(58-q*30)+'%)',dim:!sel.includes(i),z:Math.round(q*100),
       info:'<b>'+esc(t('dlDive'))+' #'+(i+1)+'</b> · '+tm(x.s)+'<br>'+esc(t('dlDepth'))+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'<br><span style="opacity:.75">'+x.lat.toFixed(5)+', '+x.lng.toFixed(5)+'</span>'})});
   const o=mapOverlay($('dlogD'),'');mapView(o,pts,sel.map(i=>idx[i]),'')}
 function dlSetSync(){const w=$('dlSetBody');if(!w)return;const h=dlHid();w.querySelectorAll('input[data-dl]').forEach(c=>{c.checked=!h.includes(+c.dataset.dl)})}
