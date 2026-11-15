@@ -5197,7 +5197,7 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
         if(tilesOK){let im='';const n=2**z;for(let tx=Math.floor(L/256);tx<=Math.floor((L+W)/256);tx++)for(let ty=Math.floor(T/256);ty<=Math.floor((T+H)/256);ty++){if(ty<0||ty>=n)continue;const xx=((tx%n)+n)%n;
             im+='<image href="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/'+z+'/'+ty+'/'+xx+'" x="'+(tx*256-L).toFixed(1)+'" y="'+(ty*256-T).toFixed(1)+'" width="256.6" height="256.6" preserveAspectRatio="none"/>'}
           /* Google satellite (Maps Static API) on top when the site has a key; Esri stays underneath as a fallback if Google doesn't load. */
-          let gi='';if(typeof GKEY!=='undefined'&&GKEY&&z>1&&H<=640){const N=256*2**z,clat=Math.atan(Math.sinh(Math.PI*(1-2*(T+H/2)/N)))*180/Math.PI,n=Math.ceil(W/640),sw=Math.ceil(W/n);
+          let gi='';if(GSTATIC&&typeof GKEY!=='undefined'&&GKEY&&z>1&&H<=640){const N=256*2**z,clat=Math.atan(Math.sinh(Math.PI*(1-2*(T+H/2)/N)))*180/Math.PI,n=Math.ceil(W/640),sw=Math.ceil(W/n);
             /* same zoom as the points, 2× pixels (sharp on phones); wide panels are split into strips of ≤640 px (the Static API limit) */
             for(let k=0;k<n;k++){const clng=(L+k*sw+sw/2)/N*360-180;
               gi+='<image href="'+esc('https://maps.googleapis.com/maps/api/staticmap?center='+clat.toFixed(6)+','+clng.toFixed(6)+'&zoom='+z+'&size='+sw+'x'+Math.ceil(H)+'&scale=2&maptype=satellite&key='+GKEY)+'" data-gw="'+(sw*2)+'" x="'+(k*sw)+'" y="0" width="'+(sw+.6)+'" height="'+Math.ceil(H)+'" preserveAspectRatio="none"/>'}}
@@ -5208,7 +5208,7 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
         /* scale bar: top-right when Google's logo sits in the bottom-left corner */
         /* Google-style: label, then a thin line with a short tick at its right end */
         const sbl=sb>=1000?fmt(sb/1000)+' km':sb+' m',sbx=(x,y)=>'<path d="M'+x.toFixed(1)+' '+y+'H'+(x+sbp).toFixed(1)+'V'+(y-5)+'" class="dsb" fill="none"/>';
-        if(tilesOK&&typeof GKEY!=='undefined'&&GKEY)b+='<text x="'+(W-16-sbp).toFixed(1)+'" y="'+17+'" class="dmsc" style="text-anchor:end">'+sbl+'</text>'+sbx(W-12-sbp,18);
+        if(tilesOK&&GSTATIC&&typeof GKEY!=='undefined'&&GKEY)b+='<text x="'+(W-16-sbp).toFixed(1)+'" y="'+17+'" class="dmsc" style="text-anchor:end">'+sbl+'</text>'+sbx(W-12-sbp,18);
         else b+='<text x="12" y="'+(H-9)+'" class="dmsc">'+sbl+'</text>'+sbx(16+sbl.length*5.2,H-8);
         const lk='<a class="dlmap" target="_blank" rel="noopener" data-ll="'+la.toFixed(6)+','+lo.toFixed(6)+'" href="https://www.google.com/maps/search/?api=1&query='+la.toFixed(5)+','+lo.toFixed(5)+'">'+la.toFixed(5)+', '+lo.toFixed(5)+'</a>';
         return '<svg viewBox="0 0 '+W+' '+H+'" class="dls'+(tilesOK&&DLBIG?' dlmapo':'')+'" role="img"'+(tilesOK&&DLBIG?' data-mapo="'+esc(G.map(x=>D.indexOf(x)).join(','))+'"':'')+'>'+b+'</svg>'+lk};
@@ -5359,6 +5359,9 @@ function dlMapOpen(ids){const L0=DLCUR;if(!L0)return;const D=L0.dv||[],sel=Strin
 function dlSetSync(){const w=$('dlSetBody');if(!w)return;const h=dlHid();w.querySelectorAll('input[data-dl]').forEach(c=>{c.checked=!h.includes(+c.dataset.dl)})}
 function dlSetBuild(){const w=$('dlSetBody');if(!w)return;const T=t('dlT');w.innerHTML=dlOrd().filter(i=>T[i]).map(i=>'<label class="chk"><input type="checkbox" data-dl="'+i+'"><span>'+esc(T[i])+'</span></label>').join('');dlSetSync()}
 /* Google answers a refused Static Maps request (key restriction, quota) with a placeholder picture of another size: drop those so the Esri imagery underneath shows */
+/* Google Static Maps satellite is not offered to accounts billed in the EEA (Portugal included; Google's EEA terms, July 2025): previews stay on Esri imagery.
+   Live maps use the Maps JavaScript API, where satellite and 3D remain available. */
+var GSTATIC=false;
 const GST={};function gstCheck(root){root.querySelectorAll('image[data-gw]').forEach(el=>{const u=el.getAttribute('href'),w=+el.dataset.gw,ok=v=>{GST[u]=v;if(!v)el.remove()};
   if(u in GST){if(!GST[u])el.remove();return}const i=new Image();i.onload=()=>ok(i.naturalWidth===w);i.onerror=()=>ok(false);i.src=u})}
 function dlShow(k){const b=$('dlogBody');DLHF=0;b.innerHTML=k==null?dlogHtml(DLCUR):dlOne(DLCUR,k);gstCheck(b);b.dataset.k=k==null?'':k;$('dlogD').querySelector('.sheet-in').scrollTop=0;try{$('dlogD').scrollTop=0}catch(_){}

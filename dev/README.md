@@ -64,7 +64,7 @@ Auth uses email + password. Auth emails go out through a custom SMTP sender (the
 - Chart settings: hidden charts `sn-dlhide` (Settings → Definições dos gráficos).
 - Maps (site only): `mapOverlay` + `mapView` (Google 3D / Google 2D satellite / Leaflet+Esri fallback, round markers `pinSvg`). Dive map `dlMapOpen`; spot map `spotMapOpen` from links with `data-ll`; name-only spots (`data-q`) are found with the Google Geocoder (needs Geocoding API on the key) and cached in `sn-geo2`; forecast spots (`fcSpots`) win, then Portugal-only search, then worldwide. "Corrigir ponto" (crosshair) saves the map centre into the entry's `gps`.
   Google photorealistic 3D (`dlGLoad`/`dlG3`, key `GKEY`, restricted in Google Cloud to `https://spearodiary.github.io/*`, Maps JavaScript API) with a 2D/3D switch (`sn-map3d`);
-  falls back to Leaflet + Esri imagery if Google fails (`G3OFF`, not saved). Test pages: `dev/map3d.html`, `dev/maptest.html` (bathymetry layers), `dev/navionics.html` (needs a Navionics key).
+  falls back to Leaflet + Esri imagery if Google fails (`G3OFF`, not saved). Previews stay on Esri: Google Static Maps satellite is not available to EEA-billed accounts (`GSTATIC=false`). Test pages: `dev/static-test.html`, `dev/map3d.html`, `dev/maptest.html` (bathymetry layers), `dev/navionics.html` (needs a Navionics key).
 - Social: `soMePage`, `soTagged`, `soShare`, `postSet`/`onBtn`/`canOnOff` (online/offline per post).
 - Share image: `scOpen`/`scPaint`; avatar crop `avCrop`.
 - Phone: windows pin the page behind them (body lock) and start under the status band.
