@@ -3282,6 +3282,8 @@ $('eNotes').addEventListener('change',runFix);
 $('fixBtn').addEventListener('click',runFix);
 $('fixUndo').addEventListener('click',()=>{if(fixPrev!=null){$('eNotes').value=fixPrev;fixState(null)}});
 function drawPhotos(){$('ePhotos').innerHTML=form.photos.map(p=>'<div><img alt="" src="'+esc(tblob(p))+'" data-full="'+esc(blob(p))+'" data-id="'+esc(p)+'"><button type="button" aria-label="×" data-rm="'+esc(p)+'">×</button></div>').join('')}
+function lastGear(){const has=e=>e.gear||(e.guns||[]).length||e.lastro!=null||e.poita!=null||e.colete!=null;
+  return entries.filter(has).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||(b.createdAt||0)-(a.createdAt||0))[0]||null}
 function openForm(e,id){
   const x=e||{};form.id=id||null;form.original=id?x:null;form.photos=(x.photos||[]).slice();form.mood=x.mood||'';form.shots=(x.shots||[]).map(q=>({...q}));confirmDel=false;fixState(null);$('tideHint').hidden=true;
   $('dlgTitle').textContent=t(id?'editEntry':'newEntry');$('eDelete').hidden=!id;$('eHist').hidden=!id;$('eHist').open=false;$('eHistList').innerHTML='';$('eDelete').innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.500 7l1 12.500a2 2 0 0 0 2 1.500h7a2 2 0 0 0 2-1.500l1-12.500M9 7V4.500h6V7"/></svg>';
@@ -3290,6 +3292,9 @@ function openForm(e,id){
   set('eIn',x.timeIn);set('eOut',x.timeOut);setTimeout(sessDur,0);$('eNoShare').checked=!!(x.noShare||x.postOff);set('eTideIn',tidesOf(x)[0]);set('eTideOut',tidesOf(x)[1]);set('eCurrent',x.current);set('eDir',x.currentDir);set('eWeather',x.weather);set('eSea',x.sea);set('eWind',x.wind);set('eGear',x.gear);set('eNotes',x.notes);set('eTags',(x.tags||[]).join(', '));$('eNoShare').checked=!!x.noShare;$('eNoShareL').hidden=!shMe;
   windOpt(x.wind);set('eWind',x.wind);set('eTempDeep',decS(x.tempDeep));set('eThermo',decS(x.thermo));set('eLastro',decS(x.lastro));set('ePoita',decS(x.poita));set('eColete',decS(x.colete));set('eNeutral',decS(x.neutral));set('eApnea',apneaF(x.apnea));set('eFeel',x.feel);set('eEq',x.equal);set('eTactic',x.tactic);set('eErrNote',x.errNote);set('eLesson',x.lesson);
   form.access=x.access||'';drawAccess();form.errs=[];{const ol=(x.errors||[]).filter(k=>ERRS.includes(k)).map(k=>t('er_'+k)).join(', ');if(ol)$('eErrNote').value=[ol,x.errNote].filter(Boolean).join('. ')}drawGuns(x.guns&&x.guns.length?x.guns:['']);
+  /* new entry: equipment copied from the most recent entry that has any */
+  if(!id){const L=lastGear();if(L){if(!x.gear&&L.gear)set('eGear',L.gear);if(!(x.guns&&x.guns.length)&&L.guns&&L.guns.length)drawGuns(L.guns.slice());
+    [['lastro','eLastro'],['poita','ePoita'],['colete','eColete']].forEach(([k,i])=>{if(x[k]==null&&L[k]!=null)set(i,decS(L[k]))})}}
   $('eCatches').innerHTML='';(x.catches&&x.catches.length?x.catches:[null]).forEach(catchRow);
   document.querySelectorAll('#entryForm details.esec').forEach(d=>d.open=false);cfApply();setType('dive');drawPhotos();drawShots();drawMoods();gpsHint();spotHint();$('ePhotoInput').value='';form.dlog=x.dlog||null;dlogChip();
   $('dlg').showModal();
@@ -4273,7 +4278,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794739816';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794739932';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
