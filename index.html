@@ -4263,7 +4263,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794737482';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794738240';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
@@ -5285,13 +5285,16 @@ function spotMapOpen(lat,lng,title){const o=mapOverlay(document.querySelector('d
   const inf=(title?'<b>'+esc(title)+'</b><br>':'')+'<span style="opacity:.75">'+lat.toFixed(5)+', '+lng.toFixed(5)+'</span>';
   mapView(o,[{lat,lng,c:'#0C8A9C',r:30,info:inf}],[0],inf)}
 /* a place known only by name: find it with Google (biased to Portugal), remember the answer, then open the in-app map */
-function geoGet(q){try{return (JSON.parse(localStorage.getItem('sn-geo')||'{}'))[norm(q)]||null}catch(_){return null}}
-function geoPut(q,v){try{const m=JSON.parse(localStorage.getItem('sn-geo')||'{}');m[norm(q)]=v;localStorage.setItem('sn-geo',JSON.stringify(m))}catch(_){}}
-function spotFind(q,href){const hit=geoGet(q);if(hit){spotMapOpen(hit[0],hit[1],q);return}
+function geoGet(q){try{return (JSON.parse(localStorage.getItem('sn-geo2')||'{}'))[norm(q)]||null}catch(_){return null}}
+function geoPut(q,v){try{const m=JSON.parse(localStorage.getItem('sn-geo2')||'{}');m[norm(q)]=v;localStorage.setItem('sn-geo2',JSON.stringify(m))}catch(_){}}
+function spotFind(q,href){try{const k=fcSpots().find(x=>norm(x.name)===norm(q));if(k){spotMapOpen(k.lat,k.lon,q);return}}catch(_){}
+  const hit=geoGet(q);if(hit){spotMapOpen(hit[0],hit[1],q);return}
   const o=mapOverlay(document.querySelector('dialog[open]')||document.body,href||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q));
   const info=o.querySelector('.dlmf-i');info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoLook'));info.hidden=false;
   const miss=()=>{if(!o.isConnected)return;info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoMiss'))};
-  dlGLoad().then(()=>google.maps.importLibrary('geocoding')).then(({Geocoder})=>new Geocoder().geocode({address:q,region:'pt'})).then(r=>{
+  /* Portugal first (strict); only if nothing there, anywhere */
+  dlGLoad().then(()=>google.maps.importLibrary('geocoding')).then(async({Geocoder})=>{const G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:'PT'}})}catch(_){}
+    if(!r||!r.results||!r.results.length||r.results[0].types.includes('country')){try{r=await G.geocode({address:q,region:'pt'})}catch(_){r=null}}return r}).then(r=>{
     const g=r&&r.results&&r.results[0];if(!g){miss();return}const la=g.geometry.location.lat(),ln=g.geometry.location.lng();geoPut(q,[la,ln]);
     if(o.isConnected){o.remove();spotMapOpen(la,ln,q)}}).catch(miss)}
 document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.closest('a[data-ll],a[data-q]');if(!a)return;
