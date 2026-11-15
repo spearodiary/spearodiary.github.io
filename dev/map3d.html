@@ -19,6 +19,10 @@ if(key)$('key').value=key;
 /* demo points near Cabo Raso */
 const PTS=[{n:'Cabo Raso',lat:38.7093,lng:-9.4857},{n:'Guincho',lat:38.7285,lng:-9.4757},{n:'Boca do Inferno',lat:38.6913,lng:-9.4310}];
 window.gm_authFailure=()=>msg('A chave foi recusada pela Google (ver restrições da chave e se a faturação está ativa).');
+const EX={ApiNotActivatedMapError:'A API «Maps JavaScript API» não está ativada no projeto.',RefererNotAllowedMapError:'Este endereço não está nas restrições da chave (use https://spearodiary.github.io/*).',InvalidKeyMapError:'Chave inválida (copie-a de novo).',BillingNotEnabledMapError:'A faturação não está ativa no projeto.',ApiTargetBlockedMapError:'A restrição de APIs da chave não inclui a Maps JavaScript API.',MissingKeyMapError:'Falta a chave.',ExpiredKeyMapError:'Chave expirada.'};
+function catchErr(...a){const t=a.map(String).join(' ');const m=t.match(/([A-Za-z]+MapError)/);if(m){$('k').style.display='flex';msg((EX[m[1]]||'Erro da Google')+' ['+m[1]+']')}}
+['error','warn'].forEach(f=>{const o=console[f].bind(console);console[f]=(...a)=>{try{catchErr(...a)}catch(_){}o(...a)}});
+window.addEventListener('error',e=>catchErr(e.message));
 async function open(){key=$('key').value.trim();if(!key){msg('Falta a chave.');return}
   try{localStorage.setItem('sn-gkey',key)}catch(_){}
   msg('A carregar…');
@@ -29,7 +33,7 @@ async function open(){key=$('key').value.trim();if(!key){msg('Falta a chave.');r
     const {Map3DElement,Marker3DElement,MapMode}=await google.maps.importLibrary('maps3d');
     const m=new Map3DElement({center:{lat:38.7093,lng:-9.4857,altitude:0},range:1800,tilt:62,heading:110,mode:MapMode?MapMode.SATELLITE:'SATELLITE'});
     PTS.forEach(p=>{const mk=new Marker3DElement({position:{lat:p.lat,lng:p.lng},label:p.n});m.append(mk)});
-    $('map').innerHTML='';$('map').append(m);$('k').style.display='none';
+    $('map').innerHTML='';$('map').append(m);msg('');setTimeout(()=>{if(!$('msg').textContent)$('k').style.display='none'},4000);
   }catch(e){msg('Erro: '+e.message)}}
 $('go').onclick=open;if(key)window.addEventListener('load',open);
 </script>
