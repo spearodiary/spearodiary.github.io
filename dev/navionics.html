@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Teste Navionics</title>
+<link rel="stylesheet" href="https://webapiv2.navionics.com/dist/webapi/webapi.min.no-dep.css">
+<style>
+html,body{margin:0;height:100%;background:#0b1a22;color:#e8f1f3;font:14px system-ui,-apple-system,sans-serif}
+#map{position:absolute;inset:0}
+#k{position:absolute;z-index:10;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));background:#11303aee;border-radius:12px;padding:10px 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#k input{flex:1;min-width:180px;padding:8px;border-radius:8px;border:1px solid #2b5562;background:#0b1a22;color:#e8f1f3}
+#k button{padding:8px 12px;border-radius:8px;border:0;background:#5cc6d0;color:#06222a;font-weight:700}
+#msg{flex-basis:100%;font-size:12.5px;color:#f6a08f}
+</style></head><body>
+<div id="map"></div>
+<div id="k"><input id="key" placeholder="Chave Navionics (Navionics_webapi_…)" autocomplete="off"><button id="go">Abrir</button><span id="msg"></span></div>
+<script src="https://webapiv2.navionics.com/dist/webapi/webapi.min.no-dep.js"></script>
+<script>
+const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t;
+let key=new URLSearchParams(location.search).get('key');
+try{key=key||localStorage.getItem('sn-navkey')}catch(_){}
+if(key)$('key').value=key;
+function open(){key=$('key').value.trim();if(!key){msg('Falta a chave.');return}
+  try{localStorage.setItem('sn-navkey',key)}catch(_){}
+  if(typeof JNC==='undefined'){msg('A biblioteca da Navionics não carregou.');return}
+  $('map').innerHTML='';msg('');
+  try{
+    const w=new JNC.Views.BoatingNavionicsMap({tagId:'#map',center:[-9.486,38.709],zoom:14,navKey:key,depthUnit:JNC.DEPTH_UNIT?JNC.DEPTH_UNIT.METERS:undefined,
+      SonarControl:true,LayerControl:true,ZoomControl:true,DistanceControl:true,DepthUnitControl:false,DistanceUnitControl:false});
+    window.nav=w;
+    if(w.onMapReady)w.onMapReady(()=>{try{w.showSonarcharts&&w.showSonarcharts()}catch(_){}$('k').style.display='none'});
+    setTimeout(()=>{if($('k').style.display!=='none')msg('Se o mapa ficou vazio, a chave não é válida para este endereço.')},6000);
+  }catch(e){msg('Erro: '+e.message)}}
+$('go').onclick=open;if(key)window.addEventListener('load',open);
+</script>
+</body></html>
