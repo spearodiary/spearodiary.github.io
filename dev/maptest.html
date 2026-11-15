@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Teste de mapas de fundo</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body{margin:0;height:100%;background:#0b1a22;color:#e8f1f3;font:14px system-ui,-apple-system,sans-serif}
+#map{position:absolute;inset:0}
+.box{position:absolute;z-index:1000;left:max(8px,env(safe-area-inset-left));top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}
+.box>*{pointer-events:auto}
+.box button{background:#11303a;color:#e8f1f3;border:1px solid #2b5562;border-radius:999px;padding:7px 11px;font:600 13px inherit}
+.box button.on{background:#5cc6d0;color:#06222a;border-color:#5cc6d0}
+#info{position:absolute;z-index:1000;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));background:#11303acc;border-radius:12px;padding:8px 12px;font-size:13px}
+.leaflet-control-attribution{font-size:10px}
+</style></head><body>
+<div id="map"></div>
+<div class="box" id="bases"></div>
+<div id="info">Toque no mapa para ver a profundidade (EMODnet).</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{zoomControl:false}).setView([38.709,-9.486],14);
+const esri='Imagem © Esri, Maxar, Earthstar Geographics';
+const B={
+ 'Satélite':L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,maxNativeZoom:18,attribution:esri}),
+ 'Oceano (Esri)':L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,maxNativeZoom:13,attribution:'© Esri, GEBCO, NOAA, Garmin'}),
+ 'Mapa':L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'})
+};
+const wms=(layer,o)=>L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms',Object.assign({layers:layer,format:'image/png',transparent:true,version:'1.1.1',attribution:'Batimetria © EMODnet'},o));
+const O={
+ 'Cores de profundidade (EMODnet)':wms('emodnet:mean_multicolour',{opacity:.55}),
+ 'Linhas de profundidade (EMODnet)':wms('emodnet:contours',{opacity:.9}),
+ 'Relevo do fundo (EMODnet)':wms('emodnet:mean_atlas_land',{opacity:.6}),
+ 'GEBCO (mundo)':L.tileLayer.wms('https://wms.gebco.net/mapserv',{layers:'GEBCO_LATEST',format:'image/png',transparent:true,opacity:.6,attribution:'© GEBCO'}),
+ 'Sinais náuticos (OpenSeaMap)':L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenSeaMap'})
+};
+let base='Satélite';B[base].addTo(map);O['Linhas de profundidade (EMODnet)'].addTo(map);
+const box=document.getElementById('bases');
+function btn(name,on,fn){const b=document.createElement('button');b.textContent=name;b.className=on?'on':'';b.onclick=()=>fn(b);box.appendChild(b);return b}
+const bb={};Object.keys(B).forEach(k=>bb[k]=btn(k,k===base,()=>{map.removeLayer(B[base]);base=k;B[k].addTo(map).bringToBack();Object.keys(bb).forEach(x=>bb[x].className=x===k?'on':'')}));
+Object.keys(O).forEach(k=>btn(k,map.hasLayer(O[k]),b=>{if(map.hasLayer(O[k])){map.removeLayer(O[k]);b.className=''}else{O[k].addTo(map);b.className='on'}}));
+// count failed tiles so we can tell which services do not load
+const bad={};Object.entries(O).concat(Object.entries(B)).forEach(([k,l])=>l.on('tileerror',()=>{bad[k]=(bad[k]||0)+1;showBad()}));
+function showBad(){const s=Object.entries(bad).map(([k,n])=>k+': '+n).join(' · ');document.getElementById('bad')?document.getElementById('bad').textContent=s:null}
+const info=document.getElementById('info');info.insertAdjacentHTML('beforeend','<div id="bad" style="color:#f6a08f"></div>');
+let mk=null;
+map.on('click',async e=>{const {lat,lng}=e.latlng;if(mk)map.removeLayer(mk);mk=L.circleMarker(e.latlng,{radius:6,color:'#f5b13d'}).addTo(map);
+ info.firstChild.textContent=lat.toFixed(5)+', '+lng.toFixed(5)+' · a procurar…';
+ try{const r=await fetch('https://rest.emodnet-bathymetry.eu/depth_sample?geom=POINT('+lng+'%20'+lat+')');const j=await r.json();
+  const d=j.avg!=null?j.avg:j.depth;info.firstChild.textContent=lat.toFixed(5)+', '+lng.toFixed(5)+' · profundidade média ≈ '+(d!=null?Math.abs(d).toFixed(1)+' m':'—')+' (célula de ~115 m)'}
+ catch(_){info.firstChild.textContent=lat.toFixed(5)+', '+lng.toFixed(5)+' · sem resposta do EMODnet'}});
+if(navigator.geolocation)btn('📍 Aqui',false,()=>navigator.geolocation.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],14)));
+</script>
+</body></html>
