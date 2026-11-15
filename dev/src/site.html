@@ -3250,10 +3250,20 @@ $('eShotInput').addEventListener('change',async ev=>{
 let heicLib=null;
 function loadHeic(){if(window.heic2any)return Promise.resolve();if(heicLib)return heicLib;heicLib=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';sc.onload=ok;sc.onerror=()=>{heicLib=null;no(new Error('load'))};document.head.append(sc)});return heicLib}
 async function prepImage(f){
-  if(!(/heic|heif/i.test(f.type)||/\.(heic|heif)$/i.test(f.name||'')))return f;
-  try{await loadHeic();const r=await window.heic2any({blob:f,toType:'image/jpeg',quality:.85});const b=Array.isArray(r)?r[0]:r;return new File([b],(f.name||'photo').replace(/\.(heic|heif)$/i,'')+'.jpg',{type:'image/jpeg'})}
-  catch(e){throw{code:'heic'}}
-}
+  if(/heic|heif/i.test(f.type)||/\.(heic|heif)$/i.test(f.name||'')){
+    try{await loadHeic();const r=await window.heic2any({blob:f,toType:'image/jpeg',quality:.85});const b=Array.isArray(r)?r[0]:r;f=new File([b],(f.name||'photo').replace(/\.(heic|heif)$/i,'')+'.jpg',{type:'image/jpeg'})}
+    catch(e){throw{code:'heic'}}}
+  return shrinkImage(f)}
+/* keep the stored original small: longest side at most 2560 px, JPEG 0.85; only used when it is actually smaller */
+async function shrinkImage(f,max=2560){
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)||f.size<400*1024)return f;
+  try{let bm=null,w,h;try{bm=await createImageBitmap(f,{imageOrientation:'from-image'})}catch(_){}
+    let src=bm;if(!src){src=await new Promise((res,rej)=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{URL.revokeObjectURL(u);res(i)};i.onerror=e=>{URL.revokeObjectURL(u);rej(e)};i.src=u})}
+    w=src.width||src.naturalWidth;h=src.height||src.naturalHeight;if(!w||!h)return f;const k=Math.min(1,max/Math.max(w,h));
+    const cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(src,0,0,cv.width,cv.height);if(bm&&bm.close)bm.close();
+    const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(!b||b.size>=f.size*.9)return f;
+    return new File([b],(f.name||'photo').replace(/\.(png|webp|jpe?g)$/i,'')+'.jpg',{type:'image/jpeg'})}
+  catch(_){return f}}
 /* Spelling: asks Claude to fix typos only, and always offers Undo */
 let sampler=null,fixPrev=null,fixPending=null;
 function fixState(k,canUndo){
