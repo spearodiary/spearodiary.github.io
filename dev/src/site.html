@@ -5194,7 +5194,7 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
           let gi='';if(typeof GKEY!=='undefined'&&GKEY&&z>1&&H<=640){const N=256*2**z,clat=Math.atan(Math.sinh(Math.PI*(1-2*(T+H/2)/N)))*180/Math.PI,n=Math.ceil(W/640),sw=Math.ceil(W/n);
             /* same zoom as the points, 2× pixels (sharp on phones); wide panels are split into strips of ≤640 px (the Static API limit) */
             for(let k=0;k<n;k++){const clng=(L+k*sw+sw/2)/N*360-180;
-              gi+='<image href="'+esc('https://maps.googleapis.com/maps/api/staticmap?center='+clat.toFixed(6)+','+clng.toFixed(6)+'&zoom='+z+'&size='+sw+'x'+Math.ceil(H)+'&scale=2&maptype=satellite&key='+GKEY)+'" x="'+(k*sw)+'" y="0" width="'+(sw+.6)+'" height="'+Math.ceil(H)+'" preserveAspectRatio="none"/>'}}
+              gi+='<image href="'+esc('https://maps.googleapis.com/maps/api/staticmap?center='+clat.toFixed(6)+','+clng.toFixed(6)+'&zoom='+z+'&size='+sw+'x'+Math.ceil(H)+'&scale=2&maptype=satellite&key='+GKEY)+'" data-gw="'+(sw*2)+'" x="'+(k*sw)+'" y="0" width="'+(sw+.6)+'" height="'+Math.ceil(H)+'" preserveAspectRatio="none"/>'}}
           b+='<g clip-path="url(#'+id+')">'+im+gi+'</g><text x="'+(W-6)+'" y="'+(H-5)+'" class="dattr">'+(gi?'Google · Esri':'Esri, Maxar, Earthstar Geographics')+'</text>'}
         if(lab)b+='<text x="10" y="17" class="dmlab">'+esc(lab)+'</text>';
         G.slice().sort((a,b)=>a.max-b.max).forEach(x=>{const q=x.max/mxD,k=D.indexOf(x)+1,px=X(x.lng),py=Y(x.lat);b+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+((5+q*6)*(DLBIG?1.3:1))+'" style="fill:hsl(195 75% '+(60-q*30)+'%)" class="dpt" data-t="'+dlA(t('dlDive')+' #'+k+' · '+tm(x.s)+'\n'+t('dlDepth')+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'\n'+x.lat.toFixed(5)+', '+x.lng.toFixed(5))+'"/><text x="'+px.toFixed(1)+'" y="'+(py+3.5).toFixed(1)+'" class="dmn">'+k+'</text>'});
@@ -5352,7 +5352,10 @@ function dlMapOpen(ids){const L0=DLCUR;if(!L0)return;const D=L0.dv||[],sel=Strin
   const o=mapOverlay($('dlogD'),'');mapView(o,pts,sel.map(i=>idx[i]),'')}
 function dlSetSync(){const w=$('dlSetBody');if(!w)return;const h=dlHid();w.querySelectorAll('input[data-dl]').forEach(c=>{c.checked=!h.includes(+c.dataset.dl)})}
 function dlSetBuild(){const w=$('dlSetBody');if(!w)return;const T=t('dlT');w.innerHTML=dlOrd().filter(i=>T[i]).map(i=>'<label class="chk"><input type="checkbox" data-dl="'+i+'"><span>'+esc(T[i])+'</span></label>').join('');dlSetSync()}
-function dlShow(k){const b=$('dlogBody');DLHF=0;b.innerHTML=k==null?dlogHtml(DLCUR):dlOne(DLCUR,k);b.dataset.k=k==null?'':k;$('dlogD').querySelector('.sheet-in').scrollTop=0;try{$('dlogD').scrollTop=0}catch(_){}
+/* Google answers a refused Static Maps request (key restriction, quota) with a placeholder picture of another size: drop those so the Esri imagery underneath shows */
+const GST={};function gstCheck(root){root.querySelectorAll('image[data-gw]').forEach(el=>{const u=el.getAttribute('href'),w=+el.dataset.gw,ok=v=>{GST[u]=v;if(!v)el.remove()};
+  if(u in GST){if(!GST[u])el.remove();return}const i=new Image();i.onload=()=>ok(i.naturalWidth===w);i.onerror=()=>ok(false);i.src=u})}
+function dlShow(k){const b=$('dlogBody');DLHF=0;b.innerHTML=k==null?dlogHtml(DLCUR):dlOne(DLCUR,k);gstCheck(b);b.dataset.k=k==null?'':k;$('dlogD').querySelector('.sheet-in').scrollTop=0;try{$('dlogD').scrollTop=0}catch(_){}
   /* phone turned sideways: squeeze the chart's height so it fits on screen without scrolling */
   if(k!=null&&innerWidth>innerHeight&&innerHeight<600){const sv=b.querySelector('.dl1c svg'),c=b.querySelector('.dl1c');if(sv&&c){const r=sv.getBoundingClientRect(),extra=c.getBoundingClientRect().bottom-r.bottom,dB=$('dlogD').getBoundingClientRect().bottom,avail=Math.min(innerHeight,dB)-r.top-extra-16;
     if(r.height>avail&&avail>60){DLHF=Math.max(110,Math.floor(DLH*avail/r.height));b.innerHTML=dlOne(DLCUR,k);DLHF=0}}}}
