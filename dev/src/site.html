@@ -722,7 +722,7 @@ dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-in
 .dls .dattr{font-size:7px;fill:#fff;fill-opacity:.85;text-anchor:end;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:2px}
 .dls .dmlab{font-size:10px;font-weight:700;fill:#fff;text-anchor:start;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:3px}
 .dls .dmsc{font-size:9.5px;fill:#fff;text-anchor:start;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:2.5px}
-.dls .dsb{stroke:#fff!important;stroke-width:2.5px;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.8))}
+.dls .dsb{stroke:#fff!important;stroke-width:1.3px;stroke-linecap:square;filter:drop-shadow(0 0 1px rgba(0,0,0,.9))}
 .dls .dpt{stroke:#fff!important;stroke-width:1.5px}
 .dls .dtb{fill:var(--sea);fill-opacity:.16}.dls .dtl{fill:none;stroke:var(--sea);stroke-width:2;stroke-linejoin:round}.dls .dtr{fill:transparent}.dls rect.dtr:hover{fill:var(--ink)!important;fill-opacity:.07!important;stroke:none!important;opacity:1!important}.dls .dtp{fill:var(--sea);stroke:var(--surface);stroke-width:1.2}.dls .dtb{fill:var(--sea);fill-opacity:.28}
 .dlk .kl{width:14px;height:0;border-top:2px solid var(--sea);border-radius:0}.dlk .kb{background:var(--sea);opacity:.3}
@@ -5181,8 +5181,10 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
         G.slice().sort((a,b)=>a.max-b.max).forEach(x=>{const q=x.max/mxD,k=D.indexOf(x)+1,px=X(x.lng),py=Y(x.lat);b+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+((5+q*6)*(DLBIG?1.3:1))+'" style="fill:hsl(195 75% '+(60-q*30)+'%)" class="dpt" data-t="'+dlA(t('dlDive')+' #'+k+' · '+tm(x.s)+'\n'+t('dlDepth')+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'\n'+x.lat.toFixed(5)+', '+x.lng.toFixed(5))+'"/><text x="'+px.toFixed(1)+'" y="'+(py+3.5).toFixed(1)+'" class="dmn">'+k+'</text>'});
         const mpp=156543.03392*Math.cos(la*Math.PI/180)/2**z,sb=dlNice(0,W*0.22*mpp,2)[1]||10,sbp=sb/mpp;
         /* scale bar: top-right when Google's logo sits in the bottom-left corner */
-        if(tilesOK&&typeof GKEY!=='undefined'&&GKEY)b+='<line x1="'+(W-12-sbp).toFixed(1)+'" x2="'+(W-12)+'" y1="14" y2="14" class="dsb"/><text x="'+(W-12)+'" y="29" class="dmsc" style="text-anchor:end">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
-        else b+='<line x1="12" x2="'+(12+sbp).toFixed(1)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" class="dsb"/><text x="'+(16+sbp).toFixed(1)+'" y="'+(H-8)+'" class="dmsc">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
+        /* Google-style: label, then a thin line with a short tick at its right end */
+        const sbl=sb>=1000?fmt(sb/1000)+' km':sb+' m',sbx=(x,y)=>'<path d="M'+x.toFixed(1)+' '+y+'H'+(x+sbp).toFixed(1)+'V'+(y-5)+'" class="dsb" fill="none"/>';
+        if(tilesOK&&typeof GKEY!=='undefined'&&GKEY)b+='<text x="'+(W-16-sbp).toFixed(1)+'" y="'+17+'" class="dmsc" style="text-anchor:end">'+sbl+'</text>'+sbx(W-12-sbp,18);
+        else b+='<text x="12" y="'+(H-9)+'" class="dmsc">'+sbl+'</text>'+sbx(16+sbl.length*5.2,H-8);
         const lk='<a class="dlmap" target="_blank" rel="noopener" data-ll="'+la.toFixed(6)+','+lo.toFixed(6)+'" href="https://www.google.com/maps/search/?api=1&query='+la.toFixed(5)+','+lo.toFixed(5)+'">'+la.toFixed(5)+', '+lo.toFixed(5)+'</a>';
         return '<svg viewBox="0 0 '+W+' '+H+'" class="dls'+(tilesOK&&DLBIG?' dlmapo':'')+'" role="img"'+(tilesOK&&DLBIG?' data-mapo="'+esc(G.map(x=>D.indexOf(x)).join(','))+'"':'')+'>'+b+'</svg>'+lk};
       const hint=tilesOK&&DLBIG?'<p class="dlmhint">'+esc(t('dlMapTap'))+'</p>':'';
