@@ -5,13 +5,13 @@
 <style>
 html,body{margin:0;height:100%;background:#0b1a22;color:#e8f1f3;font:14px system-ui,-apple-system,sans-serif}
 #map{position:absolute;inset:0}
-#k{position:absolute;z-index:10;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));background:#11303aee;border-radius:12px;padding:10px 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#k{position:absolute;z-index:100000;max-height:60vh;overflow:auto;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));background:#11303aee;border-radius:12px;padding:10px 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 #k input{flex:1;min-width:180px;padding:8px;border-radius:8px;border:1px solid #2b5562;background:#0b1a22;color:#e8f1f3}
 #k button{padding:8px 12px;border-radius:8px;border:0;background:#5cc6d0;color:#06222a;font-weight:700}
 #msg{flex-basis:100%;font-size:12.5px;color:#f6a08f}
 </style></head><body>
 <div id="map"></div>
-<div id="k"><input id="key" placeholder="Chave Google Maps (AIza…)" autocomplete="off"><button id="go">Abrir</button><span id="msg"></span></div>
+<div id="k"><input id="key" placeholder="Chave Google Maps (AIza…)" autocomplete="off"><button id="go">Abrir</button><span id="msg"></span><pre id="log" style="flex-basis:100%;white-space:pre-wrap;font-size:11px;margin:0;color:#cfe"></pre><span style="font-size:11px;opacity:.6">v3</span></div>
 <script>
 const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t;
 let key=new URLSearchParams(location.search).get('key');try{key=key||localStorage.getItem('sn-gkey')}catch(_){}
@@ -20,7 +20,7 @@ if(key)$('key').value=key;
 const PTS=[{n:'Cabo Raso',lat:38.7093,lng:-9.4857},{n:'Guincho',lat:38.7285,lng:-9.4757},{n:'Boca do Inferno',lat:38.6913,lng:-9.4310}];
 window.gm_authFailure=()=>msg('A chave foi recusada pela Google (ver restrições da chave e se a faturação está ativa).');
 const EX={ApiNotActivatedMapError:'A API «Maps JavaScript API» não está ativada no projeto.',RefererNotAllowedMapError:'Este endereço não está nas restrições da chave (use https://spearodiary.github.io/*).',InvalidKeyMapError:'Chave inválida (copie-a de novo).',BillingNotEnabledMapError:'A faturação não está ativa no projeto.',ApiTargetBlockedMapError:'A restrição de APIs da chave não inclui a Maps JavaScript API.',MissingKeyMapError:'Falta a chave.',ExpiredKeyMapError:'Chave expirada.'};
-function catchErr(...a){const t=a.map(String).join(' ');const m=t.match(/([A-Za-z]+MapError)/);if(m){$('k').style.display='flex';msg((EX[m[1]]||'Erro da Google')+' ['+m[1]+']')}}
+function catchErr(...a){const t=a.map(x=>x&&x.message?x.name+': '+x.message:String(x)).join(' ');const m=t.match(/([A-Za-z]+MapError)/);if(m){$('k').style.display='flex';msg((EX[m[1]]||'Erro da Google')+' ['+m[1]+']')}else if(/google|maps|3d|tile/i.test(t)){$('k').style.display='flex';$('log').textContent+=t.slice(0,300)+'\n'}}
 ['error','warn'].forEach(f=>{const o=console[f].bind(console);console[f]=(...a)=>{try{catchErr(...a)}catch(_){}o(...a)}});
 window.addEventListener('error',e=>catchErr(e.message));
 async function open(){key=$('key').value.trim();if(!key){msg('Falta a chave.');return}
