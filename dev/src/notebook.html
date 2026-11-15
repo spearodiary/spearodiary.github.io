@@ -951,6 +951,7 @@ dialog .sheet-in,#dlg form{overscroll-behavior:contain}
   dialog#dlg:not(.so-page),dialog.sheet:not(#scD):not(#avD):not(.dlog-d){top:calc(max(0px,calc(env(safe-area-inset-top,0px) - 6px)) + 4px);bottom:8px;height:auto;max-height:none;margin:0 auto}
   dialog#dlg .foot{padding-bottom:max(2px,calc(env(safe-area-inset-bottom,0px) - 18px))}
   dialog.sheet:not(#scD):not(#avD):not(.dlog-d) .sheet-in{max-height:none;padding-bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 4px))}}
+#tlWindy[hidden]{display:none!important}
 </style>
 
 <div class="wrap">
@@ -966,7 +967,7 @@ dialog .sheet-in,#dlg form{overscroll-behavior:contain}
       <button type="button" id="rulesBtn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M8 7h8M8 11h6"/></svg><span data-i="rulesNav"></span></button>
       <span class="tl-sep" aria-hidden="true"></span>
       <div class="tl-ext">
-        <a class="tl" id="tlWindy" href="https://www.windy.com/?waves,38.709,-9.486,10" target="_blank" rel="noopener">Windy<svg class="ext-i" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+        <a class="tl" id="tlWindy" hidden href="https://www.windy.com/?waves,38.709,-9.486,10" target="_blank" rel="noopener">Windy<svg class="ext-i" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
         <a class="tl" href="https://beachcam.meo.pt/livecams/" target="_blank" rel="noopener">BeachCam<svg class="ext-i" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
         <a class="tl" href="https://spearo.app" target="_blank" rel="noopener">Spearo<svg class="ext-i" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
       </div>
@@ -1966,7 +1967,7 @@ const icv=(k,lab,v)=>'<span title="'+esc(lab)+'" style="white-space:nowrap"><spa
     +(e.mood&&MOUTH[e.mood]?'<span class="mood" role="img" aria-label="'+esc(t('mood_'+e.mood))+'" title="'+esc(t('mood_'+e.mood))+'">'+face(e.mood)+'</span>':'')
     +'<span class="date">'+esc(fmtDate(e.date))+(k!=='dive'?' · '+esc(typeLabel(k)):'')+'</span>'
     +(e.example?'<span class="ex">'+esc(t('example'))+'</span>':'')
-    +'<span class="acts">'+(((e.catches||[]).length>1||catchCount(e)>1||duration(e.timeIn,e.timeOut))?'<span class="ctot">'+esc(t('totL'))+': '+[((e.catches||[]).length>1||catchCount(e)>1)?esc(t((e.catches||[]).every(isFishC)?'fishN':'spcN')(catchCount(e)))+(catchKg(e)?' · '+fmt(catchKg(e))+' kg':''):'',duration(e.timeIn,e.timeOut)?'<span class="tdur" title="'+esc(t('session'))+'">'+ICON.time+esc(duration(e.timeIn,e.timeOut))+'</span>':''].filter(Boolean).join(' · ')+'</span>':'')+(c?'<a class="ico wtxt" href="'+esc(windyUrl(c))+'" target="_blank" rel="noopener" title="'+esc(t('windyLabel').replace(/:$/,''))+'">Windy</a>':'')
+    +'<span class="acts">'+(((e.catches||[]).length>1||catchCount(e)>1||duration(e.timeIn,e.timeOut))?'<span class="ctot">'+esc(t('totL'))+': '+[((e.catches||[]).length>1||catchCount(e)>1)?esc(t((e.catches||[]).every(isFishC)?'fishN':'spcN')(catchCount(e)))+(catchKg(e)?' · '+fmt(catchKg(e))+' kg':''):'',duration(e.timeIn,e.timeOut)?'<span class="tdur" title="'+esc(t('session'))+'">'+ICON.time+esc(duration(e.timeIn,e.timeOut))+'</span>':''].filter(Boolean).join(' · ')+'</span>':'')+(SHOW_WINDY&&c?'<a class="ico wtxt" href="'+esc(windyUrl(c))+'" target="_blank" rel="noopener" title="'+esc(t('windyLabel').replace(/:$/,''))+'">Windy</a>':'')
     +(e.dlog?'<button type="button" class="link ico" data-dlog="'+esc(e.id)+'" title="'+esc(t('dlBtn'))+'" aria-label="'+esc(t('dlBtn'))+'">'+dlIcon()+'</button>':'')+(store&&!readOnly?'<button type="button" class="link ico" data-edit="'+esc(e.id)+'" title="'+esc(t('edit'))+'" aria-label="'+esc(t('edit'))+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg></button>':'')+'</span></div>'
     +(B=>cardOrd('b').map(k=>/^sp\d+$/.test(k)?'<div class="csp" data-b="'+k+'" style="height:'+((cOrd.h||{})[k]||24)+'px">'+BH+'<button type="button" class="csp-x" data-spx="'+k+'" aria-label="×">×</button><span class="csp-r" data-spr="'+k+'"></span></div>':(B[k]||'')).join(''))({
       cond:(cond?'<div class="cond" data-b="cond">'+BH+cond+'</div>':''),
@@ -2185,6 +2186,8 @@ $('fixBtn').addEventListener('click',runFix);
 $('fixUndo').addEventListener('click',()=>{if(fixPrev!=null){$('eNotes').value=fixPrev;fixState(null)}});
 function drawPhotos(){$('ePhotos').innerHTML=form.photos.map(p=>'<div><img alt="" src="/_blob/'+esc(p)+'"><button type="button" aria-label="×" data-rm="'+esc(p)+'">×</button></div>').join('')}
 function gearCopyOn(){try{return localStorage.getItem('sn-gearcopy')!=='0'}catch(_){return true}}
+/* Windy button on entries: hidden for now (set true to bring it back) */
+var SHOW_WINDY=false;
 function lastGear(){const has=e=>e.gear||(e.guns||[]).length||e.lastro!=null||e.poita!=null||e.colete!=null;
   return entries.filter(has).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||(b.createdAt||0)-(a.createdAt||0))[0]||null}
 {const gc=document.getElementById('gearCopy');if(gc){gc.checked=gearCopyOn();gc.addEventListener('change',()=>{try{localStorage.setItem('sn-gearcopy',gc.checked?'1':'0')}catch(_){}})}}
