@@ -734,6 +734,14 @@ dialog:not(#viewer):not(.so-page){max-width:calc(100vw - 16px - env(safe-area-in
 .gpin{line-height:0;cursor:pointer;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
 .gpin-l{background:none;border:0;line-height:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
 .dlmf-g{position:absolute;z-index:1000;right:calc(124px + env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));height:40px;padding:0 14px;border-radius:20px;display:grid;place-items:center;background:rgba(0,0,0,.65);color:#fff;font:600 13.5px var(--display,system-ui);text-decoration:none}
+.dlmf-fix{all:unset;cursor:pointer;position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));top:calc(12px + env(safe-area-inset-top,0px));height:40px;padding:0 14px;border-radius:20px;display:grid;place-items:center;background:rgba(0,0,0,.65);color:#fff;font:600 13.5px var(--display,system-ui)}
+.dlmf-fix[hidden]{display:none}
+.dlmf-cross{display:none;position:absolute;z-index:999;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.5)}
+.dlmf-cross::before,.dlmf-cross::after{content:"";position:absolute;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+.dlmf-cross::before{left:50%;top:-12px;bottom:-12px;width:2px;margin-left:-1px}.dlmf-cross::after{top:50%;left:-12px;right:-12px;height:2px;margin-top:-1px}
+.dlmf.picking .dlmf-cross{display:block}
+.dlmf-bar{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.94);color:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;font-size:14px}
+.dlmf-bar[hidden]{display:none}.dlmf-bb{display:flex;gap:8px}
 .dlmf-sw{all:unset;cursor:pointer;position:absolute;z-index:1000;top:calc(10px + env(safe-area-inset-top,0px));right:calc(64px + env(safe-area-inset-right,0px));height:44px;padding:0 14px;border-radius:22px;display:grid;place-items:center;background:rgba(0,0,0,.6);color:#fff;font:700 14px var(--display,system-ui)}
 .dlmf-i{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.92);color:#fff;border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.45}
 .dlmf-x{all:unset;cursor:pointer;position:absolute;z-index:1000;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(10,30,38,.85);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4)}
@@ -2743,8 +2751,8 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
 
 
 /* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
-Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',geoLook:'A procurar no mapa…',geoMiss:'Não encontrei este local. Abra no Google Maps (botão em cima) ou adicione coordenadas à caçada.',accSetH:'Definições da conta',fwHint:'A app marca como janela de pesca o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a janela mínima. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwMin:'Janela mínima',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
-Object.assign(T.en,{fwSetH:'Sea & weather settings',geoLook:'Looking it up on the map…',geoMiss:'Couldn\'t find this place. Open it in Google Maps (button at the top) or add coordinates to the entry.',accSetH:'Account settings',fwHint:'The app marks as a hunting window the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest window. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwMin:'Shortest window',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
+Object.assign(T.pt,{fwSetH:'Definições de mar e tempo',geoLook:'A procurar no mapa…',fixBtn:'📍 Corrigir ponto',fixHint:'Mova o mapa até o ponto exato ficar na mira.',fixSave:'Guardar',fixCancel:'Cancelar',fixDone:'Coordenadas guardadas na entrada.',geoMiss2:'Não encontrei este local. Mova o mapa até ao ponto e toque em Guardar.',geoMiss:'Não encontrei este local. Abra no Google Maps (botão em cima) ou adicione coordenadas à caçada.',accSetH:'Definições da conta',fwHint:'A app marca como janela de pesca o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a janela mínima. Aparecem a verde no gráfico de Mar e tempo.',fwWind:'Velocidade do vento',fwWave:'Altura das ondas',fwPer:'Período das ondas',fwMin:'Janela mínima',fwRow:'Janela de pesca',fwNext:'Próximas janelas',fwNone:'Nenhuma janela com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).'});
+Object.assign(T.en,{fwSetH:'Sea & weather settings',geoLook:'Looking it up on the map…',fixBtn:'📍 Fix the spot',fixHint:'Move the map so the exact spot is under the crosshair.',fixSave:'Save',fixCancel:'Cancel',fixDone:'Coordinates saved to the entry.',geoMiss2:'Couldn\'t find this place. Move the map to the spot and tap Save.',geoMiss:'Couldn\'t find this place. Open it in Google Maps (button at the top) or add coordinates to the entry.',accSetH:'Account settings',fwHint:'The app marks as a hunting window the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest window. They show in green on the Sea & weather chart.',fwWind:'Wind speed',fwWave:'Wave height',fwPer:'Wave period',fwMin:'Shortest window',fwRow:'Hunting window',fwNext:'Next windows',fwNone:'No window within your limits in the coming days (wave forecasts reach 8 days).'});
 const FW_DEF={w:5/0.514444,v:1,p:8,h:2};
 function fwGet(){try{const o=JSON.parse(localStorage.getItem('sn-fcwin2')||'null');return Object.assign({},FW_DEF,o||{})}catch(e){return Object.assign({},FW_DEF)}}
 function fwSave(o){try{localStorage.setItem('sn-fcwin2',JSON.stringify(o))}catch(e){}}
@@ -3060,7 +3068,7 @@ const icv=(k,lab,v)=>'<span title="'+esc(lab)+'" style="white-space:nowrap"><spa
   const cond=(()=>{let o='',any=false,lastBr=true;cardOrd('c').forEach(k=>{if(/^br\d+$/.test(k)){if(any&&!lastBr){o+='<span class="cbr" data-c="'+k+'"><button type="button" class="cbr-x" data-brx="'+k+'" aria-label="×">×</button></span>';lastBr=true}return}if(!CI[k])return;o+=(any&&!lastBr?' · ':'')+'<span class="ci" data-c="'+k+'">'+CI[k]+'</span>';any=true;lastBr=false});return o})();
   const c=coordsOf(e,cm),mh=mapsHref(e,c);
   return '<article class="entry'+(e.id===freshId?' fresh':'')+'"><div class="head">'
-    +(title?'<h3>'+(mh?'<a class="spot-link" href="'+esc(mh)+'"'+(c?' data-ll="'+c.lat.toFixed(6)+','+c.lon.toFixed(6)+'"':(e.spot?' data-q="'+esc(e.spot)+'"':''))+' target="_blank" rel="noopener" title="'+esc(t('maps'))+'">'+hl(title)+'</a>':hl(title))+'</h3>':'')
+    +(title?'<h3>'+(mh?'<a class="spot-link" href="'+esc(mh)+'"'+(c?' data-ll="'+c.lat.toFixed(6)+','+c.lon.toFixed(6)+'"':(e.spot?' data-q="'+esc(e.spot)+'"':''))+' data-eid="'+esc(e.id)+'" target="_blank" rel="noopener" title="'+esc(t('maps'))+'">'+hl(title)+'</a>':hl(title))+'</h3>':'')
     +(e.mood&&MOUTH[e.mood]?'<span class="mood" role="img" aria-label="'+esc(t('mood_'+e.mood))+'" title="'+esc(t('mood_'+e.mood))+'">'+face(e.mood)+'</span>':'')
     +'<span class="date">'+esc(fmtDate(e.date))+(k!=='dive'?' · '+esc(typeLabel(k)):'')+'</span>'
     +(e.example?'<span class="ex">'+esc(t('example'))+'</span>':'')
@@ -5179,7 +5187,7 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
         return '<svg viewBox="0 0 '+W+' '+H+'" class="dls'+(tilesOK&&DLBIG?' dlmapo':'')+'" role="img"'+(tilesOK&&DLBIG?' data-mapo="'+esc(G.map(x=>D.indexOf(x)).join(','))+'"':'')+'>'+b+'</svg>'+lk};
       const hint=tilesOK&&DLBIG?'<p class="dlmhint">'+esc(t('dlMapTap'))+'</p>':'';
       if(!DLBIG||Z.length<2)return panel(g,Z.length>1?'':'')+hint;
-      return hint+'<div class="dlmaps">'+panel(g,t('dlAll'))+Z.map((z,i)=>panel(z,t('dlZone')+' '+(i+1)+' · #'+z.map(x=>D.indexOf(x)+1).join(', #'))).join('')+'</div>'},
+      return hint+'<div class="dlmaps">'+panel(g,t('dlAll'))+Z.map((z,i)=>panel(z,t('dlZone')+' '+(i+1))).join('')+'</div>'},
      i:()=>{const g=D.filter(x=>x.lat!=null);if(g.length<2)return [];const dist=(a,b)=>{const k=111320,dx=(a.lng-b.lng)*k*Math.cos(a.lat*Math.PI/180),dy=(a.lat-b.lat)*k;return Math.hypot(dx,dy)};let m=0;g.forEach(a=>g.forEach(b=>m=Math.max(m,dist(a,b))));
        const Z=[];g.forEach(a=>{const z=Z.find(z=>dist(z[0],a)<300);z?z.push(a):Z.push([a])});return [I.span(m>=1000?r1(m/1000)+' km':Math.round(m)+' m'),I.zones(Z.length)]}},
     {dep:1,f:()=>{const bs=DLBIG?1:5,bk=[];D.forEach(x=>x.p.forEach(v=>{const i=Math.floor(v/(bs*10));bk[i]=(bk[i]||0)+1}));for(let i=0;i<bk.length;i++)bk[i]=bk[i]||0;const tot=bk.reduce((a,b)=>a+b,0)||1;
@@ -5256,53 +5264,63 @@ function mapOverlay(host,ext){dlMapClose();const o=document.createElement('div')
     +(ext?'<a class="dlmf-g" href="'+esc(ext)+'" target="_blank" rel="noopener">Google Maps ↗</a>':'')+'<div class="dlmf-i" hidden></div>';
   host.appendChild(o);o.querySelector('.dlmf-x').addEventListener('click',dlMapClose);return o}
 /* pts: [{lat,lng,c,r,g,dim,z,info}], sel: indexes to frame; info0: text shown at start */
-function mapView(o,pts,sel,info0){if(!o.isConnected)return;if(dlMap){try{dlMap.remove()}catch(_){}dlMap=null}
-  const box=o.querySelector('.dlmf-m'),info=o.querySelector('.dlmf-i'),mode=gMode();box.innerHTML='';o._re=()=>mapView(o,pts,sel,info0);
+function mapView(o,pts,sel,info0,far){if(!o.isConnected)return;if(dlMap){try{dlMap.remove()}catch(_){}dlMap=null}
+  const box=o.querySelector('.dlmf-m'),info=o.querySelector('.dlmf-i'),mode=gMode();box.innerHTML='';o._re=()=>mapView(o,pts,sel,info0,far);o._center=null;
   const say=h=>{info.innerHTML=h;info.hidden=!h};say(info0||'');
   let sw=o.querySelector('.dlmf-sw');if(typeof GKEY!=='undefined'&&GKEY){if(!sw){sw=document.createElement('button');sw.type='button';sw.className='dlmf-sw';o.appendChild(sw)}
-    sw.textContent=mode==='3d'?'2D':'3D';sw.onclick=()=>{G3OFF=false;try{localStorage.setItem('sn-map3d',mode==='3d'?'0':'1')}catch(_){}mapView(o,pts,sel,info0)}}
-  const F=sel.map(i=>pts[i]),la=F.reduce((a,x)=>a+x.lat,0)/F.length,ln=F.reduce((a,x)=>a+x.lng,0)/F.length,
+    sw.textContent=mode==='3d'?'2D':'3D';sw.onclick=()=>{G3OFF=false;try{localStorage.setItem('sn-map3d',mode==='3d'?'0':'1')}catch(_){}mapView(o,pts,sel,info0,far)}}
+  const F=sel.length?sel.map(i=>pts[i]):[{lat:(o._far||[39.6])[0],lng:(o._far||[0,-8.4])[1]}],la=F.reduce((a,x)=>a+x.lat,0)/F.length,ln=F.reduce((a,x)=>a+x.lng,0)/F.length,
     spread=Math.max(0,...F.map(x=>Math.hypot((x.lat-la)*111e3,(x.lng-ln)*111e3*Math.cos(la*Math.PI/180))));
-  const fail=()=>{if(!o.isConnected)return;G3OFF=true;mapView(o,pts,sel,info0)};
+  const fail=()=>{if(!o.isConnected)return;G3OFF=true;mapView(o,pts,sel,info0,far)};
   if(mode==='3d'){dlGLoad().then(()=>Promise.all([google.maps.importLibrary('maps3d'),google.maps.importLibrary('marker')])).then(([M3])=>{if(!o.isConnected)return;
       const {Map3DElement,Marker3DInteractiveElement,MapMode,AltitudeMode}=M3;
-      const m=new Map3DElement({center:{lat:la,lng:ln,altitude:0},range:Math.min(20000,Math.max(700,spread*3.2)),tilt:55,heading:0,mode:MapMode?MapMode.SATELLITE:'SATELLITE'});
+      const m=new Map3DElement({center:{lat:la,lng:ln,altitude:0},range:far?250000:Math.min(20000,Math.max(700,spread*3.2)),tilt:far?0:55,heading:0,mode:MapMode?MapMode.SATELLITE:'SATELLITE'});
       try{m.gestureHandling='GREEDY'}catch(_){}m.setAttribute('gesture-handling','greedy');
       pts.forEach(p=>{const mk=new Marker3DInteractiveElement({position:{lat:p.lat,lng:p.lng,altitude:0},altitudeMode:AltitudeMode?AltitudeMode.CLAMP_TO_GROUND:'CLAMP_TO_GROUND',zIndex:p.z||0});
         const tp=document.createElement('template'),im=document.createElement('img');im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(pinSvg(p));im.width=p.r;im.height=p.r;tp.content.append(im);mk.append(tp);
         mk.addEventListener('gmp-click',()=>say(p.info));m.append(mk)});
-      m.addEventListener('gmp-click',()=>say(''));box.appendChild(m)}).catch(fail);return}
+      m.addEventListener('gmp-click',()=>{if(!o.classList.contains('picking'))say('')});box.appendChild(m);o._center=()=>{const c=m.center;return c?{lat:c.lat,lng:c.lng}:null}}).catch(fail);return}
   if(mode==='2d'){dlGLoad().then(()=>Promise.all([google.maps.importLibrary('maps'),google.maps.importLibrary('marker')])).then(([MM,MK])=>{if(!o.isConnected)return;
-      const m=new MM.Map(box,{center:{lat:la,lng:ln},zoom:17,mapTypeId:'hybrid',mapId:'DEMO_MAP_ID',gestureHandling:'greedy',disableDefaultUI:true,zoomControl:true,clickableIcons:false,tilt:0});
+      const m=new MM.Map(box,{center:{lat:la,lng:ln},zoom:far?7:17,mapTypeId:'hybrid',mapId:'DEMO_MAP_ID',gestureHandling:'greedy',disableDefaultUI:true,zoomControl:true,clickableIcons:false,tilt:0});
       pts.forEach(p=>{const mk=new MK.AdvancedMarkerElement({map:m,position:{lat:p.lat,lng:p.lng},content:pinEl(p),zIndex:p.z||0});mk.addListener('click',()=>say(p.info))});
-      m.addListener('click',()=>say(''));
+      m.addListener('click',()=>{if(!o.classList.contains('picking'))say('')});o._center=()=>{const c=m.getCenter();return {lat:c.lat(),lng:c.lng()}};
       if(F.length>1){const b=new google.maps.LatLngBounds();F.forEach(x=>b.extend({lat:x.lat,lng:x.lng}));m.fitBounds(b,60)}}).catch(fail);return}
   dlLeaf().then(L=>{if(!o.isConnected)return;const m=L.map(box,{zoomControl:true,attributionControl:true});dlMap=m;
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(m);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,opacity:.9}).addTo(m);
     pts.forEach(p=>{const ic=L.divIcon({className:'gpin-l',html:pinSvg(p),iconSize:[p.r,p.r],iconAnchor:[p.r/2,p.r/2]});L.marker([p.lat,p.lng],{icon:ic,zIndexOffset:p.z||0}).addTo(m).on('click',()=>say(p.info))});
-    m.on('click',()=>say(''));const fb=F.map(x=>[x.lat,x.lng]);if(fb.length===1)m.setView(fb[0],17);else m.fitBounds(fb,{padding:[50,50],maxZoom:18})
+    m.on('click',()=>{if(!o.classList.contains('picking'))say('')});o._center=()=>{const c=m.getCenter();return {lat:c.lat,lng:c.lng}};const fb=F.map(x=>[x.lat,x.lng]);if(fb.length===1)m.setView(fb[0],far?7:17);else m.fitBounds(fb,{padding:[50,50],maxZoom:18})
   }).catch(()=>{box.textContent='—'})}
 /* one place on the map, inside the app; Google Maps button for directions */
-function spotMapOpen(lat,lng,title){const o=mapOverlay(document.querySelector('dialog[open]')||document.body,'https://www.google.com/maps/search/?api=1&query='+lat.toFixed(6)+','+lng.toFixed(6));
-  const inf=(title?'<b>'+esc(title)+'</b><br>':'')+'<span style="opacity:.75">'+lat.toFixed(5)+', '+lng.toFixed(5)+'</span>';
-  mapView(o,[{lat,lng,c:'#0C8A9C',r:30,info:inf}],[0],inf)}
+function spotMapOpen(lat,lng,title,eid,far){const o=mapOverlay(document.querySelector('dialog[open]')||document.body,far?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(title||''):'https://www.google.com/maps/search/?api=1&query='+lat.toFixed(6)+','+lng.toFixed(6));
+  const inf=(title?'<b>'+esc(title)+'</b><br>':'')+(far?esc(t('geoMiss2')):'<span style="opacity:.75">'+lat.toFixed(5)+', '+lng.toFixed(5)+'</span>');
+  mapView(o,far?[]:[{lat,lng,c:'#0C8A9C',r:30,info:inf}],far?[]:[0],inf,far);
+  if(far){o._far=[lat,lng]}
+  /* fix the point: move the map under the crosshair and save the centre into the entry's GPS field */
+  if(eid&&store&&entries.some(e=>e.id===eid)){const fx=document.createElement('button');fx.type='button';fx.className='dlmf-fix';fx.textContent=t('fixBtn');o.appendChild(fx);
+    const cross=document.createElement('div');cross.className='dlmf-cross';o.appendChild(cross);
+    const bar=document.createElement('div');bar.className='dlmf-bar';bar.hidden=true;bar.innerHTML='<span>'+esc(t('fixHint'))+'</span><span class="dlmf-bb"><button type="button" class="btn sm" data-x>'+esc(t('fixCancel'))+'</button><button type="button" class="btn sm primary" data-s>'+esc(t('fixSave'))+'</button></span>';o.appendChild(bar);
+    const on=v=>{o.classList.toggle('picking',v);bar.hidden=!v;fx.hidden=v;const i=o.querySelector('.dlmf-i');if(v)i.hidden=true};
+    fx.onclick=()=>on(true);bar.querySelector('[data-x]').onclick=()=>on(false);
+    bar.querySelector('[data-s]').onclick=async()=>{const c=o._center&&o._center();if(!c)return;const g=c.lat.toFixed(6)+', '+c.lng.toFixed(6);
+      const ok=await saveEntry(eid,{gps:g});if(!ok)return;spotMapOpen(c.lat,c.lng,title,eid);const i=document.querySelector('.dlmf .dlmf-i');if(i){i.innerHTML='<b>'+esc(title||'')+'</b><br>'+esc(t('fixDone'))+'<br><span style="opacity:.75">'+g+'</span>';i.hidden=false}};
+    if(far)on(true)}}
 /* a place known only by name: find it with Google (biased to Portugal), remember the answer, then open the in-app map */
 function geoGet(q){try{return (JSON.parse(localStorage.getItem('sn-geo2')||'{}'))[norm(q)]||null}catch(_){return null}}
 function geoPut(q,v){try{const m=JSON.parse(localStorage.getItem('sn-geo2')||'{}');m[norm(q)]=v;localStorage.setItem('sn-geo2',JSON.stringify(m))}catch(_){}}
-function spotFind(q,href){try{const k=fcSpots().find(x=>norm(x.name)===norm(q));if(k){spotMapOpen(k.lat,k.lon,q);return}}catch(_){}
-  const hit=geoGet(q);if(hit){spotMapOpen(hit[0],hit[1],q);return}
+function spotFind(q,href,eid){try{const k=fcSpots().find(x=>norm(x.name)===norm(q));if(k){spotMapOpen(k.lat,k.lon,q,eid);return}}catch(_){}
+  const hit=geoGet(q);if(hit){spotMapOpen(hit[0],hit[1],q,eid);return}
   const o=mapOverlay(document.querySelector('dialog[open]')||document.body,href||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q));
   const info=o.querySelector('.dlmf-i');info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoLook'));info.hidden=false;
-  const miss=()=>{if(!o.isConnected)return;info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoMiss'))};
+  const miss=()=>{if(!o.isConnected)return;if(eid&&store){o.remove();spotMapOpen(39.6,-8.4,q,eid,true);return}info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoMiss'))};
   /* Portugal first (strict); only if nothing there, anywhere */
   dlGLoad().then(()=>google.maps.importLibrary('geocoding')).then(async({Geocoder})=>{const G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:'PT'}})}catch(_){}
     if(!r||!r.results||!r.results.length||r.results[0].types.includes('country')){try{r=await G.geocode({address:q,region:'pt'})}catch(_){r=null}}return r}).then(r=>{
     const g=r&&r.results&&r.results[0];if(!g){miss();return}const la=g.geometry.location.lat(),ln=g.geometry.location.lng();geoPut(q,[la,ln]);
-    if(o.isConnected){o.remove();spotMapOpen(la,ln,q)}}).catch(miss)}
+    if(o.isConnected){o.remove();spotMapOpen(la,ln,q,eid)}}).catch(miss)}
 document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.closest('a[data-ll],a[data-q]');if(!a)return;
-  if(a.dataset.ll){const p=a.dataset.ll.split(',').map(Number);if(p.length!==2||p.some(isNaN))return;ev.preventDefault();ev.stopPropagation();spotMapOpen(p[0],p[1],a.classList.contains('spot-link')?a.textContent:'');return}
-  if(typeof GKEY==='undefined'||!GKEY)return;ev.preventDefault();ev.stopPropagation();spotFind(a.dataset.q,a.getAttribute('href'))},true);
+  if(a.dataset.ll){const p=a.dataset.ll.split(',').map(Number);if(p.length!==2||p.some(isNaN))return;ev.preventDefault();ev.stopPropagation();spotMapOpen(p[0],p[1],a.classList.contains('spot-link')?a.textContent:'',a.dataset.eid);return}
+  if(typeof GKEY==='undefined'||!GKEY)return;ev.preventDefault();ev.stopPropagation();spotFind(a.dataset.q,a.getAttribute('href'),a.dataset.eid)},true);
 function dlMapOpen(ids){const L0=DLCUR;if(!L0)return;const D=L0.dv||[],sel=String(ids||'').split(',').map(Number).filter(i=>D[i]&&D[i].lat!=null);if(!sel.length)return;
   const mxD=Math.max(...D.map(x=>x.max)),tm=s=>{const d=new Date(L0.t0+s*1000);return String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')};
   const pts=[],idx=[];D.forEach((x,i)=>{if(x.lat==null)return;const q=x.max/mxD;idx[i]=pts.length;
