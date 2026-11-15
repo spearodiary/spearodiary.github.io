@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teste Static Maps</title>
+<style>body{margin:0;padding:12px;background:#0b1a22;color:#e8f1f3;font:14px system-ui,sans-serif}img{max-width:100%;display:block;margin:6px 0 4px;border:1px solid #2b5562}.r{margin-bottom:18px}code{font-size:11px;word-break:break-all;color:#9cc}</style>
+</head><body>
+<h3>Teste Google Static Maps</h3><div id="out"></div>
+<script>
+let key='';try{key=localStorage.getItem('sn-gkey')||''}catch(_){}
+key=new URLSearchParams(location.search).get('key')||key||'AIzaSyD4cLKESU4Lkk5TuWPlzR4jZLdh24diLKA';
+const T=[
+ ['A · como de manhã (zoom 12, 170×144)','center=17.606992,-101.560800&zoom=12&size=170x144&scale=2'],
+ ['B · como agora (zoom 13, 340×288)','center=17.606992,-101.560800&zoom=13&size=340x288&scale=2'],
+ ['C · zoom 16 (zona)','center=17.599756,-101.566608&zoom=16&size=340x288&scale=2'],
+ ['D · Cabo Raso, zoom 16','center=38.7093,-9.4857&zoom=16&size=340x288&scale=2'],
+ ['E · sem scale','center=38.7093,-9.4857&zoom=16&size=340x288']];
+const out=document.getElementById('out');
+T.forEach(([n,q])=>{const u='https://maps.googleapis.com/maps/api/staticmap?'+q+'&maptype=satellite&key='+key;
+  const d=document.createElement('div');d.className='r';d.innerHTML='<b>'+n+'</b><img><div class="s">…</div><code>'+q+'</code>';out.appendChild(d);
+  const im=d.querySelector('img');im.onload=()=>{d.querySelector('.s').textContent='imagem '+im.naturalWidth+'×'+im.naturalHeight};im.onerror=()=>{d.querySelector('.s').textContent='erro ao carregar'};im.src=u;
+  fetch(u).then(r=>{d.querySelector('.s').textContent+=' · HTTP '+r.status+(r.headers.get('x-staticmap-api-warning')?' · '+r.headers.get('x-staticmap-api-warning'):'')}).catch(()=>{d.querySelector('.s').textContent+=' · (sem acesso ao código HTTP)'})});
+</script></body></html>
