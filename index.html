@@ -597,6 +597,7 @@ a{color:var(--sea);text-underline-offset:2px}
 .entry .head:has(.acts>:only-child){padding-right:36px}
 .entry .head:not(:has(.acts>*)){padding-right:0}
 .entry .acts{position:absolute;top:8px;right:8px;gap:0;margin:0}
+.entry .acts{pointer-events:none}.entry .acts>*{pointer-events:auto}
 @media (max-width:560px){.entry .acts{flex-wrap:wrap;justify-content:flex-end}.entry .acts .ctot{order:9;flex-basis:100%;text-align:right;margin:2px 8px 0 0}}
 .catch-item .kg,.catch-item .cg,.catch-item .cone{white-space:nowrap}
 .catch-item{display:block;max-width:100%;white-space:normal}
@@ -3293,6 +3294,11 @@ $('fixBtn').addEventListener('click',runFix);
 $('fixUndo').addEventListener('click',()=>{if(fixPrev!=null){$('eNotes').value=fixPrev;fixState(null)}});
 function drawPhotos(){$('ePhotos').innerHTML=form.photos.map(p=>'<div><img alt="" src="'+esc(tblob(p))+'" data-full="'+esc(blob(p))+'" data-id="'+esc(p)+'"><button type="button" aria-label="×" data-rm="'+esc(p)+'">×</button></div>').join('')}
 function gearCopyOn(){try{return localStorage.getItem('sn-gearcopy')!=='0'}catch(_){return true}}
+/* keep an entry's title clear of its action buttons (their number varies), so every word of a long title is tappable */
+function fitHeads(){const mob=matchMedia('(max-width:560px)').matches;document.querySelectorAll('.entry>.head').forEach(h=>{const a=h.querySelector('.acts');if(!a)return;
+  let w=0;if(mob){[...a.children].forEach(c=>{if(!c.classList.contains('ctot'))w+=c.getBoundingClientRect().width})}else w=a.getBoundingClientRect().width;
+  const p=w?Math.ceil(w)+6:0;if(h.dataset.fitp!==String(p)){h.dataset.fitp=p;h.style.paddingRight=p+'px'}})}
+{let q=0;const run=()=>{q=0;try{fitHeads()}catch(_){}};new MutationObserver(()=>{if(!q)q=requestAnimationFrame(run)}).observe(document.body,{childList:true,subtree:true});addEventListener('resize',()=>{if(!q)q=requestAnimationFrame(run)})}
 function lastGear(){const has=e=>e.gear||(e.guns||[]).length||e.lastro!=null||e.poita!=null||e.colete!=null;
   return entries.filter(has).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||(b.createdAt||0)-(a.createdAt||0))[0]||null}
 {const gc=document.getElementById('gearCopy');if(gc){gc.checked=gearCopyOn();gc.addEventListener('change',()=>{try{localStorage.setItem('sn-gearcopy',gc.checked?'1':'0')}catch(_){}})}}
@@ -4290,7 +4296,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794778985';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794779460';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
