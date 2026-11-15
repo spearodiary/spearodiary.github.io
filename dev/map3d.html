@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Teste mapa 3D</title>
+<style>
+html,body{margin:0;height:100%;background:#0b1a22;color:#e8f1f3;font:14px system-ui,-apple-system,sans-serif}
+#map{position:absolute;inset:0}
+#k{position:absolute;z-index:10;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));background:#11303aee;border-radius:12px;padding:10px 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#k input{flex:1;min-width:180px;padding:8px;border-radius:8px;border:1px solid #2b5562;background:#0b1a22;color:#e8f1f3}
+#k button{padding:8px 12px;border-radius:8px;border:0;background:#5cc6d0;color:#06222a;font-weight:700}
+#msg{flex-basis:100%;font-size:12.5px;color:#f6a08f}
+</style></head><body>
+<div id="map"></div>
+<div id="k"><input id="key" placeholder="Chave Google Maps (AIza…)" autocomplete="off"><button id="go">Abrir</button><span id="msg"></span></div>
+<script>
+const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t;
+let key=new URLSearchParams(location.search).get('key');try{key=key||localStorage.getItem('sn-gkey')}catch(_){}
+if(key)$('key').value=key;
+/* demo points near Cabo Raso */
+const PTS=[{n:'Cabo Raso',lat:38.7093,lng:-9.4857},{n:'Guincho',lat:38.7285,lng:-9.4757},{n:'Boca do Inferno',lat:38.6913,lng:-9.4310}];
+window.gm_authFailure=()=>msg('A chave foi recusada pela Google (ver restrições da chave e se a faturação está ativa).');
+async function open(){key=$('key').value.trim();if(!key){msg('Falta a chave.');return}
+  try{localStorage.setItem('sn-gkey',key)}catch(_){}
+  msg('A carregar…');
+  if(!window.google||!google.maps){
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({key,v:'weekly'});
+  }
+  try{
+    const {Map3DElement,Marker3DElement,MapMode}=await google.maps.importLibrary('maps3d');
+    const m=new Map3DElement({center:{lat:38.7093,lng:-9.4857,altitude:0},range:1800,tilt:62,heading:110,mode:MapMode?MapMode.SATELLITE:'SATELLITE'});
+    PTS.forEach(p=>{const mk=new Marker3DElement({position:{lat:p.lat,lng:p.lng},label:p.n});m.append(mk)});
+    $('map').innerHTML='';$('map').append(m);$('k').style.display='none';
+  }catch(e){msg('Erro: '+e.message)}}
+$('go').onclick=open;if(key)window.addEventListener('load',open);
+</script>
+</body></html>
