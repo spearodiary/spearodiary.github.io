@@ -5163,15 +5163,18 @@ function dlBuild(L0){const cl=v=>v!=null&&v<4.5?0:v,L={...L0,d:(L0.d||[]).map(cl
         const id='dmc'+(DLREG.length)+'_'+Math.round(cx)+'_'+z;let b='<defs><clipPath id="'+id+'"><rect x="0" y="0" width="'+W+'" height="'+H+'" rx="8"/></clipPath></defs><rect x="0" y="0" width="'+W+'" height="'+H+'" class="dmap" rx="8"/>';
         if(tilesOK){let im='';const n=2**z;for(let tx=Math.floor(L/256);tx<=Math.floor((L+W)/256);tx++)for(let ty=Math.floor(T/256);ty<=Math.floor((T+H)/256);ty++){if(ty<0||ty>=n)continue;const xx=((tx%n)+n)%n;
             im+='<image href="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/'+z+'/'+ty+'/'+xx+'" x="'+(tx*256-L).toFixed(1)+'" y="'+(ty*256-T).toFixed(1)+'" width="256.6" height="256.6" preserveAspectRatio="none"/>'}
-          /* Google satellite (Maps Static API) on top when the site has a key; Esri stays underneath as a fallback if Google doesn't load.
-             Zoom z-1 at scale 2 covers exactly this W×H area at zoom z, with sharp pixels. */
-          let gi='';if(typeof GKEY!=='undefined'&&GKEY&&z>1){const N=256*2**z,clng=cx/N*360-180,clat=Math.atan(Math.sinh(Math.PI*(1-2*(T+H/2)/N)))*180/Math.PI,sw=Math.ceil(W/2),sh=Math.ceil(H/2);
-            if(sw<=640&&sh<=640)gi='<image href="'+esc('https://maps.googleapis.com/maps/api/staticmap?center='+clat.toFixed(6)+','+clng.toFixed(6)+'&zoom='+(z-1)+'&size='+sw+'x'+sh+'&scale=2&maptype=satellite&key='+GKEY)+'" x="0" y="0" width="'+(sw*2)+'" height="'+(sh*2)+'" preserveAspectRatio="none"/>'}
+          /* Google satellite (Maps Static API) on top when the site has a key; Esri stays underneath as a fallback if Google doesn't load. */
+          let gi='';if(typeof GKEY!=='undefined'&&GKEY&&z>1&&H<=640){const N=256*2**z,clat=Math.atan(Math.sinh(Math.PI*(1-2*(T+H/2)/N)))*180/Math.PI,n=Math.ceil(W/640),sw=Math.ceil(W/n);
+            /* same zoom as the points, 2× pixels (sharp on phones); wide panels are split into strips of ≤640 px (the Static API limit) */
+            for(let k=0;k<n;k++){const clng=(L+k*sw+sw/2)/N*360-180;
+              gi+='<image href="'+esc('https://maps.googleapis.com/maps/api/staticmap?center='+clat.toFixed(6)+','+clng.toFixed(6)+'&zoom='+z+'&size='+sw+'x'+Math.ceil(H)+'&scale=2&maptype=satellite&key='+GKEY)+'" x="'+(k*sw)+'" y="0" width="'+(sw+.6)+'" height="'+Math.ceil(H)+'" preserveAspectRatio="none"/>'}}
           b+='<g clip-path="url(#'+id+')">'+im+gi+'</g><text x="'+(W-6)+'" y="'+(H-5)+'" class="dattr">'+(gi?'Google · Esri':'Esri, Maxar, Earthstar Geographics')+'</text>'}
         if(lab)b+='<text x="10" y="17" class="dmlab">'+esc(lab)+'</text>';
         G.slice().sort((a,b)=>a.max-b.max).forEach(x=>{const q=x.max/mxD,k=D.indexOf(x)+1,px=X(x.lng),py=Y(x.lat);b+='<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="'+((5+q*6)*(DLBIG?1.3:1))+'" style="fill:hsl(195 75% '+(60-q*30)+'%)" class="dpt" data-t="'+dlA(t('dlDive')+' #'+k+' · '+tm(x.s)+'\n'+t('dlDepth')+': '+fmt(x.max)+' m · '+dlMs(x.dur)+'\n'+x.lat.toFixed(5)+', '+x.lng.toFixed(5))+'"/><text x="'+px.toFixed(1)+'" y="'+(py+3.5).toFixed(1)+'" class="dmn">'+k+'</text>'});
         const mpp=156543.03392*Math.cos(la*Math.PI/180)/2**z,sb=dlNice(0,W*0.22*mpp,2)[1]||10,sbp=sb/mpp;
-        b+='<line x1="12" x2="'+(12+sbp).toFixed(1)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" class="dsb"/><text x="'+(16+sbp).toFixed(1)+'" y="'+(H-8)+'" class="dmsc">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
+        /* scale bar: top-right when Google's logo sits in the bottom-left corner */
+        if(tilesOK&&typeof GKEY!=='undefined'&&GKEY)b+='<line x1="'+(W-12-sbp).toFixed(1)+'" x2="'+(W-12)+'" y1="14" y2="14" class="dsb"/><text x="'+(W-12)+'" y="29" class="dmsc" style="text-anchor:end">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
+        else b+='<line x1="12" x2="'+(12+sbp).toFixed(1)+'" y1="'+(H-12)+'" y2="'+(H-12)+'" class="dsb"/><text x="'+(16+sbp).toFixed(1)+'" y="'+(H-8)+'" class="dmsc">'+(sb>=1000?fmt(sb/1000)+' km':sb+' m')+'</text>';
         const lk='<a class="dlmap" target="_blank" rel="noopener" data-ll="'+la.toFixed(6)+','+lo.toFixed(6)+'" href="https://www.google.com/maps/search/?api=1&query='+la.toFixed(5)+','+lo.toFixed(5)+'">'+la.toFixed(5)+', '+lo.toFixed(5)+'</a>';
         return '<svg viewBox="0 0 '+W+' '+H+'" class="dls'+(tilesOK&&DLBIG?' dlmapo':'')+'" role="img"'+(tilesOK&&DLBIG?' data-mapo="'+esc(G.map(x=>D.indexOf(x)).join(','))+'"':'')+'>'+b+'</svg>'+lk};
       const hint=tilesOK&&DLBIG?'<p class="dlmhint">'+esc(t('dlMapTap'))+'</p>':'';
