@@ -61,7 +61,10 @@ Auth uses email + password. Auth emails go out through a custom SMTP sender (the
   chart kit `dlFrame`/`dlBars`/`dlLine`/`dlScatter`; order + overlay choices in localStorage (`sn-dlord`, `sn-dlov`).
 - Forecast ("Mar e tempo"): `fcLoad` (Open-Meteo: weather 14 days, sea 8 days = the marine API maximum; cached 1 h), `drawForecast`, folded strip `fcStrip`, palettes `FCS_*` + `sn-fcpal`.
   Hunting windows: `fwWindows` with the user's limits from Settings → Definições de mar e tempo (`sn-fcwin2`, wind stored in knots; defaults 5 m/s, 1 m, 8 s, 2 h; clipped to exact sunrise–sunset).
-- Chart settings: hidden charts `sn-dlhide` (Settings → Definições dos gráficos); interactive dive map `dlMapOpen` (Leaflet from unpkg, Esri imagery; site only).
+- Chart settings: hidden charts `sn-dlhide` (Settings → Definições dos gráficos).
+- Maps (site only): dive map `dlMapOpen` and spot map `spotMapOpen` (opened from any link with `data-ll`, e.g. the spot title of an entry).
+  Google photorealistic 3D (`dlGLoad`/`dlG3`, key `GKEY`, restricted in Google Cloud to `https://spearodiary.github.io/*`, Maps JavaScript API) with a 2D/3D switch (`sn-map3d`);
+  falls back to Leaflet + Esri imagery if Google fails (`G3OFF`, not saved). Test pages: `dev/map3d.html`, `dev/maptest.html` (bathymetry layers), `dev/navionics.html` (needs a Navionics key).
 - Social: `soMePage`, `soTagged`, `soShare`, `postSet`/`onBtn`/`canOnOff` (online/offline per post).
 - Share image: `scOpen`/`scPaint`; avatar crop `avCrop`.
 - Phone: windows pin the page behind them (body lock) and start under the status band.
