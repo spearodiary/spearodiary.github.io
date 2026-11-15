@@ -1882,7 +1882,7 @@ function fillFacets(){
   bar.hidden=false;
   const lk=(u,l)=>'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(l)+'</a>';
   if(!cm.size){bar.hidden=true;return}
-  bar.innerHTML=(cm.size?'<div class="windy"><span>'+esc(t('windyLabel'))+'</span>'+[...cm.values()].slice(0,12).map(o=>lk(windyUrl(o.c),o.name)).join('')+'</div>':'');
+  bar.innerHTML='';bar.hidden=true;/* the Windy list at the end of the page was removed; each entry keeps its own Windy button */
 }
 function haystack(e){
   const both=(p,v)=>v?T.en[p+v]+' '+T.pt[p+v]:'';
