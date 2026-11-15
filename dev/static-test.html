@@ -5,8 +5,8 @@
 </head><body>
 <h3>Teste Google Static Maps</h3><div id="out"></div>
 <script>
-let key='';try{key=localStorage.getItem('sn-gkey')||''}catch(_){}
-key=new URLSearchParams(location.search).get('key')||key||'AIzaSyD4cLKESU4Lkk5TuWPlzR4jZLdh24diLKA';
+const key=new URLSearchParams(location.search).get('key')||'AIzaSyD4cLKESU4Lkk5TuWPlzR4jZLdh24diLKA';
+document.querySelector('h3').textContent+=' · chave …'+key.slice(-6)+' · v2';
 const T=[
  ['A · como de manhã (zoom 12, 170×144)','center=17.606992,-101.560800&zoom=12&size=170x144&scale=2'],
  ['B · como agora (zoom 13, 340×288)','center=17.606992,-101.560800&zoom=13&size=340x288&scale=2'],
