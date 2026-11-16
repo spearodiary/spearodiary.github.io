@@ -1522,6 +1522,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .fc-pop button:hover,.fc-pop button:focus-visible{background:var(--sea-soft)}
 .fc-pop button.on{color:var(--sea);font-weight:600}
 .fc-pop button[data-new]{color:var(--sea);border-top:1px solid var(--line);border-radius:0 0 8px 8px;margin-top:4px}
+.dlmf-pick .dlmf-top{max-width:440px}
+.dlmf-q,.dlmf-q input{font-family:var(--body);font-weight:400}
 </style>
 </head>
 <body>
@@ -2730,6 +2732,11 @@ function fcMapPick(){const cur=fcSpot||fcPick(),o=mapOverlay(document.body,'');o
   const top=o.querySelector('.dlmf-top');top.innerHTML='<form class="dlmf-q"><input type="search" placeholder="'+esc(t('fcMapQ'))+'" aria-label="'+esc(t('fcMapQ'))+'" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="'+esc(t('fcFindGo'))+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button></form><ul class="dlmf-res" hidden></ul>';
   const bar=document.createElement('div');bar.className='dlmf-bar';bar.innerHTML='<span class="hint">'+esc(t('fcMapHint'))+'</span><input class="dlmf-nm" aria-label="'+esc(t('fcNameL'))+'" placeholder="'+esc(t('fcNameL'))+'"><span class="dlmf-bb"><button type="button" class="btn sm" data-x>'+esc(t('cancel'))+'</button><button type="button" class="btn sm primary" data-s>'+esc(t('fcMapAdd'))+'</button></span>';o.appendChild(bar);
   const inp=top.querySelector('input'),ul=top.querySelector('.dlmf-res'),nm=bar.querySelector('.dlmf-nm');
+  /* computer: typing anywhere on the map goes into the search field (the map would otherwise take the keys) */
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches)setTimeout(()=>{if(o.isConnected)inp.focus()},600);
+  const keys=ev=>{if(!o.isConnected){removeEventListener('keydown',keys,true);return}const a=document.activeElement;
+    if(ev.key.length===1&&!ev.ctrlKey&&!ev.metaKey&&!ev.altKey&&a!==inp&&a!==nm){inp.focus()}};
+  addEventListener('keydown',keys,true);
   mapView(o,[{lat:cur.lat,lng:cur.lon,c:'#0C8A9C',r:18,info:''}],[0],'');
   const go=p=>{ul.hidden=true;if(o._goto)o._goto(p.lat,p.lng);if(p.name)nm.value=p.name};
   top.querySelector('form').addEventListener('submit',async ev=>{ev.preventDefault();const q=inp.value.trim();if(!q)return;inp.blur();ul.hidden=false;ul.innerHTML='<li class="hint">'+esc(t('fcLoading'))+'</li>';
