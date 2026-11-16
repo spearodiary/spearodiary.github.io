@@ -4548,6 +4548,7 @@ async function soRows(off,n,mine){const hid=await shHid();if(mine){const{data,er
   let q=sb.from('shared_catches').select('user_id,entry_id,data,caught,updated_at'+(hid?',hidden,published_at':'')).in('user_id',ids);q=hid?q.order('published_at',{ascending:false}):q.order('updated_at',{ascending:false});
   const{data,error}=await q.range(off,off+n-1);
   if(error)throw error;const rows=data||[];await soDecorate(rows);return rows}
+let soFR=null;function soFeedRefresh(){if(soFR)return soFR;soFR=(async()=>{try{await soLoadFollows();await soFeed();SO.feedAt=Date.now();soLoadAct()}catch(_){}finally{soFR=null}})();return soFR}
 async function soFeed(){const el=$('so_feed');if(!el.firstChild)el.innerHTML='<p class="hint so-wait">…</p>';
   let rows;try{rows=await soRows(0,1)}catch(e){el.innerHTML='<p class="hint">'+esc(t('frErr'))+'</p>';return}
   if(!rows.length){el.innerHTML=soEmpty();return}
@@ -4680,11 +4681,13 @@ async function frStart(user){
     shProf=data||null}catch(e){shProf=null}
   if(!shProf)return;$('setProfile').hidden=false;
   if(!SO.social){$('soSetup').hidden=false;$('soMeBody').hidden=true}else{$('feedCard').hidden=false;render(false);allOnLoad();soTagCheck();try{if(localStorage.getItem('sn-feed-open')!=='0')$('feedCard').open=true}catch(_){$('feedCard').open=true}}
-  shSoon();if(SO.social){soLoadFollows();soLoadAct()}
+  shSoon();if(SO.social){soFeedRefresh()}
   try{if(/[?&]amigo=/.test(location.search))history.replaceState(null,'',location.pathname)}catch(e){}}
 (function(){const d=$('soc');if(!d)return;
   const fc=$('feedCard');
-  fc.addEventListener('toggle',()=>{try{localStorage.setItem('sn-feed-open',fc.open?'1':'0')}catch(_){}if(fc.open){soLoadFollows().then(()=>soFeed());soLoadAct()}});
+  /* opening shows what is already loaded (prefetched after login); it refetches only when that is over 2 minutes old */
+  fc.addEventListener('toggle',()=>{try{localStorage.setItem('sn-feed-open',fc.open?'1':'0')}catch(_){}if(!fc.open)return;
+    if(SO.feedAt&&Date.now()-SO.feedAt<12e4&&$('so_feed').firstChild)return;soFeedRefresh()});
   $('feedFind').addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();soFindToggle()});
   $('feedMe').addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();soMePage()});
   d.addEventListener('cancel',ev=>{ev.preventDefault();soBack()});
