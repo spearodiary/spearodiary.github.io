@@ -3474,14 +3474,14 @@ async function prepImage(f){
     try{await loadHeic();const r=await window.heic2any({blob:f,toType:'image/jpeg',quality:.85});const b=Array.isArray(r)?r[0]:r;f=new File([b],(f.name||'photo').replace(/\.(heic|heif)$/i,'')+'.jpg',{type:'image/jpeg'})}
     catch(e){throw{code:'heic'}}}
   return shrinkImage(f)}
-/* keep the stored original small: longest side at most 2560 px, JPEG 0.85; only used when it is actually smaller */
-async function shrinkImage(f,max=2560){
-  if(!/^image\/(jpeg|png|webp)$/.test(f.type)||f.size<400*1024)return f;
+/* keep the stored original small: longest side at most 1080 px (as on Instagram), JPEG 0.85; only used when it is actually smaller */
+async function shrinkImage(f,max=1080){
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)||f.size<150*1024)return f;
   try{let bm=null,w,h;try{bm=await createImageBitmap(f,{imageOrientation:'from-image'})}catch(_){}
     let src=bm;if(!src){src=await new Promise((res,rej)=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{URL.revokeObjectURL(u);res(i)};i.onerror=e=>{URL.revokeObjectURL(u);rej(e)};i.src=u})}
     w=src.width||src.naturalWidth;h=src.height||src.naturalHeight;if(!w||!h)return f;const k=Math.min(1,max/Math.max(w,h));
     const cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(src,0,0,cv.width,cv.height);if(bm&&bm.close)bm.close();
-    const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(!b||b.size>=f.size*.9)return f;
+    const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(!b||(k>=1&&b.size>=f.size*.9))return f;
     return new File([b],(f.name||'photo').replace(/\.(png|webp|jpe?g)$/i,'')+'.jpg',{type:'image/jpeg'})}
   catch(_){return f}}
 /* Spelling: asks Claude to fix typos only, and always offers Undo */

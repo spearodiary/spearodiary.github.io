@@ -3474,14 +3474,14 @@ async function prepImage(f){
     try{await loadHeic();const r=await window.heic2any({blob:f,toType:'image/jpeg',quality:.85});const b=Array.isArray(r)?r[0]:r;f=new File([b],(f.name||'photo').replace(/\.(heic|heif)$/i,'')+'.jpg',{type:'image/jpeg'})}
     catch(e){throw{code:'heic'}}}
   return shrinkImage(f)}
-/* keep the stored original small: longest side at most 2560 px, JPEG 0.85; only used when it is actually smaller */
-async function shrinkImage(f,max=2560){
-  if(!/^image\/(jpeg|png|webp)$/.test(f.type)||f.size<400*1024)return f;
+/* keep the stored original small: longest side at most 1080 px (as on Instagram), JPEG 0.85; only used when it is actually smaller */
+async function shrinkImage(f,max=1080){
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)||f.size<150*1024)return f;
   try{let bm=null,w,h;try{bm=await createImageBitmap(f,{imageOrientation:'from-image'})}catch(_){}
     let src=bm;if(!src){src=await new Promise((res,rej)=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{URL.revokeObjectURL(u);res(i)};i.onerror=e=>{URL.revokeObjectURL(u);rej(e)};i.src=u})}
     w=src.width||src.naturalWidth;h=src.height||src.naturalHeight;if(!w||!h)return f;const k=Math.min(1,max/Math.max(w,h));
     const cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(src,0,0,cv.width,cv.height);if(bm&&bm.close)bm.close();
-    const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(!b||b.size>=f.size*.9)return f;
+    const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(!b||(k>=1&&b.size>=f.size*.9))return f;
     return new File([b],(f.name||'photo').replace(/\.(png|webp|jpe?g)$/i,'')+'.jpg',{type:'image/jpeg'})}
   catch(_){return f}}
 /* Spelling: asks Claude to fix typos only, and always offers Undo */
@@ -4550,7 +4550,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794846568';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794846817';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
