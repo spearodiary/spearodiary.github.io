@@ -2678,28 +2678,17 @@ async function fcLoad(force){
   fcLoading=false;drawForecast();
 }
 function fcFindClose(){$('fcFind').hidden=true;$('fcRes').innerHTML='';fcFillSelect()}
-async function fcSearch(nm0){
-  const q=$('fcQ').value.trim(),res=$('fcRes');if(!q)return;if(typeof nm0!=='string')nm0='';
+async function fcSearch(){
+  const q=$('fcQ').value.trim(),res=$('fcRes');if(!q)return;
   const see=(la,lo,nm)=>'<button type="button" class="fc-see" data-see="'+la+','+lo+'" data-name="'+esc(nm)+'" title="'+esc(t('fcSee'))+'" aria-label="'+esc(t('fcSee'))+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></button>';
-  /* coordinates or a full Google Maps / Windy link: the place name comes from the link when it has one, and can be edited */
-  const c=parseCoords(q);if(c){let nm='';const pm=/\/maps\/place\/([^/@?]+)/.exec(q);if(pm){try{nm=decodeURIComponent(pm[1].replace(/\+/g,' '))}catch(_){}}
-    nm=nm||nm0||c.lat.toFixed(4)+', '+c.lon.toFixed(4);
-    res.innerHTML='<li class="fc-new"><input id="fcName" value="'+esc(nm)+'" aria-label="'+esc(t('fcNameL'))+'"><span class="hint">'+esc(c.lat.toFixed(5)+', '+c.lon.toFixed(5))+'</span>'+see(c.lat,c.lon,nm)+'<button type="button" class="fc-add" data-lat="'+c.lat+'" data-lon="'+c.lon+'" data-name="'+esc(nm)+'" data-named="1">'+esc(t('fcAdd'))+'</button></li>';return}
-  /* a short Google Maps link: the server function resolve-link opens it and tells where it leads */
-  const sm=/https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i.exec(q);
-  if(sm){res.innerHTML='<li class="hint">'+esc(t('fcOpening'))+'</li>';const txtName=q.replace(sm[0],'').replace(/\s+/g,' ').trim();
-    try{const k=CFG.supabaseAnonKey,r=await fetch(CFG.supabaseUrl+'/functions/v1/resolve-link?u='+encodeURIComponent(sm[0]),{headers:{apikey:k,Authorization:'Bearer '+k}});if(!r.ok)throw 0;const j=await r.json();
-      let all=[j.url,...(j.chain||[])].join(' ');for(let i=0;i<3;i++){try{all=decodeURIComponent(all)}catch(_){break}}
-      const c2=parseCoords(all),pn=/\/maps\/place\/([^/@?&]+)/.exec(all),qn=/[?&]q=([^&@]+)/.exec(all);
-      const nm=((pn&&pn[1])||txtName||(qn&&!parseCoords(qn[1])&&qn[1])||'').replace(/\+/g,' ').trim();
-      if(c2){$('fcQ').value=(pn?'https://www.google.com/maps/place/'+pn[1]+'/':'')+'@'+c2.lat+','+c2.lon;if(!pn&&nm)$('fcQ').value=nm+' '+c2.lat+','+c2.lon;return fcSearch(nm)}
-      if(nm){$('fcQ').value=nm;return fcSearch()}}catch(_){}
-    if(txtName){$('fcQ').value=txtName;return fcSearch()}
-    res.innerHTML='<li class="hint">'+esc(t('fcShort'))+'</li>';return}
-  res.innerHTML='<li class="hint">'+esc(t('fcLoading'))+'</li>';
-  try{const j=await fcGet('https://geocoding-api.open-meteo.com/v1/search?count=8&format=json&language='+(lang==='pt'?'pt':'en')+'&name='+encodeURIComponent(q));
-    const r=(j.results||[]);res.innerHTML=r.length?r.map(x=>'<li class="fc-row"><button type="button" data-lat="'+x.latitude+'" data-lon="'+x.longitude+'" data-name="'+esc(x.name)+'">'+esc(x.name)+' <span class="hint">'+esc([x.admin1,x.country].filter(Boolean).join(', '))+'</span></button>'+see(x.latitude,x.longitude,x.name)+'</li>').join(''):'<li class="hint">'+esc(t('libNone'))+'</li>'}
-  catch(e){res.innerHTML='<li class="hint">'+esc(t('fcFail'))+'</li>'}
+  /* one exact point (coordinates, a full or short Google Maps link): an editable name + Add */
+  const one=(la,lo,nm)=>{nm=nm||la.toFixed(4)+', '+lo.toFixed(4);res.innerHTML='<li class="fc-new"><input id="fcName" value="'+esc(nm)+'" aria-label="'+esc(t('fcNameL'))+'"><span class="hint">'+esc(la.toFixed(5)+', '+lo.toFixed(5))+'</span>'+see(la,lo,nm)+'<button type="button" class="fc-add" data-lat="'+la+'" data-lon="'+lo+'" data-name="'+esc(nm)+'" data-named="1">'+esc(t('fcAdd'))+'</button></li>'};
+  const c=parseCoords(q);if(c){let nm='';const pm=/\/maps\/place\/([^/@?]+)/.exec(q);if(pm){try{nm=decodeURIComponent(pm[1].replace(/\+/g,' '))}catch(_){}}if(/\d°/.test(nm))nm='';one(c.lat,c.lon,nm);return}
+  res.innerHTML='<li class="hint">'+esc(t(SHORT_RE.test(q)?'fcOpening':'fcLoading'))+'</li>';
+  const r=await placeFind(q);if($('fcQ').value.trim()!==q)return;
+  if(!r.length){res.innerHTML='<li class="hint">'+esc(t(SHORT_RE.test(q)?'fcShort':'libNone'))+'</li>';return}
+  if(r[0].exact){one(r[0].lat,r[0].lng,r[0].name);return}
+  res.innerHTML=r.map(x=>'<li class="fc-row"><button type="button" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'">'+esc(x.name)+(x.sub?' <span class="hint">'+esc(x.sub)+'</span>':'')+'</button>'+see(x.lat,x.lng,x.name)+'</li>').join('')
 }
 $('fcGo').addEventListener('click',fcSearch);
 $('fcQ').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();fcSearch()}else if(ev.key==='Escape'){fcFindClose()}});
@@ -2718,10 +2707,15 @@ $('fcPop').addEventListener('click',ev=>{const b=ev.target.closest('button[data-
 document.addEventListener('click',ev=>{if(!$('fcPop').hidden&&!ev.target.closest('.fc-ddw'))fcPopClose()});
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&!$('fcPop').hidden)fcPopClose()});
 /* pick a place on the map (Google 3D/2D, Esri fallback): search inside the map, aim the crosshair, add it to the forecast places */
-async function placeFind(q){const c=parseCoords(q);if(c)return [{name:'',lat:c.lat,lng:c.lon}];
-  const sm=/https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i.exec(q);
-  if(sm){try{const k=CFG.supabaseAnonKey,r=await fetch(CFG.supabaseUrl+'/functions/v1/resolve-link?u='+encodeURIComponent(sm[0]),{headers:{apikey:k,Authorization:'Bearer '+k}});const j=await r.json();let all=[j.url,...(j.chain||[])].join(' ');for(let i=0;i<3;i++){try{all=decodeURIComponent(all)}catch(_){break}}
-    const c2=parseCoords(all),pn=/\/maps\/place\/([^/@?&]+)/.exec(all),nm=pn?pn[1].replace(/\+/g,' '):'';if(c2)return [{name:/\d°/.test(nm)?'':nm,lat:c2.lat,lng:c2.lon}];if(nm)q=nm;else return []}catch(_){return []}}
+const SHORT_RE=/https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i;
+async function placeFind(q){const c=parseCoords(q);if(c)return [{name:'',lat:c.lat,lng:c.lon,exact:1}];
+  const sm=SHORT_RE.exec(q);
+  if(sm){const txt=q.replace(sm[0],'').replace(/\s+/g,' ').trim();let nm='';
+    try{const k=CFG.supabaseAnonKey,r=await fetch(CFG.supabaseUrl+'/functions/v1/resolve-link?u='+encodeURIComponent(sm[0]),{headers:{apikey:k,Authorization:'Bearer '+k}});const j=await r.json();let all=[j.url,...(j.chain||[])].join(' ');for(let i=0;i<3;i++){try{all=decodeURIComponent(all)}catch(_){break}}
+      const pn=/\/maps\/place\/([^/@?&]+)/.exec(all),qn=/[?&](?:q|query)=([^&]+)/.exec(all);nm=(pn?pn[1]:qn?qn[1]:'').replace(/\+/g,' ').trim();
+      const c2=parseCoords(all.replace(/[?&](?:ftid|lucs|g_st|entry)=[^&\s]*/g,''));if(/\d°/.test(nm)||parseCoords(nm))nm='';
+      if(c2)return [{name:nm||txt,lat:c2.lat,lng:c2.lon,exact:1}]}catch(_){}
+    q=nm||txt;if(!q)return []}
   const out=[];try{await dlGLoad();const {Geocoder}=await google.maps.importLibrary('geocoding'),G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:'PT'}})}catch(_){}
     if(!r||!r.results.length||r.results[0].types.includes('country')){try{r=await G.geocode({address:q,region:'pt'})}catch(_){r=null}}
     (r&&r.results||[]).slice(0,5).forEach(g=>out.push({name:(g.address_components[0]||{}).long_name||q,sub:g.formatted_address,lat:g.geometry.location.lat(),lng:g.geometry.location.lng()}))}catch(_){}
@@ -2768,7 +2762,10 @@ $('fcRen').addEventListener('click',()=>{const cur=$('fcSpot').value,sp=fcCustom
   document.addEventListener('click',ev=>{if(d.classList.contains('ask')&&!d.contains(ev.target))reset()})}
 $('fcDel').addEventListener('click',()=>{const cur=$('fcSpot').value;try{localStorage.setItem('sn-fc-custom',JSON.stringify(fcCustom().filter(c=>norm(c.name)!==cur)));localStorage.setItem('sn-fc-spot',norm(FC_DEF.name))}catch(e){}seaFirst=true;fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
 $('fcSpot').addEventListener('change',()=>{if($('fcSpot').value==='__new'){$('fcFind').hidden=false;$('fcQ').focus();return}$('fcFind').hidden=true;seaFirst=true;try{localStorage.setItem('sn-fc-spot',$('fcSpot').value)}catch(e){}fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
-$('fcCard').addEventListener('toggle',()=>{try{localStorage.setItem('sn-fc',$('fcCard').open?'1':'0')}catch(e){}if($('fcCard').open&&!fcData)fcLoad();else drawForecast()});
+/* opening the card shows what is already drawn; it is redrawn only when the data, language or 10 minutes have changed (a 14-day table is heavy on phones) */
+let fcDrawn=null;
+$('fcCard').addEventListener('toggle',()=>{try{localStorage.setItem('sn-fc',$('fcCard').open?'1':'0')}catch(e){}if(!$('fcCard').open)return;
+  if(!fcData){fcLoad();return}if(fcDrawn&&fcDrawn.d===fcData&&fcDrawn.l===lang&&Date.now()-fcDrawn.t<6e5)return;drawForecast()});
 try{if(localStorage.getItem('sn-fc')==='0')$('fcCard').open=false}catch(e){}
 setInterval(()=>{if($('fcCard').open)fcLoad()},36e5);
 function wxKind(c){return c==null?'':c===0?'sunny':c<=2?'partly':c===3?'cloudy':c===45||c===48?'fog':c>=51&&c<=57?'drizzle':c>=95?'storm':'rain'}
@@ -2883,7 +2880,7 @@ function fwWindows(hrs,wv,mv,ST,sp){const o=fwGet(),out=[],H=ST*18e5;let cur=nul
     if(st&&w.wind_speed_10m!=null&&m.wave_height!=null&&w.wind_speed_10m<=o.w+1e-9&&m.wave_height<=o.v+1e-9&&(m.wave_period==null||m.wave_period<=o.p+1e-9)){const s0=Math.max(t-H,st.rise),e0=Math.min(t+H,st.set);if(e0>s0)seg=[s0,e0]}
     if(seg&&cur&&seg[0]<=cur.e+1000){cur.e=seg[1];cur.b=i}else{if(cur)out.push(cur);cur=seg?{a:i,b:i,s:seg[0],e:seg[1]}:null}});if(cur)out.push(cur);
   return out.filter(x=>x.e-x.s>=o.h*36e5-1000)}
-function drawForecast(){
+function drawForecast(){fcDrawn={d:fcData,l:lang,t:Date.now()};
   try{fcStrip()}catch(e){}
   const card=$('fcCard');if(!card||!card.open)return;
   const box=$('fcBox'),nowEl=$('fcNow'),nowMs=Date.now(),p=lisbonParts(nowMs),t0=nowMs-((p.hour*60+p.minute)*60+p.second)*1000-nowMs%1000;
