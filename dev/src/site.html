@@ -1497,7 +1497,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .fc-res .fc-new input{flex:1 1 160px;min-width:0}
 .fc-res .fc-add{padding:6px 12px;font-size:13.5px}
 .fc-ren{margin:8px 0}.fc-head[hidden]{display:none}
-.fc-ib{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;color:var(--sea)}.fc-ib:hover,.fc-ib:focus-visible{background:var(--sea-soft)}.fc-ib.fc-del{color:var(--muted)}.fc-ib[hidden]{display:none}
+.fc-ib{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;color:var(--sea)}.fc-ib:hover,.fc-ib:focus-visible{background:var(--sea-soft)}.fc-ib.fc-del{color:var(--danger);margin-left:-10px}.fc-ib.fc-del.ask{background:var(--danger);color:var(--surface)}.fc-ib[hidden]{display:none}
 .dlmf-pick .dlmf-top{right:calc(64px + env(safe-area-inset-right,0px));flex-direction:column;align-items:stretch;gap:6px}
 .dlmf-q{display:flex;gap:0;pointer-events:auto;background:rgba(10,30,38,.92);border-radius:22px;padding:3px 3px 3px 14px;align-items:center}
 .dlmf-q input{all:unset;flex:1;min-width:0;color:#fff;font-size:16px;height:38px}
@@ -2753,6 +2753,11 @@ $('fcRen').addEventListener('click',()=>{const cur=$('fcSpot').value,sp=fcCustom
     try{localStorage.setItem('sn-fc-custom',JSON.stringify(cs));localStorage.setItem('sn-fc-spot',norm(nm))}catch(e){}
     done();fcSpot=null;fcSpot=fcPick();fcFillSelect();drawForecast()};
   $('fcRenOk').onclick=ok;$('fcRenNo').onclick=done;i.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();ok()}else if(ev.key==='Escape')done()})});
+/* delete in two taps: the bin turns into a red "?" first; only a tap on it removes the place */
+{const d=$('fcDel'),bin=d.innerHTML,q='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-.9.4-1.5 1.2-1.5 2.2v.6"/><path d="M12 18.2v.1"/></svg>';let tm=0;
+  const reset=()=>{clearTimeout(tm);d.classList.remove('ask');d.innerHTML=bin};
+  d.addEventListener('click',ev=>{if(!d.classList.contains('ask')){ev.stopImmediatePropagation();d.classList.add('ask');d.innerHTML=q;tm=setTimeout(reset,4000);return}reset()},true);
+  document.addEventListener('click',ev=>{if(d.classList.contains('ask')&&!d.contains(ev.target))reset()})}
 $('fcDel').addEventListener('click',()=>{const cur=$('fcSpot').value;try{localStorage.setItem('sn-fc-custom',JSON.stringify(fcCustom().filter(c=>norm(c.name)!==cur)));localStorage.setItem('sn-fc-spot',norm(FC_DEF.name))}catch(e){}seaFirst=true;fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
 $('fcSpot').addEventListener('change',()=>{if($('fcSpot').value==='__new'){$('fcFind').hidden=false;$('fcQ').focus();return}$('fcFind').hidden=true;seaFirst=true;try{localStorage.setItem('sn-fc-spot',$('fcSpot').value)}catch(e){}fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
 $('fcCard').addEventListener('toggle',()=>{try{localStorage.setItem('sn-fc',$('fcCard').open?'1':'0')}catch(e){}if($('fcCard').open&&!fcData)fcLoad();else drawForecast()});
