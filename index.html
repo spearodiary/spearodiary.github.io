@@ -2765,8 +2765,8 @@ $('fcDel').addEventListener('click',()=>{const cur=$('fcSpot').value;try{localSt
 $('fcSpot').addEventListener('change',()=>{if($('fcSpot').value==='__new'){$('fcFind').hidden=false;$('fcQ').focus();return}$('fcFind').hidden=true;seaFirst=true;try{localStorage.setItem('sn-fc-spot',$('fcSpot').value)}catch(e){}fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
 /* opening the card shows what is already drawn; it is redrawn only when the data, language or 10 minutes have changed (a 14-day table is heavy on phones) */
 let fcDrawn=null;
-$('fcCard').addEventListener('toggle',()=>{try{localStorage.setItem('sn-fc',$('fcCard').open?'1':'0')}catch(e){}if(!$('fcCard').open)return;
-  if(!fcData){fcLoad();return}if(fcDrawn&&fcDrawn.d===fcData&&fcDrawn.l===lang&&Date.now()-fcDrawn.t<6e5)return;drawForecast()});
+$('fcCard').addEventListener('toggle',()=>{try{localStorage.setItem('sn-fc',$('fcCard').open?'1':'0')}catch(e){}if(!$('fcCard').open){try{fcStrip()}catch(e){}return}$('fcStrip').hidden=true;
+  if(!fcData){fcLoad();return}if(fcDrawn&&fcDrawn.d===fcData&&fcDrawn.l===lang&&Date.now()-fcDrawn.t<6e5&&$('fcBox').childElementCount)return;drawForecast()});
 try{if(localStorage.getItem('sn-fc')==='0')$('fcCard').open=false}catch(e){}
 setInterval(()=>{if($('fcCard').open)fcLoad()},36e5);
 function wxKind(c){return c==null?'':c===0?'sunny':c<=2?'partly':c===3?'cloudy':c===45||c===48?'fog':c>=51&&c<=57?'drizzle':c>=95?'storm':'rain'}
@@ -2881,9 +2881,9 @@ function fwWindows(hrs,wv,mv,ST,sp){const o=fwGet(),out=[],H=ST*18e5;let cur=nul
     if(st&&w.wind_speed_10m!=null&&m.wave_height!=null&&w.wind_speed_10m<=o.w+1e-9&&m.wave_height<=o.v+1e-9&&(m.wave_period==null||m.wave_period<=o.p+1e-9)){const s0=Math.max(t-H,st.rise),e0=Math.min(t+H,st.set);if(e0>s0)seg=[s0,e0]}
     if(seg&&cur&&seg[0]<=cur.e+1000){cur.e=seg[1];cur.b=i}else{if(cur)out.push(cur);cur=seg?{a:i,b:i,s:seg[0],e:seg[1]}:null}});if(cur)out.push(cur);
   return out.filter(x=>x.e-x.s>=o.h*36e5-1000)}
-function drawForecast(){fcDrawn={d:fcData,l:lang,t:Date.now()};
+function drawForecast(){
   try{fcStrip()}catch(e){}
-  const card=$('fcCard');if(!card||!card.open)return;
+  const card=$('fcCard');if(!card||!card.open)return;fcDrawn={d:fcData,l:lang,t:Date.now()};
   const box=$('fcBox'),nowEl=$('fcNow'),nowMs=Date.now(),p=lisbonParts(nowMs),t0=nowMs-((p.hour*60+p.minute)*60+p.second)*1000-nowMs%1000;
   const lastW=fcData&&fcData.w&&fcData.w.time?fcData.w.time[fcData.w.time.length-1]*1000:t0+3*864e5,DAYS=Math.max(3,Math.min(14,Math.ceil((lastW-t0)/864e5))),ST=fcStep(),HALF=ST*18e5,NH=DAYS*24/ST,CW=32,W=NH*CW,cx=i=>i*CW+CW/2,XT=t=>(t-t0)/(36e5*ST)*CW+CW/2;
   const R=[['day',22],['hour',20],['win',20],['sun',22],['sky',34],['air',20],['g0',10],['wind',22],['windA',48],['g1',22],['wave',16],['waveA',48],['gc',10],['clar',30],['g2',10],['sst',16],['g3',8],['tide',60]];
@@ -4407,7 +4407,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794839964';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794840311';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
