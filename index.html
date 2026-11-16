@@ -1746,7 +1746,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
       <div class="lang-row"><div class="lang" role="group" aria-label="Language">
         <button type="button" id="langPt" lang="pt">PT</button>
         <button type="button" id="langEn" lang="en">EN</button>
-        <button type="button" id="langEs" lang="es">ES</button>
+        <button type="button" id="langEs" lang="es" hidden>ES</button>
       </div>
       </div>
     </section>
@@ -2031,7 +2031,9 @@ const FACEC={good:'var(--good)',ok:'var(--amber)',bad:'var(--danger)'};
 function face(m){return '<svg class="face" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="'+FACEC[m]+'" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="'+MOUTH[m]+'"/><path d="M9 9h.01M15 9h.01" stroke-width="2.6"/></svg>'}
 
 let lang='en';try{lang=localStorage.getItem('sn-lang')||''}catch(e){lang=''}
-if(lang!=='en'&&lang!=='pt'&&lang!=='es'){let n='';try{n=(navigator.language||'').slice(0,2)}catch(e){}lang=n==='es'?'es':'pt'}
+/* Spanish is ready but hidden until Spain is added: only ?lang=es turns it on (for testing) */
+try{const q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='pt'||q==='en')lang=q}catch(e){}
+if(lang!=='en'&&lang!=='pt'&&lang!=='es')lang='pt';
 const t=k=>{const d=T[lang],v=d&&d[k];return v!==undefined?v:T.en[k]};
 const LX=o=>o?(o[lang]!=null?o[lang]:o.en):'';
 const locale=()=>lang==='pt'?'pt-PT':lang==='es'?'es-ES':'en-GB';
@@ -4548,7 +4550,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794840897';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794846568';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);

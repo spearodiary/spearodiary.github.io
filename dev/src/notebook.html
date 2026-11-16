@@ -1136,7 +1136,7 @@ dialog .sheet-in,#dlg form{overscroll-behavior:contain}
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langPt" lang="pt">PT</button>
         <button type="button" id="langEn" lang="en">EN</button>
-        <button type="button" id="langEs" lang="es">ES</button>
+        <button type="button" id="langEs" lang="es" hidden>ES</button>
       </div>
     </section>
     <section class="set-sec">
@@ -1337,7 +1337,9 @@ const FACEC={good:'var(--good)',ok:'var(--amber)',bad:'var(--danger)'};
 function face(m){return '<svg class="face" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="'+FACEC[m]+'" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="'+MOUTH[m]+'"/><path d="M9 9h.01M15 9h.01" stroke-width="2.6"/></svg>'}
 
 let lang='en';try{lang=localStorage.getItem('sn-lang')||''}catch(e){lang=''}
-if(lang!=='en'&&lang!=='pt'&&lang!=='es'){let n='';try{n=(navigator.language||'').slice(0,2)}catch(e){}lang=n==='es'?'es':'pt'}
+/* Spanish is ready but hidden until Spain is added: only ?lang=es turns it on (for testing) */
+try{const q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='pt'||q==='en')lang=q}catch(e){}
+if(lang!=='en'&&lang!=='pt'&&lang!=='es')lang='pt';
 const t=k=>{const d=T[lang],v=d&&d[k];return v!==undefined?v:T.en[k]};
 const LX=o=>o?(o[lang]!=null?o[lang]:o.en):'';
 const locale=()=>lang==='pt'?'pt-PT':lang==='es'?'es-ES':'en-GB';
