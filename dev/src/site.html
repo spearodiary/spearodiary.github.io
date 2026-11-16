@@ -1596,6 +1596,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
   </form>
 
   <div class="notice" id="modeNotice" hidden></div>
+  <div class="notice" id="syncNote" hidden></div>
 
   <details class="tidecard" id="srCard">
     <summary><svg class="fc-ic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span data-i="searchPh"></span><span class="sr-on" id="srOn" role="button" tabindex="0" data-al="clear" hidden></span></summary>
@@ -2546,6 +2547,9 @@ function demoStore(){
     async save(id,d){mem[id]=d;emit()},async remove(id){delete mem[id];emit()},async backup(){},async history(){return[]}};
 }
 const DEMO=/[?&]demo(=|&|$)/.test(location.search);
+Object.assign(T.pt,{offPend:n=>(n===1?'1 alteração guardada':n+' alterações guardadas')+' neste aparelho. Será enviada quando houver internet.',offView:'Sem internet: está a ver a última cópia guardada neste aparelho. Pode adicionar caçadas; serão enviadas depois.',offSaved:'Guardado neste aparelho. Será enviado quando houver internet.'});
+Object.assign(T.en,{offPend:n=>(n===1?'1 change saved':n+' changes saved')+' on this device. It will be sent when you are back online.',offView:'No internet: showing the last copy saved on this device. You can add dives; they will be sent later.',offSaved:'Saved on this device. It will be sent when you are back online.'});
+Object.assign(T.es,{offPend:n=>(n===1?'1 cambio guardado':n+' cambios guardados')+' en este dispositivo. Se enviará cuando haya internet.',offView:'Sin internet: estás viendo la última copia guardada en este dispositivo. Puedes añadir jornadas; se enviarán después.',offSaved:'Guardado en este dispositivo. Se enviará cuando haya internet.'});
 Object.assign(T.pt,{demoMode:'Demonstração com dados de exemplo: pode experimentar tudo, mas nada fica guardado.'});
 Object.assign(T.en,{demoMode:'Demo with sample data: try everything, nothing is saved.'});
 function dbStore(db,uid){
@@ -2593,9 +2597,31 @@ async function fetchUrls(){
   (data||[]).forEach(r=>{if(r.signedUrl)ucPut(r.path,r.signedUrl,6.5*864e5)});
   render(false);if($('dlg').open){drawPhotos();drawShots()}
 }
+/* Offline: the last copy of the diary is kept on the device, and new or changed entries wait in an outbox
+   until the connection is back. Nothing is thrown away: an entry stays in the outbox until the server accepts it. */
+const isNetErr=e=>{try{if(!navigator.onLine)return true}catch(_){}const m=String(e&&(e.message||e.error_description||e)||'');return /fetch|network|load failed|timeout|offline|aborted|ERR_|JWT|token/i.test(m)};
 function sbStore(uid){
   let listener=null;
-  const rows=new Map();let full=false,busy=null,again=false;
+  const rows=new Map();let full=false,busy=null,again=false,offline=false;
+  const CK='sd-cache-'+uid,OK='sd-outbox-'+uid;let outbox={e:{},h:[]};
+  try{const o=JSON.parse(localStorage.getItem(OK)||'null');if(o&&o.e)outbox={e:o.e,h:o.h||[]}}catch(e){}
+  try{const c=JSON.parse(localStorage.getItem(CK)||'null');if(Array.isArray(c))c.forEach(([id,r])=>rows.set(id,r))}catch(e){}
+  const saveCache=()=>{try{localStorage.setItem(CK,JSON.stringify([...rows]))}catch(e){}};
+  const pend=()=>Object.keys(outbox.e).length+outbox.h.length;
+  const note=()=>{const el=$('syncNote');if(!el)return;const n=Object.keys(outbox.e).length;el.textContent=n?t('offPend')(n):offline?t('offView'):'';el.hidden=!el.textContent};
+  const saveOut=()=>{try{localStorage.setItem(OK,JSON.stringify(outbox))}catch(e){}note()};
+  const view=()=>{const m=new Map(rows);for(const[id,o] of Object.entries(outbox.e)){if(o.op==='del')m.delete(id);else m.set(id,{u:'',d:o.d})}return[...m].map(([id,r])=>({...r.d,id}))};
+  const emit=()=>{listener&&listener(view())};
+  let flushing=null;
+  const flush=async()=>{if(!pend())return;if(flushing)return flushing;flushing=(async()=>{
+    while(outbox.h.length){const h=outbox.h[0];const{error}=await sb.from('history').insert(h);if(error)throw error;outbox.h.shift();saveOut()}
+    for(const[id,o] of Object.entries(outbox.e)){
+      const{error}=o.op==='del'?await sb.from('entries').delete().eq('id',id):await sb.from('entries').upsert({user_id:uid,id,data:o.d,updated_at:o.t},{onConflict:'user_id,id'});
+      if(error)throw error;if(outbox.e[id]===o){delete outbox.e[id];saveOut()}}
+  })();try{await flushing;offline=false;note()}finally{flushing=null}};
+  const tryFlush=()=>flush().then(()=>load()).catch(e=>{if(isNetErr(e)){offline=true;note()}});
+  addEventListener('online',()=>{tryFlush()});
+  setInterval(()=>{if(pend()&&document.visibilityState==='visible')tryFlush()},30000);
   const load=async()=>{if(busy){again=true;return busy}busy=(async()=>{
     if(!full){const{data,error}=await sb.from('entries').select('id,data,updated_at').limit(5000);if(error)throw error;
       rows.clear();data.forEach(r=>rows.set(r.id,{u:r.updated_at||'',d:r.data}));full=true}
@@ -2604,7 +2630,7 @@ function sbStore(uid){
       let gone=false;[...rows.keys()].forEach(id=>{if(!seen.has(id)){rows.delete(id);gone=true}});
       if(!need.length&&!gone)return;
       for(let i=0;i<need.length;i+=100){const{data:d2,error:e2}=await sb.from('entries').select('id,data,updated_at').in('id',need.slice(i,i+100));if(e2)throw e2;d2.forEach(r=>rows.set(r.id,{u:r.updated_at||'',d:r.data}))}}
-    listener&&listener([...rows].map(([id,r])=>({...r.d,id})));
+    offline=false;saveCache();emit();note();
   })();try{return await busy}finally{busy=null;if(again){again=false;setTimeout(()=>load().catch(()=>{}),0)}}};
   addEventListener('focus',()=>{load().catch(()=>{})});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')load().catch(()=>{})});
@@ -2613,11 +2639,16 @@ function sbStore(uid){
   try{sb.channel('entries-'+uid).on('postgres_changes',{event:'*',schema:'public',table:'entries',filter:'user_id=eq.'+uid},soon).subscribe()}catch(e){}
   let lastPoll=0;setInterval(()=>{if(document.visibilityState!=='visible')return;const fast=$('checklist').open,gap=fast?15e3:3e5;if(Date.now()-lastPoll<gap)return;lastPoll=Date.now();load().catch(()=>{})},2e3);
   return{
-    sub(fn,fail){listener=fn;load().catch(fail)},
+    sub(fn,fail){listener=fn;const had=rows.size>0||pend()>0;if(had)emit();note();
+      load().then(()=>{if(pend())tryFlush()}).catch(e=>{if(isNetErr(e)){offline=true;note();if(!had)emit()}else fail(e)})},
     newId(){return (crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)).replace(/-/g,'')},
-    async save(id,d){const{error}=await sb.from('entries').upsert({user_id:uid,id,data:d,updated_at:new Date().toISOString()},{onConflict:'user_id,id'});if(error)throw error;await load()},
-    async remove(id){const{error}=await sb.from('entries').delete().eq('id',id);if(error)throw error;await load()},
-    async backup(id,d,del){const{error}=await sb.from('history').insert({user_id:uid,entry_id:id,saved_at:Date.now(),deleted:!!del,data:d});if(error)throw error},
+    async save(id,d){outbox.e[id]={op:'save',d,t:new Date().toISOString()};saveOut();emit();
+      try{await flush();await load()}catch(e){if(isNetErr(e)){offline=true;note();return}throw e}},
+    async remove(id){outbox.e[id]={op:'del',t:new Date().toISOString()};saveOut();emit();
+      try{await flush();await load()}catch(e){if(isNetErr(e)){offline=true;note();return}throw e}},
+    async backup(id,d,del){outbox.h.push({user_id:uid,entry_id:id,saved_at:Date.now(),deleted:!!del,data:d});saveOut();
+      try{await flush()}catch(e){if(!isNetErr(e))throw e}},
+    pending:pend,
     async history(){const{data,error}=await sb.from('history').select('entry_id,saved_at,deleted,data').order('saved_at',{ascending:false}).limit(1000);if(error)throw error;return data.map(h=>({entryId:h.entry_id,savedAt:+h.saved_at,deleted:h.deleted,data:h.data}))}
   };
 }
@@ -2681,12 +2712,13 @@ $('newPassForm').addEventListener('submit',async ev=>{
   catch(e){err.textContent=t('authFail');err.hidden=false}
   $('nGo').disabled=false;
 });
-$('signOut').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
+$('signOut').addEventListener('click',async()=>{try{const u=JSON.parse(localStorage.getItem('sd-user')||'null');localStorage.removeItem('sd-user');if(u){localStorage.removeItem('sd-cache-'+u.id)}}catch(e){}await sb.auth.signOut();location.reload()});
 let started=false;
 function startApp(user){
   if(started||recovering)return;started=true;setTimeout(()=>{fcFillSelect();fcLoad()},300);
   $('authView').hidden=true;$('appView').hidden=false;
   $('who').textContent=user.email||'';$('setAccount').hidden=false;
+  try{localStorage.setItem('sd-user',JSON.stringify({id:user.id,email:user.email||''}))}catch(e){}
   store=sbStore(user.id);assets=sbAssets(user.id);downloads=fileDownloads;
   frStart(user);$('shotBlock').hidden=false;$('photoBlock').hidden=false;$('exportCsv').hidden=false;$('backupBtn').hidden=false;
   loadTimer=setTimeout(()=>{if(!loaded)showMode('loadSlow')},10000);
@@ -2709,7 +2741,9 @@ async function boot(){
   const linkErr=/error_code=([a-z_]+)/.exec(u0);
   sb=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey);
   sb.auth.onAuthStateChange((ev,session)=>{if(ev==='PASSWORD_RECOVERY'){recovering=true;showAuth();return}if(session&&session.user)startApp(session.user)});
-  const{data}=await sb.auth.getSession();
+  let data={session:null};try{const r=await sb.auth.getSession();data=r.data||data}catch(e){}
+  if(!data.session&&!recovering){let u=null;try{u=JSON.parse(localStorage.getItem('sd-user')||'null')}catch(e){}
+    if(u&&u.id&&!navigator.onLine){startApp(u);return}}
   if(linkErr){try{history.replaceState(null,'',location.pathname)}catch(e){}}
   if(recovering&&!data.session&&!linkErr){await new Promise(r=>setTimeout(r,1500));const d2=await sb.auth.getSession();data.session=d2.data.session}
   if(recovering&&!data.session)recovering=false;
