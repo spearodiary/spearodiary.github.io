@@ -1517,8 +1517,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .fc-dd:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
 .fc-pop{position:absolute;z-index:40;top:calc(100% + 4px);left:0;min-width:220px;max-width:min(320px,calc(100vw - 40px));max-height:min(60vh,420px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);padding:6px}
 .fc-pop[hidden]{display:none}
-.fc-pop .fc-pg{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 10px 4px}
-.fc-pop button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:9px 10px;border-radius:8px;font-size:15px;color:var(--ink)}
+.fc-pop .fc-pg{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px 3px}
+.fc-pop button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:7px 10px;border-radius:6px;font-size:13.5px;color:var(--ink)}
 .fc-pop button:hover,.fc-pop button:focus-visible{background:var(--sea-soft)}
 .fc-pop button.on{color:var(--sea);font-weight:600}
 .fc-pop button[data-new]{color:var(--sea);border-top:1px solid var(--line);border-radius:0 0 8px 8px;margin-top:4px}
@@ -4408,7 +4408,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794838227';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1794838272';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
