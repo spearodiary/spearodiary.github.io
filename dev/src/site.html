@@ -1511,6 +1511,17 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .dlmf-pick .dlmf-bar{flex-direction:column;align-items:stretch}
 .dlmf-nm{all:unset;box-sizing:border-box;background:rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;color:#fff;font-size:16px}
 .dlmf-pick .dlmf-bb{justify-content:flex-end}
+.fc-ddw{position:relative;display:inline-flex;max-width:100%;min-width:0}
+.fc-ddw select{display:none}
+.fc-dd{all:unset;box-sizing:border-box;cursor:pointer;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 30px 5px 10px;font-size:13.5px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%237d8b92' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.fc-dd:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+.fc-pop{position:absolute;z-index:40;top:calc(100% + 4px);left:0;min-width:220px;max-width:min(320px,calc(100vw - 40px));max-height:min(60vh,420px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.28);padding:6px}
+.fc-pop[hidden]{display:none}
+.fc-pop .fc-pg{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 10px 4px}
+.fc-pop button{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:9px 10px;border-radius:8px;font-size:15px;color:var(--ink)}
+.fc-pop button:hover,.fc-pop button:focus-visible{background:var(--sea-soft)}
+.fc-pop button.on{color:var(--sea);font-weight:600}
+.fc-pop button[data-new]{color:var(--sea);border-top:1px solid var(--line);border-radius:0 0 8px 8px;margin-top:4px}
 </style>
 </head>
 <body>
@@ -1562,7 +1573,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
   </details>
   <details class="tidecard" id="fcCard" open>
     <summary id="fcSum"><svg class="fc-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg><span data-i="fcTitleA"></span> <button type="button" class="fc-step" id="fcStepBtn" aria-haspopup="true"></button><button type="button" class="fc-pal" id="fcPal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></button></summary>
-    <div class="fc-head"><select id="fcSpot" data-al="spot"></select><button type="button" class="fc-ib" id="fcMap" data-t="fcMapPick" data-al="fcMapPick"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></button><button type="button" class="fc-ib" id="fcRen" hidden data-t="fcRenSpot" data-al="fcRenSpot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg></button><button type="button" class="fc-ib fc-del" id="fcDel" hidden data-t="fcDelSpot" data-al="fcDelSpot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg></button><span class="hint" id="fcStamp"></span></div>
+    <div class="fc-head"><span class="fc-ddw"><select id="fcSpot" data-al="spot" tabindex="-1" aria-hidden="true"></select><button type="button" class="fc-dd" id="fcSpotBtn" aria-haspopup="listbox" aria-expanded="false" data-al="spot"></button><div class="fc-pop" id="fcPop" role="listbox" hidden></div></span><button type="button" class="fc-ib" id="fcMap" data-t="fcMapPick" data-al="fcMapPick"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></button><button type="button" class="fc-ib" id="fcRen" hidden data-t="fcRenSpot" data-al="fcRenSpot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg></button><button type="button" class="fc-ib fc-del" id="fcDel" hidden data-t="fcDelSpot" data-al="fcDelSpot"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg></button><span class="hint" id="fcStamp"></span></div>
     <div class="fc-find" id="fcFind" hidden><input id="fcQ" type="search" data-ph="fcFindPh" data-al="fcFindPh" autocomplete="off"><button type="button" id="fcGo" data-i="fcFindGo"></button><button type="button" class="link" id="fcCancel" data-i="cancel"></button><ul class="fc-res" id="fcRes"></ul></div>
     <div class="tide-now" id="fcNow"></div>
     <div id="fcBox"></div>
@@ -2645,6 +2656,7 @@ function fcFillSelect(){
   const opt=s=>'<option value="'+esc(norm(s.name))+'">'+esc(s.name)+'</option>',grp=(g,l)=>{const a=list.filter(s=>s.g===g);return a.length?'<optgroup label="'+esc(t(l))+'">'+a.map(opt).join('')+'</optgroup>':''};
   sel.innerHTML=list.filter(s=>s.g==='d').map(opt).join('')+grp('m','fcGrpMine')+grp('c','fcGrpAdded')+grp('p','fcGrpPlaces')+'<option value="__new">'+esc(t('fcOther'))+'</option>';sel.value=norm(cur);
   $('fcDel').hidden=!list.some(s=>s.g==='c'&&norm(s.name)===norm(cur));$('fcRen').hidden=$('fcDel').hidden;
+  {const o=sel.selectedOptions[0];$('fcSpotBtn').textContent=o?o.textContent:''}
 }
 async function fcGet(url){const r=await fetch(url);if(!r.ok)throw new Error('http '+r.status);return r.json()}
 async function fcLoad(force){
@@ -2694,6 +2706,15 @@ $('fcRes').addEventListener('click',ev=>{const sv=ev.target.closest('button[data
   const b=ev.target.closest('button[data-lat]');if(!b)return;let nm=b.dataset.name;if(b.dataset.named){const v=($('fcName')||{}).value;if(v&&v.trim())nm=v.trim()}const sp={name:nm,lat:+b.dataset.lat,lon:+b.dataset.lon};
   const cs=fcCustom().filter(c=>norm(c.name)!==norm(sp.name));cs.unshift(sp);try{localStorage.setItem('sn-fc-custom',JSON.stringify(cs.slice(0,12)));localStorage.setItem('sn-fc-spot',norm(sp.name))}catch(e){}
   $('fcFind').hidden=true;$('fcRes').innerHTML='';$('fcQ').value='';seaFirst=true;fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
+/* the place list in the app's own style (a native <select> opens the system picker on phones); the hidden select keeps the value */
+function fcPopClose(){$('fcPop').hidden=true;$('fcSpotBtn').setAttribute('aria-expanded','false')}
+$('fcSpotBtn').addEventListener('click',ev=>{ev.stopPropagation();const pop=$('fcPop');if(!pop.hidden){fcPopClose();return}const sel=$('fcSpot');
+  const item=o=>'<button type="button" role="option" data-v="'+esc(o.value)+'"'+(o.value===sel.value?' class="on" aria-selected="true"':'')+(o.value==='__new'?' data-new="1"':'')+'>'+esc(o.textContent)+'</button>';
+  pop.innerHTML=[...sel.children].map(ch=>ch.tagName==='OPTGROUP'?'<div class="fc-pg">'+esc(ch.label)+'</div>'+[...ch.children].map(item).join(''):item(ch)).join('');
+  pop.hidden=false;$('fcSpotBtn').setAttribute('aria-expanded','true');const on=pop.querySelector('.on');if(on)on.scrollIntoView({block:'nearest'})});
+$('fcPop').addEventListener('click',ev=>{const b=ev.target.closest('button[data-v]');if(!b)return;fcPopClose();const sel=$('fcSpot');sel.value=b.dataset.v;sel.dispatchEvent(new Event('change'))});
+document.addEventListener('click',ev=>{if(!$('fcPop').hidden&&!ev.target.closest('.fc-ddw'))fcPopClose()});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&!$('fcPop').hidden)fcPopClose()});
 /* pick a place on the map (Google 3D/2D, Esri fallback): search inside the map, aim the crosshair, add it to the forecast places */
 async function placeFind(q){const c=parseCoords(q);if(c)return [{name:'',lat:c.lat,lng:c.lon}];
   const sm=/https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i.exec(q);
@@ -2723,7 +2744,7 @@ function fcMapPick(){const cur=fcSpot||fcPick(),o=mapOverlay(document.body,'');o
     dlMapClose();$('fcFind').hidden=true;seaFirst=true;fcData=null;fcSpot=null;fcFillSelect();fcLoad()}}
 $('fcMap').addEventListener('click',fcMapPick);
 /* rename a place the user added: an inline field in place of the list */
-$('fcRen').addEventListener('click',()=>{const cur=$('fcSpot').value,sp=fcCustom().find(c=>norm(c.name)===cur);if(!sp)return;const head=$('fcSpot').parentNode;
+$('fcRen').addEventListener('click',()=>{const cur=$('fcSpot').value,sp=fcCustom().find(c=>norm(c.name)===cur);if(!sp)return;const head=$('fcSpot').closest('.fc-head');
   const box=document.createElement('div');box.className='fc-find fc-ren';box.innerHTML='<input id="fcRenI" aria-label="'+esc(t('fcNameL'))+'"><button type="button" id="fcRenOk">'+esc(t('save'))+'</button><button type="button" class="link" id="fcRenNo">'+esc(t('cancel'))+'</button>';
   head.hidden=true;head.after(box);const i=$('fcRenI');i.value=sp.name;i.focus();i.select();
   const done=()=>{box.remove();head.hidden=false};
