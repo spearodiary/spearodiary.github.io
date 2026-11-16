@@ -52,6 +52,12 @@ Status: everything up to `supabase-online.sql` has been run. **`supabase-tags.sq
 Free-plan limits to watch (Usage page): 500 MB database, 1 GB file storage, 5 GB egress; no automatic backups; project pauses after a week without activity.
 Auth uses email + password. Auth emails go out through a custom SMTP sender (the owner's Gmail with an app password), not Supabase's built-in mailer, which only reaches the project team (2/hour). Watch: Supabase's own limit for custom SMTP (Auth → Rate Limits, 30 emails/hour by default) and Gmail's daily sending cap.
 
+## Edge function
+
+`dev/functions/resolve-link/index.ts` opens short Google Maps links (maps.app.goo.gl) on the server so "Outro local" in Mar e tempo can read their coordinates or place name.
+Deploy from the Supabase dashboard (Edge Functions → Deploy a new function → Via editor, name `resolve-link`), then turn off **Verify JWT** for it (the site sends the publishable key).
+Status: **not deployed yet** — until it is, short links show a hint instead.
+
 ## Code map (site.html)
 
 - Entries: `readForm`, `openForm`, `entryHtml`, `saveEntry`; compact-mode fields `cfApply`/`CF`/`CF_DEF`; card order `cardOrd`/`C_DEF`.
