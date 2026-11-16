@@ -56,7 +56,7 @@ Auth uses email + password. Auth emails go out through a custom SMTP sender (the
 
 `dev/functions/resolve-link/index.ts` opens short Google Maps links (maps.app.goo.gl) on the server so "Outro local" in Mar e tempo can read their coordinates or place name.
 Deploy from the Supabase dashboard (Edge Functions → Deploy a new function → Via editor, name `resolve-link`), then turn off **Verify JWT** for it (the site sends the publishable key).
-Status: **not deployed yet** — until it is, short links show a hint instead.
+Status: deployed 2026-11-16 (Verify JWT off).
 
 ## Code map (site.html)
 
