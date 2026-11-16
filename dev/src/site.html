@@ -1524,6 +1524,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 .fc-pop button[data-new]{color:var(--sea);border-top:1px solid var(--line);border-radius:0 0 8px 8px;margin-top:4px}
 .dlmf-pick .dlmf-top{max-width:440px}
 .dlmf-q,.dlmf-q input{font-family:var(--body);font-weight:400}
+.fc-ren{flex-wrap:nowrap}.fc-ren input{min-width:0}.fc-ren .fc-ib{flex:none;padding:0;border:0}.fc-ren .fc-ok{color:var(--good)}.fc-ren .fc-no{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -2747,7 +2748,7 @@ $('fcMap').addEventListener('click',fcMapPick);
 $('fcAddB').addEventListener('click',()=>{const f=$('fcFind');if(!f.hidden){fcFindClose();return}f.hidden=false;$('fcQ').focus()});
 /* rename a place the user added: an inline field in place of the list */
 $('fcRen').addEventListener('click',()=>{const cur=$('fcSpot').value,sp=fcCustom().find(c=>norm(c.name)===cur);if(!sp)return;const head=$('fcSpot').closest('.fc-head');
-  const box=document.createElement('div');box.className='fc-find fc-ren';box.innerHTML='<input id="fcRenI" aria-label="'+esc(t('fcNameL'))+'"><button type="button" id="fcRenOk">'+esc(t('save'))+'</button><button type="button" class="link" id="fcRenNo">'+esc(t('cancel'))+'</button>';
+  const box=document.createElement('div');box.className='fc-find fc-ren';box.innerHTML='<input id="fcRenI" aria-label="'+esc(t('fcNameL'))+'"><button type="button" class="fc-ib fc-ok" id="fcRenOk" title="'+esc(t('save'))+'" aria-label="'+esc(t('save'))+'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button type="button" class="fc-ib fc-no" id="fcRenNo" title="'+esc(t('cancel'))+'" aria-label="'+esc(t('cancel'))+'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>';
   head.hidden=true;head.after(box);const i=$('fcRenI');i.value=sp.name;i.focus();i.select();
   const done=()=>{box.remove();head.hidden=false};
   const ok=()=>{const nm=i.value.trim();if(!nm||norm(nm)===cur){done();return}
