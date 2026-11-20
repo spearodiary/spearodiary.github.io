@@ -4928,7 +4928,9 @@ async function frStart(user){
   d.addEventListener('cancel',ev=>{ev.preventDefault();soBack()});
   $('soPg').addEventListener('scroll',()=>{const g=$('soPg');if((SO.prof==='@feed'||SO.prof==='@me')&&g.scrollTop+g.clientHeight>g.scrollHeight-700)soFeedMore()},{passive:true});
   {let sx=null,sy=0,dx=0;const pg=$('soPg');
-    d.addEventListener('touchstart',ev=>{const t0=ev.touches[0];if(ev.touches.length!==1||t0.clientX>window.innerWidth*.6){sx=null;return}sx=t0.clientX;sy=t0.clientY;dx=0},{passive:true});
+    /* on anything that scrolls sideways (photos of a post), a swipe moves the photos; "back" then only starts from the very left edge, like iOS */
+    const hScroll=el=>{for(let e=el;e&&e!==d;e=e.parentElement){if(e.scrollWidth>e.clientWidth+2&&/(auto|scroll)/.test(getComputedStyle(e).overflowX))return true}return false};
+    d.addEventListener('touchstart',ev=>{const t0=ev.touches[0];if(ev.touches.length!==1||t0.clientX>window.innerWidth*.6||(t0.clientX>24&&hScroll(ev.target))){sx=null;return}sx=t0.clientX;sy=t0.clientY;dx=0},{passive:true});
     d.addEventListener('touchmove',ev=>{if(sx==null)return;const t0=ev.touches[0];dx=t0.clientX-sx;const dy=Math.abs(t0.clientY-sy);if(dy>40&&dx<dy){sx=null;pg.style.transform='';return}if(dx>0)pg.style.transform='translateX('+dx+'px)'},{passive:true});
     d.addEventListener('touchend',()=>{if(sx==null)return;sx=null;pg.style.transition='transform .2s ease';if(dx>90){pg.style.transform='translateX(100%)';setTimeout(()=>{pg.style.transition='';pg.style.transform='';soBack()},190)}else{pg.style.transform='';setTimeout(()=>pg.style.transition='',200)}})}
   $('gearBtn').addEventListener('click',()=>{soMeLoad()});
