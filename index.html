@@ -1001,10 +1001,13 @@ details .inner{display:grid;gap:12px;padding-top:12px}
 #viewer[open]{display:grid;grid-template-rows:minmax(0,1fr) auto;place-items:center}
 #viewer::backdrop{background:rgba(4,14,18,.94)}
 #viewer{overscroll-behavior:contain;touch-action:none}
-.vtrack{width:100%;height:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior:contain;touch-action:pan-x pinch-zoom;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.vtrack{width:100%;height:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior:contain;touch-action:pan-x;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .vtrack::-webkit-scrollbar{display:none}
 .vtrack>div{flex:0 0 100%;height:100%;display:grid;place-items:center;scroll-snap-align:center;scroll-snap-stop:always;padding:12px;box-sizing:border-box}
 .vtrack img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.vtrack>div{overflow:hidden}.vtrack img{transform-origin:50% 50%;will-change:transform}
+.vtrack.zoomed{overflow-x:hidden;touch-action:none}.vtrack.zoomed img{cursor:grab}
+.vtrack:not(.zoomed) img{cursor:zoom-in}
 html.vopen,html.vopen body{overflow:hidden;overscroll-behavior:none}
 .vbar{display:flex;gap:10px;align-items:center;padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));color:#fff;font-size:14px}
 .vbar button{background:rgba(255,255,255,.12);border:0;color:#fff;font-size:22px;line-height:1;padding:8px 16px;border-radius:8px}
@@ -3658,7 +3661,7 @@ $('list').addEventListener('toggle',ev=>{const d=ev.target;if(d.dataset&&d.datas
 let vList=[],vI=0;
 const vT=()=>$('vTrack');
 function vCount(){vLoad(vI);$('vCount').textContent=vList.length>1?(vI+1)+' / '+vList.length:'';$('vPrev').hidden=$('vNext').hidden=vList.length<2}
-function vGo(i,smooth){vI=(i+vList.length)%vList.length;vT().scrollTo({left:vI*vT().clientWidth,behavior:smooth?'smooth':'auto'});vCount()}
+function vGo(i,smooth){vzReset();vI=(i+vList.length)%vList.length;vT().scrollTo({left:vI*vT().clientWidth,behavior:smooth?'smooth':'auto'});vCount()}
 const midOf=id=>{const i=id.indexOf('/');return id.slice(0,i)+'/m/'+id.slice(i+1).replace(/\.[a-z0-9]+$/i,'')+'.jpg'};
 let vIds=null;const mBusy=new Set();
 async function makeMid(id,b){if(mBusy.has(id))return;mBusy.add(id);const u=URL.createObjectURL(b);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u});
@@ -3679,8 +3682,8 @@ function vOpen(list,i){
   requestAnimationFrame(()=>vGo(vI,false));
 }
 let vRaf=null;
-vT().addEventListener('scroll',()=>{cancelAnimationFrame(vRaf);vRaf=requestAnimationFrame(()=>{const w=vT().clientWidth;if(w){vI=Math.round(vT().scrollLeft/w);vCount()}})},{passive:true});
-$('viewer').addEventListener('close',()=>{document.documentElement.classList.remove('vopen');vT().innerHTML='';vIds=null});
+vT().addEventListener('scroll',()=>{cancelAnimationFrame(vRaf);vRaf=requestAnimationFrame(()=>{const w=vT().clientWidth;if(w){const n=Math.round(vT().scrollLeft/w);if(n!==vI)vzReset();vI=n;vCount()}})},{passive:true});
+$('viewer').addEventListener('close',()=>{vzReset();clearTimeout(vTapT);vTapT=0;document.documentElement.classList.remove('vopen');vT().innerHTML='';vIds=null});
 addEventListener('resize',()=>{if($('viewer').open)vGo(vI,false)});
 $('list').addEventListener('click',ev=>{
   const a=ev.target.closest('.photos a,.cmp-imgs a');if(!a)return;
@@ -3691,7 +3694,38 @@ $('list').addEventListener('click',ev=>{
 $('vPrev').addEventListener('click',()=>vGo(vI-1,true));
 $('vNext').addEventListener('click',()=>vGo(vI+1,true));
 $('vClose').addEventListener('click',()=>$('viewer').close());
-$('viewer').addEventListener('click',ev=>{if(ev.target===$('viewer')||ev.target.closest('.vtrack>div'))$('viewer').close()});
+/* zoom inside the viewer: pinch with two fingers, double-tap or double-click, wheel; drag to move a zoomed photo */
+let vz={s:1,x:0,y:0},vTapT=0,vNoClick=0,vPinch=null,vPan=null;
+const vzImg=()=>{const d=vT().children[vI];return d&&d.querySelector('img')};
+function vzCenter(){const d=vT().children[vI],r=d.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}
+function vzClamp(){const im=vzImg();if(!im)return;const W=vT().clientWidth,H=vT().clientHeight,mx=Math.max(0,(im.offsetWidth*vz.s-W)/2),my=Math.max(0,(im.offsetHeight*vz.s-H)/2);vz.x=Math.min(mx,Math.max(-mx,vz.x));vz.y=Math.min(my,Math.max(-my,vz.y))}
+function vzApply(){const im=vzImg();if(!im)return;if(vz.s<=1.01)vz={s:1,x:0,y:0};else vzClamp();im.style.transform=vz.s>1?'translate('+vz.x+'px,'+vz.y+'px) scale('+vz.s+')':'';vT().classList.toggle('zoomed',vz.s>1)}
+function vzReset(){vT().querySelectorAll('img').forEach(i=>i.style.transform='');vz={s:1,x:0,y:0};vPinch=vPan=null;vT().classList.remove('zoomed')}
+function vzAt(px,py,ns){const c=vzCenter(),dx=px-c.x,dy=py-c.y,k=ns/vz.s;vz.x=dx-(dx-vz.x)*k;vz.y=dy-(dy-vz.y)*k;vz.s=ns;vzApply()}
+const vDist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),vMid=t=>({x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2});
+vT().addEventListener('touchstart',ev=>{const t=ev.touches;
+  if(t.length===2){ev.preventDefault();clearTimeout(vTapT);vTapT=0;vPan=null;vPinch={d:vDist(t),m:vMid(t),s:vz.s,x:vz.x,y:vz.y,c:vzCenter()}}
+  else if(t.length===1&&vz.s>1){vPan={x:t[0].clientX,y:t[0].clientY,ox:vz.x,oy:vz.y,mv:false}}},{passive:false});
+vT().addEventListener('touchmove',ev=>{const t=ev.touches;
+  if(vPinch&&t.length===2){ev.preventDefault();const p=vPinch,ns=Math.min(5,Math.max(1,p.s*vDist(t)/p.d)),m=vMid(t),k=ns/p.s;
+    vz.s=ns;vz.x=(m.x-p.c.x)-(p.m.x-p.c.x-p.x)*k;vz.y=(m.y-p.c.y)-(p.m.y-p.c.y-p.y)*k;vzApply()}
+  else if(vPan&&t.length===1){ev.preventDefault();const dx=t[0].clientX-vPan.x,dy=t[0].clientY-vPan.y;if(Math.abs(dx)+Math.abs(dy)>6)vPan.mv=true;vz.x=vPan.ox+dx;vz.y=vPan.oy+dy;vzApply()}},{passive:false});
+vT().addEventListener('touchend',ev=>{const t=ev.touches;
+  if(vPinch&&t.length<2){vPinch=null;vNoClick=Date.now()+400;if(t.length===1&&vz.s>1)vPan={x:t[0].clientX,y:t[0].clientY,ox:vz.x,oy:vz.y,mv:true}}
+  else if(vPan&&!t.length){if(vPan.mv)vNoClick=Date.now()+400;vPan=null}});
+vT().addEventListener('touchcancel',()=>{vPinch=vPan=null});
+/* mouse: drag a zoomed photo, wheel to zoom */
+vT().addEventListener('mousedown',ev=>{if(vz.s<=1||ev.button)return;ev.preventDefault();const st={x:ev.clientX,y:ev.clientY,ox:vz.x,oy:vz.y,mv:false};
+  const mm=e=>{const dx=e.clientX-st.x,dy=e.clientY-st.y;if(Math.abs(dx)+Math.abs(dy)>4)st.mv=true;vz.x=st.ox+dx;vz.y=st.oy+dy;vzApply()};
+  const mu=()=>{removeEventListener('mousemove',mm);removeEventListener('mouseup',mu);if(st.mv)vNoClick=Date.now()+300};addEventListener('mousemove',mm);addEventListener('mouseup',mu)});
+vT().addEventListener('wheel',ev=>{if(!ev.ctrlKey&&Math.abs(ev.deltaX)>Math.abs(ev.deltaY))return;ev.preventDefault();vzAt(ev.clientX,ev.clientY,Math.min(5,Math.max(1,vz.s*Math.exp(-ev.deltaY*(ev.ctrlKey?.01:.0025)))))},{passive:false});
+/* one tap closes (as before), a second tap within 300 ms zooms in or back out; a tap on a zoomed photo does nothing */
+$('viewer').addEventListener('click',ev=>{if(Date.now()<vNoClick)return;
+  const onSlide=ev.target.closest('.vtrack>div');if(!(ev.target===$('viewer')||onSlide))return;
+  if(onSlide&&vTapT){clearTimeout(vTapT);vTapT=0;if(vz.s>1){vz={s:1,x:0,y:0};vzApply()}else vzAt(ev.clientX,ev.clientY,2.5);return}
+  if(onSlide&&vz.s>1){vTapT=setTimeout(()=>{vTapT=0},300);return}
+  if(!onSlide){$('viewer').close();return}
+  vTapT=setTimeout(()=>{vTapT=0;$('viewer').close()},300)});
 $('viewer').addEventListener('keydown',ev=>{if(ev.key==='ArrowLeft')$('vPrev').click();if(ev.key==='ArrowRight')$('vNext').click()});
 $('ePhotos').addEventListener('click',ev=>{const im=ev.target.closest('img');if(!im)return;const all=[...$('ePhotos').querySelectorAll('img')];if(all.every(i=>i.dataset.id&&i.dataset.id.includes('/'))){vOpenIds(all.map(i=>i.dataset.id),all.map(i=>i.src),all.indexOf(im));return}vOpen(all.map(i=>i.dataset.full&&!/^data:image\/gif/.test(i.dataset.full)?i.dataset.full:i.src),all.indexOf(im))});
 $('list').addEventListener('click',ev=>{
@@ -4584,7 +4618,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1794872694';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795179275';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
