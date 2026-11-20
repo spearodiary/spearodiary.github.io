@@ -2616,7 +2616,12 @@ function sbStore(uid){
   try{const c=JSON.parse(localStorage.getItem(CK)||'null');if(Array.isArray(c))c.forEach(([id,r])=>rows.set(id,r))}catch(e){}
   const saveCache=()=>{try{localStorage.setItem(CK,JSON.stringify([...rows]))}catch(e){}};
   const pend=()=>Object.keys(outbox.e).length+outbox.h.length;
-  const note=()=>{const el=$('syncNote');if(!el)return;const n=Object.keys(outbox.e).length;el.textContent=n?t('offPend')(n):offline?t('offView'):'';el.hidden=!el.textContent};
+  /* a normal save passes through the outbox in a split second; the note only shows when offline or when sending takes longer than 4 s, so the page doesn't jump */
+  let noteT=null;
+  const note=()=>{const el=$('syncNote');if(!el)return;const ks=Object.keys(outbox.e),n=ks.length;clearTimeout(noteT);
+    const old=ks.some(k=>Date.now()-Date.parse(outbox.e[k].t||0)>4000);
+    el.textContent=n&&(offline||old)?t('offPend')(n):offline?t('offView'):'';el.hidden=!el.textContent;
+    if(n&&!offline&&!old)noteT=setTimeout(note,4200)};
   const saveOut=()=>{try{localStorage.setItem(OK,JSON.stringify(outbox))}catch(e){}note()};
   const view=()=>{const m=new Map(rows);for(const[id,o] of Object.entries(outbox.e)){if(o.op==='del')m.delete(id);else m.set(id,{u:'',d:o.d})}return[...m].map(([id,r])=>({...r.d,id}))};
   const emit=()=>{listener&&listener(view())};
@@ -4632,7 +4637,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795216743';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795217473';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);

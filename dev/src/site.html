@@ -2616,7 +2616,12 @@ function sbStore(uid){
   try{const c=JSON.parse(localStorage.getItem(CK)||'null');if(Array.isArray(c))c.forEach(([id,r])=>rows.set(id,r))}catch(e){}
   const saveCache=()=>{try{localStorage.setItem(CK,JSON.stringify([...rows]))}catch(e){}};
   const pend=()=>Object.keys(outbox.e).length+outbox.h.length;
-  const note=()=>{const el=$('syncNote');if(!el)return;const n=Object.keys(outbox.e).length;el.textContent=n?t('offPend')(n):offline?t('offView'):'';el.hidden=!el.textContent};
+  /* a normal save passes through the outbox in a split second; the note only shows when offline or when sending takes longer than 4 s, so the page doesn't jump */
+  let noteT=null;
+  const note=()=>{const el=$('syncNote');if(!el)return;const ks=Object.keys(outbox.e),n=ks.length;clearTimeout(noteT);
+    const old=ks.some(k=>Date.now()-Date.parse(outbox.e[k].t||0)>4000);
+    el.textContent=n&&(offline||old)?t('offPend')(n):offline?t('offView'):'';el.hidden=!el.textContent;
+    if(n&&!offline&&!old)noteT=setTimeout(note,4200)};
   const saveOut=()=>{try{localStorage.setItem(OK,JSON.stringify(outbox))}catch(e){}note()};
   const view=()=>{const m=new Map(rows);for(const[id,o] of Object.entries(outbox.e)){if(o.op==='del')m.delete(id);else m.set(id,{u:'',d:o.d})}return[...m].map(([id,r])=>({...r.d,id}))};
   const emit=()=>{listener&&listener(view())};
