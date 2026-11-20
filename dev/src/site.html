@@ -1211,7 +1211,9 @@ body.arranging .entry [data-b].arr-b{box-shadow:0 -3px 0 var(--accent)}
 body.arranging .entry [data-b].arr-a{box-shadow:0 3px 0 var(--accent)}
 body.arranging .entry [data-c].arr-b{box-shadow:-3px 0 0 var(--accent)}
 body.arranging .entry [data-c].arr-a{box-shadow:3px 0 0 var(--accent)}
-.vtrack img{width:auto;height:auto;max-width:calc(100vw - 24px);max-height:calc(100dvh - 96px - env(safe-area-inset-bottom,0px))}
+.vtrack img{width:100%;height:100%;max-width:calc(100vw - 24px);max-height:calc(100dvh - 96px - env(safe-area-inset-bottom,0px));object-fit:contain}
+/* the small preview is stretched to full size at once and softly blurred until the sharp copy arrives, then fades in */
+.vtrack.lazy img{transition:filter .25s}.vtrack.lazy img:not([data-hi]){filter:blur(10px)}
 
 .cg2{display:inline-block;max-width:100%}
 .csp{position:relative}
@@ -3667,7 +3669,7 @@ let vIds=null;const mBusy=new Set();
 async function makeMid(id,b){if(mBusy.has(id))return;mBusy.add(id);const u=URL.createObjectURL(b);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u});
   const S=Math.min(1,1800/Math.max(im.naturalWidth,im.naturalHeight));const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.naturalWidth*S));cv.height=Math.max(1,Math.round(im.naturalHeight*S));
   cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);const mb=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(mb)await sb.storage.from('photos').upload(midOf(id),mb,{contentType:'image/jpeg',upsert:true})}finally{URL.revokeObjectURL(u);mBusy.delete(id)}}
-function vOpenIds(ids,thumbs,i){const ok=sb&&ids.every(x=>x&&String(x).includes('/'));vIds=ok?ids:null;vOpen(thumbs,i)}
+function vOpenIds(ids,thumbs,i){const ok=sb&&ids.every(x=>x&&String(x).includes('/'));vIds=ok?ids:null;vOpen(thumbs,i);vT().classList.toggle('lazy',!!ok)}
 /* sharper copy for the viewer: the photo shown first, then its neighbours, then the rest, all at once (photos per entry are few).
    A copy that failed or is still pending after 6 s is tried again when its slide is shown. */
 function vLoad(k){if(!vIds)return;const ids=vIds,imgs=[...vT().querySelectorAll('img')],n=ids.length,order=[];
@@ -3680,7 +3682,7 @@ async function vLoadOne(id,im,cur){if(!id||!im||im.dataset.hi)return;const t0=+i
     const{data}=await sb.storage.from('photos').createSignedUrls([midOf(id)],60*60*24*7);const r=data&&data[0];
     if(r&&r.signedUrl&&!r.error){ucPut(key,r.signedUrl,6.5*864e5);if(await show(r.signedUrl,key))return}
     const dl=await sb.storage.from('photos').download(id);if(dl.error)throw dl.error;if(await show(URL.createObjectURL(dl.data)))makeMid(id,dl.data).catch(()=>{});else throw 0}
-  catch(_){if(!im.dataset.hi)delete im.dataset.ld}}
+  catch(_){if(!im.dataset.hi){delete im.dataset.ld;im.dataset.hi=''}}}
 function vOpen(list,i){
   vList=list;vI=Math.max(0,i);
   vT().innerHTML=list.map(u=>'<div><img alt="" draggable="false" src="'+esc(u)+'"></div>').join('');
@@ -3689,7 +3691,7 @@ function vOpen(list,i){
 }
 let vRaf=null;
 vT().addEventListener('scroll',()=>{cancelAnimationFrame(vRaf);vRaf=requestAnimationFrame(()=>{const w=vT().clientWidth;if(w){const n=Math.round(vT().scrollLeft/w);if(n!==vI)vzReset();vI=n;vCount()}})},{passive:true});
-$('viewer').addEventListener('close',()=>{vzReset();clearTimeout(vTapT);vTapT=0;document.documentElement.classList.remove('vopen');vT().innerHTML='';vIds=null});
+$('viewer').addEventListener('close',()=>{vzReset();vT().classList.remove('lazy');clearTimeout(vTapT);vTapT=0;document.documentElement.classList.remove('vopen');vT().innerHTML='';vIds=null});
 addEventListener('resize',()=>{if($('viewer').open)vGo(vI,false)});
 $('list').addEventListener('click',ev=>{
   const a=ev.target.closest('.photos a,.cmp-imgs a');if(!a)return;
@@ -3704,7 +3706,7 @@ $('vClose').addEventListener('click',()=>$('viewer').close());
 let vz={s:1,x:0,y:0},vTapT=0,vNoClick=0,vPinch=null,vPan=null;
 const vzImg=()=>{const d=vT().children[vI];return d&&d.querySelector('img')};
 function vzCenter(){const d=vT().children[vI],r=d.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}
-function vzClamp(){const im=vzImg();if(!im)return;const W=vT().clientWidth,H=vT().clientHeight,mx=Math.max(0,(im.offsetWidth*vz.s-W)/2),my=Math.max(0,(im.offsetHeight*vz.s-H)/2);vz.x=Math.min(mx,Math.max(-mx,vz.x));vz.y=Math.min(my,Math.max(-my,vz.y))}
+function vzClamp(){const im=vzImg();if(!im)return;const bw=im.offsetWidth,bh=im.offsetHeight,nw=im.naturalWidth||bw,nh=im.naturalHeight||bh,k=Math.min(bw/nw,bh/nh),W=vT().clientWidth,H=vT().clientHeight,mx=Math.max(0,(nw*k*vz.s-W)/2),my=Math.max(0,(nh*k*vz.s-H)/2);vz.x=Math.min(mx,Math.max(-mx,vz.x));vz.y=Math.min(my,Math.max(-my,vz.y))}
 function vzApply(){const im=vzImg();if(!im)return;if(vz.s<=1.01)vz={s:1,x:0,y:0};else vzClamp();im.style.transform=vz.s>1?'translate('+vz.x+'px,'+vz.y+'px) scale('+vz.s+')':'';vT().classList.toggle('zoomed',vz.s>1)}
 function vzReset(){vT().querySelectorAll('img').forEach(i=>i.style.transform='');vz={s:1,x:0,y:0};vPinch=vPan=null;vT().classList.remove('zoomed')}
 function vzAt(px,py,ns){const c=vzCenter(),dx=px-c.x,dy=py-c.y,k=ns/vz.s;vz.x=dx-(dx-vz.x)*k;vz.y=dy-(dy-vz.y)*k;vz.s=ns;vzApply()}
