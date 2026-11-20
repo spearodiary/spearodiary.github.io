@@ -1005,7 +1005,7 @@ details .inner{display:grid;gap:12px;padding-top:12px}
 .vtrack::-webkit-scrollbar{display:none}
 .vtrack>div{flex:0 0 100%;height:100%;display:grid;place-items:center;scroll-snap-align:center;scroll-snap-stop:always;padding:12px;box-sizing:border-box}
 .vtrack img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
-.vtrack>div{overflow:hidden}.vtrack img{transform-origin:50% 50%;will-change:transform}
+.vtrack>div{overflow:hidden}.vtrack img{transform-origin:50% 50%}
 .vtrack.zoomed{overflow-x:hidden;touch-action:none}.vtrack.zoomed img{cursor:grab}
 .vtrack:not(.zoomed) img{cursor:zoom-in}
 html.vopen,html.vopen body{overflow:hidden;overscroll-behavior:none}
@@ -3668,13 +3668,19 @@ async function makeMid(id,b){if(mBusy.has(id))return;mBusy.add(id);const u=URL.c
   const S=Math.min(1,1800/Math.max(im.naturalWidth,im.naturalHeight));const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.naturalWidth*S));cv.height=Math.max(1,Math.round(im.naturalHeight*S));
   cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);const mb=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));if(mb)await sb.storage.from('photos').upload(midOf(id),mb,{contentType:'image/jpeg',upsert:true})}finally{URL.revokeObjectURL(u);mBusy.delete(id)}}
 function vOpenIds(ids,thumbs,i){const ok=sb&&ids.every(x=>x&&String(x).includes('/'));vIds=ok?ids:null;vOpen(thumbs,i)}
-async function vLoad(k){if(!vIds)return;const ids=vIds,imgs=[...vT().querySelectorAll('img')];
-  for(const j of [k,k+1,k-1]){const id=ids[j],im=imgs[j];if(!id||!im||im.dataset.ld)continue;im.dataset.ld='1';
-    const show=u=>{const pre=new Image();pre.onload=()=>{if(im.isConnected)im.src=u};pre.src=u};
-    const key='m:'+id;if(urlCache.get(key)){show(urlCache.get(key));continue}
-    try{const{data}=await sb.storage.from('photos').createSignedUrls([midOf(id)],60*60*24*7);const r=data&&data[0];
-      if(r&&r.signedUrl&&!r.error){ucPut(key,r.signedUrl,6.5*864e5);show(r.signedUrl);continue}
-      const dl=await sb.storage.from('photos').download(id);if(dl.error)continue;show(URL.createObjectURL(dl.data));makeMid(id,dl.data).catch(()=>{})}catch(_){}}}
+/* sharper copy for the viewer: the photo shown first, then its neighbours, then the rest, all at once (photos per entry are few).
+   A copy that failed or is still pending after 6 s is tried again when its slide is shown. */
+function vLoad(k){if(!vIds)return;const ids=vIds,imgs=[...vT().querySelectorAll('img')],n=ids.length,order=[];
+  for(let d=0;d<n;d++){const j=d%2?k+(d+1)/2:k-d/2;order.push(((Math.round(j)%n)+n)%n)}
+  [...new Set([k,...order])].forEach(j=>vLoadOne(ids[j],imgs[j],j===k))}
+async function vLoadOne(id,im,cur){if(!id||!im||im.dataset.hi)return;const t0=+im.dataset.ld||0;if(t0&&!(cur&&Date.now()-t0>6000))return;im.dataset.ld=String(Date.now());
+  const show=(u,key)=>new Promise(ok=>{const pre=new Image();pre.decoding='async';pre.onload=()=>{if(im.isConnected){im.src=u;im.dataset.hi='1'}ok(true)};pre.onerror=()=>{if(key)urlCache.delete(key);ok(false)};pre.src=u});
+  const key='m:'+id;
+  try{if(urlCache.get(key)&&await show(urlCache.get(key),key))return;
+    const{data}=await sb.storage.from('photos').createSignedUrls([midOf(id)],60*60*24*7);const r=data&&data[0];
+    if(r&&r.signedUrl&&!r.error){ucPut(key,r.signedUrl,6.5*864e5);if(await show(r.signedUrl,key))return}
+    const dl=await sb.storage.from('photos').download(id);if(dl.error)throw dl.error;if(await show(URL.createObjectURL(dl.data)))makeMid(id,dl.data).catch(()=>{});else throw 0}
+  catch(_){if(!im.dataset.hi)delete im.dataset.ld}}
 function vOpen(list,i){
   vList=list;vI=Math.max(0,i);
   vT().innerHTML=list.map(u=>'<div><img alt="" draggable="false" src="'+esc(u)+'"></div>').join('');
@@ -4618,7 +4624,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795179275';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795180008';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
