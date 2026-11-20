@@ -1001,6 +1001,8 @@ details .inner{display:grid;gap:12px;padding-top:12px}
 #viewer[open]{display:grid;grid-template-rows:minmax(0,1fr) auto;place-items:center}
 #viewer::backdrop{background:rgba(4,14,18,.94)}
 #viewer{overscroll-behavior:contain;touch-action:none}
+/* the viewer covers the whole screen, under the status bar and the home bar too; the photo keeps clear of the status bar */
+#viewer{position:fixed;inset:0;width:auto;height:auto;min-height:100%;padding-top:env(safe-area-inset-top,0px);box-sizing:border-box}
 .vtrack{width:100%;height:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior:contain;touch-action:pan-x;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .vtrack::-webkit-scrollbar{display:none}
 .vtrack>div{flex:0 0 100%;height:100%;display:grid;place-items:center;scroll-snap-align:center;scroll-snap-stop:always;padding:12px;box-sizing:border-box}
@@ -1211,7 +1213,7 @@ body.arranging .entry [data-b].arr-b{box-shadow:0 -3px 0 var(--accent)}
 body.arranging .entry [data-b].arr-a{box-shadow:0 3px 0 var(--accent)}
 body.arranging .entry [data-c].arr-b{box-shadow:-3px 0 0 var(--accent)}
 body.arranging .entry [data-c].arr-a{box-shadow:3px 0 0 var(--accent)}
-.vtrack img{width:100%;height:100%;max-width:calc(100vw - 24px);max-height:calc(100dvh - 96px - env(safe-area-inset-bottom,0px));object-fit:contain}
+.vtrack img{width:100%;height:100%;max-width:calc(100vw - 24px);max-height:100%;object-fit:contain}
 /* the small preview is stretched to full size at once and softly blurred until the sharp copy arrives, then fades in */
 .vtrack.lazy img{transition:filter .25s}.vtrack.lazy img:not([data-hi]){filter:blur(10px)}
 

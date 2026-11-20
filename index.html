@@ -1001,6 +1001,8 @@ details .inner{display:grid;gap:12px;padding-top:12px}
 #viewer[open]{display:grid;grid-template-rows:minmax(0,1fr) auto;place-items:center}
 #viewer::backdrop{background:rgba(4,14,18,.94)}
 #viewer{overscroll-behavior:contain;touch-action:none}
+/* the viewer covers the whole screen, under the status bar and the home bar too; the photo keeps clear of the status bar */
+#viewer{position:fixed;inset:0;width:auto;height:auto;min-height:100%;padding-top:env(safe-area-inset-top,0px);box-sizing:border-box}
 .vtrack{width:100%;height:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior:contain;touch-action:pan-x;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .vtrack::-webkit-scrollbar{display:none}
 .vtrack>div{flex:0 0 100%;height:100%;display:grid;place-items:center;scroll-snap-align:center;scroll-snap-stop:always;padding:12px;box-sizing:border-box}
@@ -1211,7 +1213,7 @@ body.arranging .entry [data-b].arr-b{box-shadow:0 -3px 0 var(--accent)}
 body.arranging .entry [data-b].arr-a{box-shadow:0 3px 0 var(--accent)}
 body.arranging .entry [data-c].arr-b{box-shadow:-3px 0 0 var(--accent)}
 body.arranging .entry [data-c].arr-a{box-shadow:3px 0 0 var(--accent)}
-.vtrack img{width:100%;height:100%;max-width:calc(100vw - 24px);max-height:calc(100dvh - 96px - env(safe-area-inset-bottom,0px));object-fit:contain}
+.vtrack img{width:100%;height:100%;max-width:calc(100vw - 24px);max-height:100%;object-fit:contain}
 /* the small preview is stretched to full size at once and softly blurred until the sharp copy arrives, then fades in */
 .vtrack.lazy img{transition:filter .25s}.vtrack.lazy img:not([data-hi]){filter:blur(10px)}
 
@@ -4626,7 +4628,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795181085';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795184613';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
