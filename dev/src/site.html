@@ -5033,14 +5033,15 @@ function scMeta(e){const o=SC.o,a=[],b=[];
   if(o.dt)a.push({t:e.monthOnly?new Date(e.date+'T12:00').toLocaleDateString(locale(),{month:'long',year:'numeric'}):fmtDate(e.date)});const L=scLocText(e);if(L)a.push({t:L});
   const md=entryMaxDepth(e);if(o.md&&md!=null)b.push({i:'depth',t:t('maxU')+' '+fmt(md)+' m'});if(o.dv&&e.dives!=null)b.push({t:fmt(e.dives)+' '+t('divesU')});
   if(o.ap&&e.apnea!=null)b.push({i:'apnea',t:apneaF(e.apnea)});if(o.wt&&e.temp!=null)b.push({t:fmt(e.temp)+' °C'});if(o.cu&&e.current)b.push({t:t('cur_'+e.current)});
-  if(o.gn&&(e.guns||[]).length)b.push({i:'gun',t:e.guns.join(', ')});
+  /* the share image shows only the gun model: what comes before the first comma ("Salvimar Wild Pro 75 mm, bands 48 cm, …" → "Salvimar Wild Pro 75 mm") */
+  if(o.gn&&(e.guns||[]).length){const gm=[...new Set(e.guns.map(g=>String(g||'').split(/\s*[,;(]\s*|\s+[-–—]\s+/)[0].trim()).filter(Boolean))];if(gm.length)b.push({i:'gun',t:gm.slice(0,2).join(' / ')+(gm.length>2?' +'+(gm.length-2):'')})}
   return [a,b]}
 function scCur(){const im=SC.photo?scImgs[scPi]:null;if(!im)return null;const k=scPi+'|'+SC.fmt;
   if(!scCrop.has(k)){const W=1080,H=SC.fmt==='story'?1920:1350;const f0=Math.min(W/im.naturalWidth,H/im.naturalHeight),c0=Math.max(W/im.naturalWidth,H/im.naturalHeight);scCrop.set(k,{z:c0/f0,cx:W/2,cy:H/2})}
   return scCrop.get(k)}
 const SC_IW=40,SC_SEP='  ·  ',SC_IC={depth:'M12 3v13M6.5 10.5 12 16l5.5-5.5M4 21h16',apnea:'M12 21a7.500 7.500 0 1 0 0-15 7.500 7.500 0 0 0 0 15zM12 9.500v4l2.500 1.500M10 2.500h4M12 2.500v3.500',gun:'M12 2.500v18M10 5 12 2.500 14 5M3.500 11.500C6 7.500 18 7.500 20.500 11.500M3.500 11.500 12 15.500l8.500-4M10.500 18.500h3'};
 function scItemW(x,it){return x.measureText(it.t).width+(it.i?SC_IW+4:0)}
-function scWrapLines(x,items,max,maxL){const out=[];let cur=[],w=0;const sw=x.measureText(SC_SEP).width;items.forEach(it=>{const iw=scItemW(x,it);if(cur.length&&w+sw+iw>max){out.push(cur);cur=[it];w=iw}else{w+=(cur.length?sw:0)+iw;cur.push(it)}});if(cur.length)out.push(cur);return out.slice(0,maxL)}
+function scWrapLines(x,items,max,maxL){const out=[];let cur=[],w=0;const sw=x.measureText(SC_SEP).width;items.forEach(it=>{if(scItemW(x,it)>max)it={...it,t:scFit(x,it.t,max-(it.i?SC_IW+4:0))};const iw=scItemW(x,it);if(cur.length&&w+sw+iw>max){out.push(cur);cur=[it];w=iw}else{w+=(cur.length?sw:0)+iw;cur.push(it)}});if(cur.length)out.push(cur);return out.slice(0,maxL)}
 function scDrawLine(x,line,X,Y,col){let px=X;line.forEach((it,j)=>{if(j){x.fillText(SC_SEP,px,Y);px+=x.measureText(SC_SEP).width}
   if(it.i){const s=SC_IW/24;x.save();x.translate(px,Y-SC_IW*.82);x.scale(s,s);x.strokeStyle=col;x.lineWidth=2.2;x.lineCap='round';x.lineJoin='round';if(it.i==='gun'){x.translate(12,12);x.rotate(Math.PI/4);x.translate(-12,-12)}x.stroke(new Path2D(SC_IC[it.i]));x.restore();px+=SC_IW+4}
   x.fillText(it.t,px,Y);px+=x.measureText(it.t).width})}
