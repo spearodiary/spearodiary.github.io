@@ -3024,7 +3024,9 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
   b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();fcsMono=!fcsMono;try{localStorage.setItem('sn-fcpal',fcsMono?'mono':'color')}catch(e){}sync();drawForecast()})})();
 (function(){const el=$('fcStrip');if(!el)return;const op=()=>{const c=$('fcCard');c.open=true};
   el.addEventListener('click',ev=>{const bar=el.querySelector('.fcs-b'),t0=+el.dataset.t0,nd=+el.dataset.nd;
-    if(bar&&t0&&nd){const r=bar.getBoundingClientRect(),f=Math.min(.999,Math.max(0,(ev.clientX-r.left)/r.width)),d=Math.floor(f*nd);if(d>0)fcGoT=t0+d*864e5+6*36e5}op()});el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();op()}})})();
+    if(bar&&t0&&nd){const r=bar.getBoundingClientRect(),f=Math.min(.999,Math.max(0,(ev.clientX-r.left)/r.width)),d=Math.floor(f*nd);if(d>0)fcGoT=t0+d*864e5+6*36e5}op();
+    /* the table is not redrawn when it is still fresh: then scroll the one already there */
+    setTimeout(()=>{if(fcGoT==null||!fcXT)return;const r=$('fcBox').querySelector('.sea-r');if(!r)return;const g=fcGoT,cw=fcXT(g+fcStep()*36e5)-fcXT(g);fcGoT=null;r.scrollLeft=Math.max(0,fcXT(g)-cw/2)},80)});el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();op()}})})();
 
 
 /* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
@@ -4653,7 +4655,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795421171';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795422483';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);

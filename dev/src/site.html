@@ -3024,7 +3024,9 @@ Object.assign(T.pt,{fcsWind:'Vento',fcsWave:'Ondas',fcsPalM:'Cores: cinzento →
   b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();fcsMono=!fcsMono;try{localStorage.setItem('sn-fcpal',fcsMono?'mono':'color')}catch(e){}sync();drawForecast()})})();
 (function(){const el=$('fcStrip');if(!el)return;const op=()=>{const c=$('fcCard');c.open=true};
   el.addEventListener('click',ev=>{const bar=el.querySelector('.fcs-b'),t0=+el.dataset.t0,nd=+el.dataset.nd;
-    if(bar&&t0&&nd){const r=bar.getBoundingClientRect(),f=Math.min(.999,Math.max(0,(ev.clientX-r.left)/r.width)),d=Math.floor(f*nd);if(d>0)fcGoT=t0+d*864e5+6*36e5}op()});el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();op()}})})();
+    if(bar&&t0&&nd){const r=bar.getBoundingClientRect(),f=Math.min(.999,Math.max(0,(ev.clientX-r.left)/r.width)),d=Math.floor(f*nd);if(d>0)fcGoT=t0+d*864e5+6*36e5}op();
+    /* the table is not redrawn when it is still fresh: then scroll the one already there */
+    setTimeout(()=>{if(fcGoT==null||!fcXT)return;const r=$('fcBox').querySelector('.sea-r');if(!r)return;const g=fcGoT,cw=fcXT(g+fcStep()*36e5)-fcXT(g);fcGoT=null;r.scrollLeft=Math.max(0,fcXT(g)-cw/2)},80)});el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();op()}})})();
 
 
 /* hunting windows: hours when wind, waves and swell are all at or under the user's limits (stored in knots / metres) */
