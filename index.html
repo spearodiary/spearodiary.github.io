@@ -3148,7 +3148,9 @@ function drawForecast(){
 
 /* tapping a window in "Próximas janelas" scrolls the chart to it */
 document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('.fwc[data-t]');if(!b||!fcXT)return;const r=$('fcBox').querySelector('.sea-r');if(!r)return;
-  r.scrollTo({left:Math.max(0,fcXT(+b.dataset.t)-40),behavior:'smooth'});const sea=r.closest('.sea'),bx=sea.getBoundingClientRect();if(bx.top<0||bx.top>innerHeight*0.45)sea.scrollIntoView({behavior:'smooth',block:'start'})});
+  r.scrollTo({left:Math.max(0,fcXT(+b.dataset.t)-40),behavior:'smooth'});
+  /* the page only moves if the table is completely out of sight, and then just enough to show its top rows */
+  const sea=r.closest('.sea'),bx=sea.getBoundingClientRect();if(bx.top>innerHeight-80||bx.bottom<80)scrollBy({top:bx.top-Math.min(140,innerHeight*0.2),behavior:'smooth'})});
 document.addEventListener('toggle',ev=>{const d=ev.target;if(d&&d.classList&&d.classList.contains('fwl')&&matchMedia('(max-width:560px)').matches)try{localStorage.setItem('sn-fwopen',d.open?'1':'0')}catch(_){}},true);
 function autoTide(){
   const d=$('eDate').value,sp=$('eSpot').value,gp=$('eGps').value;let did=false;
@@ -4647,7 +4649,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795419515';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795420950';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);

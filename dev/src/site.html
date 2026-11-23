@@ -3148,7 +3148,9 @@ function drawForecast(){
 
 /* tapping a window in "Próximas janelas" scrolls the chart to it */
 document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('.fwc[data-t]');if(!b||!fcXT)return;const r=$('fcBox').querySelector('.sea-r');if(!r)return;
-  r.scrollTo({left:Math.max(0,fcXT(+b.dataset.t)-40),behavior:'smooth'});const sea=r.closest('.sea'),bx=sea.getBoundingClientRect();if(bx.top<0||bx.top>innerHeight*0.45)sea.scrollIntoView({behavior:'smooth',block:'start'})});
+  r.scrollTo({left:Math.max(0,fcXT(+b.dataset.t)-40),behavior:'smooth'});
+  /* the page only moves if the table is completely out of sight, and then just enough to show its top rows */
+  const sea=r.closest('.sea'),bx=sea.getBoundingClientRect();if(bx.top>innerHeight-80||bx.bottom<80)scrollBy({top:bx.top-Math.min(140,innerHeight*0.2),behavior:'smooth'})});
 document.addEventListener('toggle',ev=>{const d=ev.target;if(d&&d.classList&&d.classList.contains('fwl')&&matchMedia('(max-width:560px)').matches)try{localStorage.setItem('sn-fwopen',d.open?'1':'0')}catch(_){}},true);
 function autoTide(){
   const d=$('eDate').value,sp=$('eSpot').value,gp=$('eGps').value;let did=false;
