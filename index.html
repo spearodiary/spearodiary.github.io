@@ -1538,7 +1538,7 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .dlmf-pick .dlmf-top{max-width:440px}
 .dlmf-q,.dlmf-q input{font-family:var(--body);font-weight:400}
 .fc-ren{flex-wrap:nowrap}.fc-ren input{min-width:0}.fc-ren .fc-ib{flex:none;padding:0;border:0}.fc-ren .fc-ok{color:var(--good)}.fc-ren .fc-no{color:var(--muted)}
-.dlmf-z>.dlmf-rb[hidden]{display:none}.dlmf-z>.dlmf-rb.on{background:#fff;color:#0a1e26}.dlmf.picking .dlmf-rb,.dlmf.picking .dlmf-rul{display:none}
+.dlmf-z>.dlmf-rb[hidden]{display:none}.dlmf-z>.dlmf-rb.on{background:#fff;color:#0a1e26}.dlmf.ruling .dlmf-bar,.dlmf.ruling .dlmf-cross,.dlmf.ruling .dlmf-res{display:none!important}
 .dlmf-rul{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(66px + env(safe-area-inset-right,0px));max-width:420px;bottom:calc(30px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.94);color:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4}
 .dlmf-rul[hidden]{display:none}.dlmf-rul .hint{color:rgba(255,255,255,.72);font-size:13px}.rul-b{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.rul-b button:disabled{opacity:.45}
 .dlmf.ruling .dlmf-i,.dlmf.ruling .zleg{display:none}.dlmf.ruling .dlmf-m{cursor:crosshair}
@@ -4312,7 +4312,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.clos
   if(b.dataset.zmap){zonesMap(null,null);return}const p=(b.dataset.zll||'').split(',').map(Number);zonesMap(p.length===2&&!p.some(isNaN)?{lat:p[0],lon:p[1]}:null,b.dataset.zone)},true);
 
 /* ===== Map ruler: tap to add as many points as needed, drag a point to move it, tap a point to remove it.
-   Works on the Leaflet map and the Google 2D map; in 3D the button opens the 2D map with the ruler on. Hidden while picking a place. A tap on a dive pin adds a point exactly there. ===== */
+   Works on the Leaflet map and the Google 2D map; in 3D the button opens the 2D map with the ruler on. While picking a place the crosshair and its bar step aside until the ruler is closed. A tap on a dive pin adds a point exactly there. ===== */
 const RUT={pt:{btn:'Régua',hint:'Toque no mapa para marcar pontos. Arraste um ponto para o mover; toque nele para o apagar.',undo:'Desfazer',clr:'Limpar',done:'Fechar',pts:'pontos',leg:'último troço'},
  en:{btn:'Ruler',hint:'Tap the map to add points. Drag a point to move it; tap it to delete it.',undo:'Undo',clr:'Clear',done:'Close',pts:'points',leg:'last leg'},
  es:{btn:'Regla',hint:'Toque el mapa para marcar puntos. Arrastre un punto para moverlo; tóquelo para borrarlo.',undo:'Deshacer',clr:'Borrar',done:'Cerrar',pts:'puntos',leg:'último tramo'}};
@@ -4931,7 +4931,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795624008';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795625616';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);

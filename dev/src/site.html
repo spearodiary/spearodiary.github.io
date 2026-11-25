@@ -1538,7 +1538,7 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .dlmf-pick .dlmf-top{max-width:440px}
 .dlmf-q,.dlmf-q input{font-family:var(--body);font-weight:400}
 .fc-ren{flex-wrap:nowrap}.fc-ren input{min-width:0}.fc-ren .fc-ib{flex:none;padding:0;border:0}.fc-ren .fc-ok{color:var(--good)}.fc-ren .fc-no{color:var(--muted)}
-.dlmf-z>.dlmf-rb[hidden]{display:none}.dlmf-z>.dlmf-rb.on{background:#fff;color:#0a1e26}.dlmf.picking .dlmf-rb,.dlmf.picking .dlmf-rul{display:none}
+.dlmf-z>.dlmf-rb[hidden]{display:none}.dlmf-z>.dlmf-rb.on{background:#fff;color:#0a1e26}.dlmf.ruling .dlmf-bar,.dlmf.ruling .dlmf-cross,.dlmf.ruling .dlmf-res{display:none!important}
 .dlmf-rul{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(66px + env(safe-area-inset-right,0px));max-width:420px;bottom:calc(30px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.94);color:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4}
 .dlmf-rul[hidden]{display:none}.dlmf-rul .hint{color:rgba(255,255,255,.72);font-size:13px}.rul-b{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.rul-b button:disabled{opacity:.45}
 .dlmf.ruling .dlmf-i,.dlmf.ruling .zleg{display:none}.dlmf.ruling .dlmf-m{cursor:crosshair}
@@ -4312,7 +4312,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.clos
   if(b.dataset.zmap){zonesMap(null,null);return}const p=(b.dataset.zll||'').split(',').map(Number);zonesMap(p.length===2&&!p.some(isNaN)?{lat:p[0],lon:p[1]}:null,b.dataset.zone)},true);
 
 /* ===== Map ruler: tap to add as many points as needed, drag a point to move it, tap a point to remove it.
-   Works on the Leaflet map and the Google 2D map; in 3D the button opens the 2D map with the ruler on. Hidden while picking a place. A tap on a dive pin adds a point exactly there. ===== */
+   Works on the Leaflet map and the Google 2D map; in 3D the button opens the 2D map with the ruler on. While picking a place the crosshair and its bar step aside until the ruler is closed. A tap on a dive pin adds a point exactly there. ===== */
 const RUT={pt:{btn:'Régua',hint:'Toque no mapa para marcar pontos. Arraste um ponto para o mover; toque nele para o apagar.',undo:'Desfazer',clr:'Limpar',done:'Fechar',pts:'pontos',leg:'último troço'},
  en:{btn:'Ruler',hint:'Tap the map to add points. Drag a point to move it; tap it to delete it.',undo:'Undo',clr:'Clear',done:'Close',pts:'points',leg:'last leg'},
  es:{btn:'Regla',hint:'Toque el mapa para marcar puntos. Arrastre un punto para moverlo; tóquelo para borrarlo.',undo:'Deshacer',clr:'Borrar',done:'Cerrar',pts:'puntos',leg:'último tramo'}};
