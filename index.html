@@ -1772,7 +1772,7 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
       <div class="lang-row"><div class="lang" role="group" aria-label="Language">
         <button type="button" id="langPt" lang="pt">PT</button>
         <button type="button" id="langEn" lang="en">EN</button>
-        <button type="button" id="langEs" lang="es" hidden>ES</button>
+        <button type="button" id="langEs" lang="es">ES</button>
       </div>
       </div>
     </section>
@@ -2063,7 +2063,7 @@ const FACEC={good:'var(--good)',ok:'var(--amber)',bad:'var(--danger)'};
 function face(m){return '<svg class="face" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="'+FACEC[m]+'" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="'+MOUTH[m]+'"/><path d="M9 9h.01M15 9h.01" stroke-width="2.6"/></svg>'}
 
 let lang='en';try{lang=localStorage.getItem('sn-lang')||''}catch(e){lang=''}
-/* Spanish is ready but hidden until Spain is added: only ?lang=es turns it on (for testing) */
+/* ?lang=xx picks the language from a link */
 try{const q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='pt'||q==='en')lang=q}catch(e){}
 if(lang!=='en'&&lang!=='pt'&&lang!=='es')lang='pt';
 const t=k=>{const d=T[lang],v=d&&d[k];return v!==undefined?v:T.en[k]};
@@ -2828,15 +2828,28 @@ $('eMood').addEventListener('click',ev=>{const b=ev.target.closest('[data-m]');i
 function tidesOf(e){return[e.tideIn||e.tide||'',e.tideOut||'']}
 function duration(a,b){if(!a||!b)return'';let m=(+b.slice(0,2)*60+ +b.slice(3))-(+a.slice(0,2)*60+ +a.slice(3));if(m<0)m+=1440;return Math.floor(m/60)+'h'+pad(m%60)}
 /* Forecast: wind, waves, water temperature and sky from Open-Meteo (free for non-commercial use, no key) */
-const FC_DEF_R={CON:{name:'Cabo Raso',lat:38.7092,lon:-9.4856},MAD:{name:'Funchal',lat:32.6386,lon:-16.915},AZO:{name:'Ponta Delgada',lat:37.737,lon:-25.668}};
+const FC_DEF_R={CON:{name:'Cabo Raso',lat:38.7092,lon:-9.4856},MAD:{name:'Funchal',lat:32.6386,lon:-16.915},AZO:{name:'Ponta Delgada',lat:37.737,lon:-25.668},
+ GA:{name:'A Coruña',lat:43.40,lon:-8.42},AS:{name:'Gijón',lat:43.57,lon:-5.67},CB:{name:'Santander',lat:43.49,lon:-3.77},PV:{name:'Donostia',lat:43.33,lon:-2.00},ANA:{name:'Tarifa',lat:36.00,lon:-5.61},ANM:{name:'Cabo de Gata',lat:36.71,lon:-2.19},MU:{name:'Cabo de Palos',lat:37.63,lon:-0.67},VC:{name:'Xàbia',lat:38.78,lon:0.22},CT:{name:'L\'Escala',lat:42.12,lon:3.15},IB:{name:'Palma',lat:39.54,lon:2.63},CN:{name:'Las Palmas',lat:28.14,lon:-15.41},CE:{name:'Ceuta',lat:35.89,lon:-5.29},ML:{name:'Melilla',lat:35.29,lon:-2.92}};
 const fcReg=()=>{try{const r=localStorage.getItem('sn-ptreg');return FC_DEF_R[r]?r:'CON'}catch(e){return'CON'}};
 let FC_DEF=FC_DEF_R[fcReg()];
 let fcData=null,fcErr='',fcLoading=false,fcSpot=null;
 const FC_PRESETS_R={CON:[['Cascais',38.69,-9.43],['Ericeira',38.97,-9.43],['Peniche',39.36,-9.41],['Nazaré',39.6,-9.08],['Figueira da Foz',40.15,-8.87],['Viana do Castelo',41.69,-8.85],['Sesimbra',38.43,-9.11],['Sines',37.95,-8.88],['Zambujeira do Mar',37.52,-8.79],['Sagres',37.0,-8.94],['Lagos',37.09,-8.67],['Albufeira',37.08,-8.25]],
  MAD:[['Funchal',32.6386,-16.915],['Caniço de Baixo',32.643,-16.845],['Machico',32.715,-16.765],['Porto da Cruz',32.775,-16.825],['São Vicente',32.805,-17.045],['Porto Moniz',32.87,-17.17],['Paul do Mar',32.755,-17.23],['Calheta',32.72,-17.18],['Ribeira Brava',32.67,-17.065],['Porto Santo',33.06,-16.34]],
  AZO:[['Ponta Delgada',37.737,-25.668],['Mosteiros',37.89,-25.825],['Rabo de Peixe',37.815,-25.585],['Vila Franca do Campo',37.712,-25.432],['Vila do Porto (Santa Maria)',36.943,-25.147],['Angra do Heroísmo',38.652,-27.218],['Praia da Vitória',38.73,-27.055],['Horta (Faial)',38.53,-28.623],['Madalena (Pico)',38.535,-28.53],['Lajes do Pico',38.393,-28.255],['Velas (São Jorge)',38.68,-28.205],['Santa Cruz da Graciosa',39.087,-27.997],['Santa Cruz das Flores',39.453,-31.123],['Corvo',39.672,-31.112]]};
+Object.assign(FC_PRESETS_R,{GA:[['A Coruña',43.40,-8.42],['Malpica',43.34,-8.84],['Fisterra',42.90,-9.30],['Corrubedo',42.57,-9.10],['Baiona',42.12,-8.88],['Cariño',43.75,-7.87]],
+ AS:[['Gijón',43.57,-5.67],['Llanes',43.44,-4.75],['Cudillero',43.58,-6.15],['Luarca',43.56,-6.53],['Tapia de Casariego',43.59,-6.94]],
+ CB:[['Santander',43.49,-3.77],['Santoña',43.47,-3.44],['Suances',43.46,-4.05],['San Vicente de la Barquera',43.41,-4.40],['Castro Urdiales',43.40,-3.21]],
+ PV:[['Donostia',43.33,-2.00],['Hondarribia',43.40,-1.79],['Getaria',43.32,-2.20],['Lekeitio',43.38,-2.50],['Bermeo',43.44,-2.72]],
+ ANA:[['Tarifa',36.00,-5.61],['Barbate',36.16,-5.93],['Conil',36.27,-6.12],['Cádiz',36.53,-6.33],['Chipiona',36.74,-6.46],['Mazagón',37.12,-6.85]],
+ ANM:[['Cabo de Gata',36.71,-2.19],['Carboneras',36.98,-1.88],['Mojácar',37.13,-1.81],['La Herradura',36.72,-3.74],['Nerja',36.73,-3.88],['Marbella',36.49,-4.88],['Estepona',36.41,-5.15]],
+ MU:[['Cabo de Palos',37.63,-0.67],['Cabo Tiñoso',37.52,-1.11],['Mazarrón',37.54,-1.25],['Águilas',37.39,-1.58]],
+ VC:[['Xàbia',38.78,0.22],['Calp',38.62,0.08],['Benidorm',38.52,-0.13],['Torrevieja',37.96,-0.67],['Cullera',39.17,-0.21],['Peníscola',40.36,0.42]],
+ CT:[["L'Escala",42.12,3.15],['Cadaqués',42.29,3.30],['Palamós',41.84,3.14],['Tossa de Mar',41.70,2.94],['Sitges',41.22,1.81],["L'Ametlla de Mar",40.88,0.82]],
+ IB:[['Palma',39.54,2.63],['Pollença',39.90,3.12],['Cala Rajada',39.71,3.48],['Maó',39.87,4.31],['Ciutadella',39.99,3.81],['Eivissa',38.90,1.46],['Formentera (La Savina)',38.74,1.42]],
+ CN:[['Las Palmas',28.14,-15.41],['Arguineguín',27.75,-15.69],['Puerto del Carmen',28.91,-13.67],['Corralejo',28.75,-13.86],['Los Cristianos',28.03,-16.72],['La Restinga',27.63,-17.98],['Santa Cruz de La Palma',28.68,-17.75]],
+ CE:[['Ceuta',35.89,-5.29]],ML:[['Melilla',35.29,-2.92]]});
 for(const k in FC_PRESETS_R)FC_PRESETS_R[k]=FC_PRESETS_R[k].map(([name,lat,lon])=>({name,lat,lon,g:'p'}));
-const FC_PRESETS=[].concat(FC_PRESETS_R.CON,FC_PRESETS_R.MAD,FC_PRESETS_R.AZO);
+const FC_PRESETS=[].concat(...Object.values(FC_PRESETS_R));
 function fcCustom(){try{return JSON.parse(localStorage.getItem('sn-fc-custom')||'[]')}catch(e){return[]}}
 function fcSpots(){const m=new Map([[norm(FC_DEF.name),{...FC_DEF,g:'d'}]]);entries.forEach(e=>{const c=parseCoords(e.gps);if(c&&e.spot&&!m.has(norm(e.spot)))m.set(norm(e.spot),{name:e.spot.trim(),lat:c.lat,lon:c.lon,g:'m'})});fcCustom().forEach(c=>{if(!m.has(norm(c.name)))m.set(norm(c.name),{...c,g:'c'})});(FC_PRESETS_R[fcReg()]||FC_PRESETS_R.CON).forEach(p=>{if(!m.has(norm(p.name)))m.set(norm(p.name),p)});return[...m.values()]}
 function fcPick(){let k='';try{k=localStorage.getItem('sn-fc-spot')||''}catch(e){}return fcSpots().find(s=>norm(s.name)===k)||FC_DEF}
@@ -4368,36 +4381,136 @@ function rulerG2(m,o){if(!o||!google.maps.marker)return;const AM=google.maps.mar
   m.addListener('click',e=>{if(o.classList.contains('ruling')&&o._rulAd===ad&&e.latLng)o._rulAdd(e.latLng.lat(),e.latLng.lng())});
   rulerInit(o,ad)}
 
-/* ===== Portugal fishing regions: Continente / Madeira / Açores ===== */
-const PT_LAW=JSON.parse(JSON.stringify(LAW)),PT_LEGAL=JSON.parse(JSON.stringify(LEGAL));
+/* ===== España: rules, sizes and species law per comunidad autónoma (research Nov 2026, see dev/spain/README.md) =====*/
+const ES_REG={GA:{n:'Galicia',z:'NO'},AS:{n:'Asturias',z:'NO'},CB:{n:'Cantabria',z:'NO'},PV:{n:'País Vasco',z:'NO'},
+  ANA:{n:'Andalucía (Atlántico)',z:'GC'},ANM:{n:'Andalucía (Mediterráneo)',z:'MED'},MU:{n:'Región de Murcia',z:'MED'},VC:{n:'Comunitat Valenciana',z:'MED'},
+  CT:{n:'Cataluña',z:'MED'},IB:{n:'Illes Balears',z:'MED'},CN:{n:'Canarias',z:'CAN'},CE:{n:'Ceuta',z:'MED'},ML:{n:'Melilla',z:'MED'}};
+const ZONE_N={NO:'Cantábrico y Noroeste',GC:'Golfo de Cádiz',MED:'Mediterráneo',CAN:'Canarias'};
+/* minimum sizes by fishing ground: RD 560/1995 (consolidated 01.11.2025), Mediterranean also Reg. (UE) 2019/1241 Annex IX, RD 347/2011 art. 4 bis */
+const ES_MIN={
+ NO:{'Dicentrarchus labrax':'42 cm','Pollachius pollachius':'30 cm','Pagellus bogaraveo':'25 cm','Boops boops':'11 cm','Conger conger':'58 cm','Spondyliosoma cantharus':'23 cm','Sparus aurata':'19 cm','Trachurus trachurus':'15 cm','Solea solea':'24 cm','Molva molva':'63 cm','Merluccius merluccius':'27 cm','Pagrus pagrus':'15 cm','Octopus vulgaris':'1 kg','Scophthalmus rhombus':'30 cm','Scophthalmus maximus':'30 cm','Sarpa salpa':'15 cm','Mullus surmuletus':'15 cm','Maja squinado':'12 cm','Belone belone':'25 cm'},
+ MED:{'Dicentrarchus labrax':'25 cm','Sparus aurata':'20 cm','Diplodus sargus':'23 cm','Diplodus vulgaris':'18 cm','Diplodus puntazzo':'18 cm','Diplodus annularis':'12 cm','Diplodus cervinus':'15 cm','Epinephelus marginatus':'45 cm','Polyprion americanus':'45 cm','Lithognathus mormyrus':'20 cm','Pagrus pagrus':'18 cm','Pagellus acarne':'17 cm','Pagellus erythrinus':'15 cm','Pagellus bogaraveo':'33 cm','Mullus surmuletus':'11 cm','Merluccius merluccius':'20 cm','Solea solea':'20 cm','Trachurus trachurus':'15 cm','Boops boops':'11 cm','Sarpa salpa':'15 cm','Octopus vulgaris':'1 kg','Belone belone':'25 cm'},
+ CAN:{'Dicentrarchus labrax':'22 cm','Sparus aurata':'19 cm','Diplodus sargus':'22 cm','Diplodus cadenati':'22 cm','Diplodus vulgaris':'22 cm','Sparisoma cretense':'22 cm','Pagrus pagrus':'28 cm','Epinephelus marginatus':'45 cm','Mycteroperca fusca':'35 cm','Serranus atricauda':'20 cm','Serranus cabrilla':'19 cm','Sarpa salpa':'24 cm','Spondyliosoma cantharus':'23 cm','Pagellus acarne':'20 cm','Pagellus erythrinus':'22 cm','Dentex gibbosus':'35 cm','Dentex macrophthalmus':'22 cm','Muraena augusti':'56 cm','Gymnothorax unicolor':'57 cm','Chelon auratus':'14 cm','Mullus surmuletus':'15 cm','Trachurus trachurus':'12 cm','Octopus vulgaris':'1 kg','Boops boops':'11 cm','Belone belone':'25 cm'}};
+ES_MIN.GC=Object.assign({},ES_MIN.NO,{'Dicentrarchus labrax':'36 cm'});
+const ES_GENUS={NO:{Mugil:'20 cm',Chelon:'20 cm',Scomber:'20 cm',Solea:'24 cm'},GC:{Mugil:'20 cm',Chelon:'20 cm',Scomber:'20 cm',Solea:'24 cm'},
+  MED:{Mugil:'16 cm',Chelon:'16 cm',Scomber:'18 cm',Epinephelus:'45 cm',Solea:'20 cm',Mullus:'11 cm'},CAN:{Scomber:'18 cm',Mullus:'15 cm',Trachurus:'12 cm'}};
+/* regional changes on top of the fishing ground */
+const ES_X={
+ PV:{note:'Lubina: al este de la isla de Santa Clara (Donostia) mínimo 44 cm y 1 al día.',qn:{'Sea bass':'Al este de la isla de Santa Clara (Donostia): mínimo 44 cm y 1 al día.'}},
+ AS:{ban:{genus:['Octopus','Sepia','Loligo']},note:'La licencia submarina solo permite peces.'},
+ MU:{ban:{genus:['Maja','Homarus','Palinurus','Scyllarides']}},
+ ANA:{ban:{genus:['Epinephelus','Octopus']},quota:{}},
+ ANM:{ban:{genus:['Epinephelus','Octopus']}},
+ IB:{min:{'Dentex dentex':'35 cm','Sciaena umbra':'30 cm','Seriola dumerili':'35 cm'},ban:{genus:['Octopus','Sepia','Loligo']},
+   qn:{'Sea bass':'Cupo en Baleares: 1 al día.','Gilthead bream':'Cupo en Baleares: 2 al día.','Dentex':'Cupo en Baleares: 2 al día.','Grouper':'Cupo en Baleares: 1 mero al día.'},quota:{'Dicentrarchus labrax':1,'Sparus aurata':2,'Dentex dentex':2,'Epinephelus marginatus':1,'Mycteroperca rubra':1}},
+ CT:{def:[{lat:['Sepia officinalis'],from:'09-01',to:'10-31',area:'Bahías de Roses y Pals'}]},
+ CN:{}};
+const ES_BAN_ALL={sp:['Homarus gammarus','Maja squinado','Necora puber','Cancer pagurus','Anguilla anguilla','Hippocampus hippocampus','Pinna nobilis'],genus:['Palinurus','Scyllarides']};
+const ES_DEF_ALL={AS:[{lat:['Octopus vulgaris'],from:'11-01',to:'12-31',area:'Asturias'}]};
+function esLaw(r){const z=ES_REG[r].z,x=ES_X[r]||{};
+  return{min:Object.assign({},ES_MIN[z],x.min||{}),genus:Object.assign({},ES_GENUS[z]),
+    ban:{sp:[...ES_BAN_ALL.sp,...((x.ban||{}).sp||[])],genus:[...ES_BAN_ALL.genus,...((x.ban||{}).genus||[])]},
+    def:[...(ES_DEF_ALL[r]||[]),...(x.def||[])].map(d=>({...d,area:{pt:d.area,en:d.area,es:d.area}}))}}
+const ES_CK={es:['Licencia de pesca submarina (de la comunidad)','Licencia federativa','Seguro de responsabilidad civil y accidentes','DNI',['Boya',['Bandera Alfa','Carrete con cabo y poita']],'Fusil','Chaqueta del traje','Pantalón del traje','Capucha','Guantes','Escarpines','Aletas','Máscara','Tubo','Cinturón de lastre','Portapeces','Cuchillo','Linterna','Reloj','Agua','Comida'],
+ pt:['Licença de pesca submarina (da comunidade)','Licença federativa','Seguro de responsabilidade civil e acidentes','Documento de identificação',['Bóia',['Bandeira Alfa','Enrolador com cabo e poita']],'Arma','Casaco','Calças','Gorro','Luvas','Meias','Barbatanas','Máscara','Tubo','Cinto de lastro','Fieira','Faca','Lanterna','Relógio','Água','Comida'],
+ en:['Spearfishing licence (regional)','Federation licence','Liability and accident insurance','ID card',['Buoy',['Alpha flag','Reel with line and anchor']],'Speargun','Wetsuit jacket','Wetsuit trousers','Hood','Gloves','Socks','Fins','Mask','Snorkel','Weight belt','Fish stringer','Knife','Torch','Watch','Water','Food']};
+const ES_NAT='<details><summary>Para toda España</summary><ul><li>Solo en apnea: prohibido llevar fusil y equipo de buceo en la misma embarcación.</li><li>Boya obligatoria; no alejarse más de <b>25 m</b> de ella.</li><li>Prohibido de la puesta a la salida del sol, cargar el fusil fuera del agua, puntas explosivas o eléctricas, focos (salvo linterna de mano) y scooters.</li><li>300 m de barcos profesionales faenando, 148 m de sus artes calados, 200 m de piscifactorías.</li><li>Solo peces y cefalópodos del Anexo I del RD 347/2011: nada de crustáceos (bogavante, langosta, centollo…).</li><li>Prohibida la venta de capturas.</li><li>Atún rojo, pez espada, besugo, lubina, abadejo, lenguado, merluza y lampuga necesitan autorización de pesca de protección diferenciada; las capturas se declaran en la app <b>PescaREC</b> (obligatorio desde el 10 nov 2026).</li><li>Cupo general (aguas exteriores): <b>5 kg por persona y día</b>; una pieza puede superarlo.</li></ul><p class="hint">RD 347/2011 (consolidado 19 mar 2026); Orden de 26 feb 1999; Resolución de 29 oct 2026.</p></details>';
+const ES_RULES={
+ GA:{lic:'Licencia de clase C (Xunta), desde 16 años: certificado médico, seguro de accidentes y RC, y licencia de armas o federativa. Anual o mensual.',
+   how:'<li>Solo <b>sábados, domingos y festivos</b>; todos los días del jueves al domingo de Semana Santa y del <b>15 de junio al 15 de septiembre</b>.</li><li>De la salida a la puesta del sol.</li>',
+   dist:'<li><b>Prohibido dentro de todas las rías</b> (líneas del Decreto 369/1994).</li><li>Prohibido a menos de 250 m de las islas Coelleiras, Farallóns, Ansarón, Os Aguillóns, Sisargas, Lobeiras, Miñarzos, As Basoñas, Sagres, Sálvora, Cíes, Ons (sector) y Onza; y en el Parque Nacional de las Islas Atlánticas.</li><li>Zonas reservadas: avisar a la delegación de 3 a 15 días hábiles antes.</li>',
+   lim:'<li>5 kg por persona y día (cupo general).</li>',src:[['Orden 13 ago 1999 (DOG)','https://www.xunta.gal/dog/Publicados/1999/19990820/AnuncioE4B6_es.html']],todo:'Se prepara un decreto nuevo (2026).'},
+ AS:{lic:'Licencia submarina del Principado, 2 años, con seguro. Menores de 18 con autorización de sus padres.',
+   how:'<li>Fusil manual o mecánico; prohibidas las luces para atraer.</li>',dist:'<li>Zonas y distancias: artículo 12 del Decreto 25/2006.</li>',
+   lim:'<li><b>Solo peces, hasta 5 kg</b> al día (art. 5.2.3).</li><li>Pulpo (no con licencia submarina): veda 1 nov – 31 dic.</li>',src:[['Decreto 25/2006','https://vlex.es/vid/regula-pesca-maritima-recreo-principado-74440955'],['Resolución 30 mar 2026 (pulpo)','https://noticias.juridicas.com/base_datos/CCAA/994910-r-medio-rural-y-politica-agraria-30-mar-2026-ca-asturias-medidas-restrictivas.html']]},
+ CB:{lic:'Licencia de 2.ª clase, desde 16 años: certificado médico oficial y licencia federativa.',how:'',dist:'',lim:'<li>5 kg por persona y día (cupo general).</li><li>Vedas y tallas: orden anual de la consejería.</li>',src:[['Ley 1/2021 de Cantabria','https://www.boe.es/boe/dias/2022/01/21/pdfs/BOE-A-2022-990.pdf']]},
+ PV:{lic:'Licencia submarina del Gobierno Vasco, hasta 1 año, desde 16 años, con seguro.',how:'',dist:'',
+   lim:'<li><b>5 kg</b> por persona y día.</li><li>Lubina: al este de la isla de Santa Clara (Donostia) mínimo 44 cm y <b>1 al día</b>; al oeste, 42 cm.</li>',src:[['Especies, tallas y cupos (Euskadi)','https://www.euskadi.eus/web01-a2arraku/es/contenidos/informacion/especies_tallas_cupos/es_def/index.shtml']]},
+ ANA:null,ANM:null,
+ MU:{lic:'Licencia regional <b>solo desde 18 años</b>: certificado médico y seguro de accidentes y RC; 1 año.',
+   how:'<li>Boya con bandera Alfa, como máximo a 25 m. Prohibido de noche.</li><li>Prohibidos crustáceos y moluscos, salvo cefalópodos.</li>',
+   dist:'<li><b>250 m</b> de playas con bañistas.</li><li>200 m de artes profesionales y piscifactorías.</li><li>Prohibido en las reservas marinas de Cabo de Palos – Islas Hormigas y Cabo Tiñoso, y en el canal de El Estacio.</li>',
+   lim:'<li>5 kg por persona y día (cupo general).</li>',src:[['Decreto 72/2016 (BORM)','https://borm.es/services/anuncio/748579/pdf']]},
+ VC:{lic:'Licencia de la Generalitat desde 16 años, con aptitud física acreditada; hasta 2 años.',
+   how:'<li>Solo fusil mecánico. Marcar cada pieza con un corte en la cola nada más capturarla.</li>',
+   dist:'<li>Prohibido en las reservas marinas (Tabarca, Cap de Sant Antoni, Columbretes, Irta), sobre praderas de posidonia y coralígeno, y en zonas de arrecifes artificiales.</li>',
+   lim:'<li>5 kg por persona y día (cupo general).</li>',src:[['Ley 5/2017 de pesca marítima (BOE)','https://www.boe.es/boe/dias/2017/03/07/pdfs/BOE-A-2017-2424.pdf']]},
+ CT:{lic:'Licencia de la Generalitat, 1 año, con seguro. Para comprar y transportar el fusil hace falta licencia federativa.',
+   how:'<li>Sepia en las bahías de Roses y Pals: veda 1 sep – 31 oct; el resto del año, 15 al día.</li>',
+   dist:'<li><b>250 m</b> de zonas de baño; 100 m de artes ajenas; prohibido en puertos.</li><li>Prohibido en las Illes Medes, Ses Negres, Masia Blanca y partes del Cap de Creus.</li>',
+   lim:'<li>Aguas interiores (Portbou–Begur, Arenys–Barcelona, Salou–delta del Ebro): <b>10 kg</b> de peces (una pieza puede superarlo) + 5 kg de cefalópodos.</li><li>Aguas exteriores y Cap de Creus: 5 kg.</li>',src:[['Resumen AES Neptuno (2022)','https://aesneptuno.org/2016/07/08/legislacion-sobre-la-pesca-submarina-en-cataluna/']]},
+ IB:{lic:'Licencia del Govern desde 16 años (28,92 €, gratis desde 65). <b>Licencia federativa obligatoria</b> para usar fusil. Las licencias extranjeras no valen.',
+   how:'<li>Boya naranja, roja o amarilla, como máximo a 25 m. De la salida a la puesta del sol.</li><li>Prohibido coger cefalópodos buceando.</li><li>Marcar con corte en la cola: serviola, pez de San Pedro, dentón, cabracho, meros, corvallo y verrugato.</li>',
+   dist:'<li><b>100 m</b> de zonas con bañistas; en las playas, prohibido de 7:00 a 22:00 del <b>1 de mayo al 30 de septiembre</b>.</li><li>250 m de artes profesionales.</li><li>Prohibido en Cabrera, Dragonera, Mondragó, Es Trenc‑Salobrar y en todas las reservas marinas salvo Bahía de Palma y Migjorn de Mallorca (lunes, martes, sábados, domingos y festivos, con permiso anual).</li>',
+   lim:'<li>5 kg + 1 pieza por licencia y día.</li><li>Por día: lubina 1, dorada 2, dentón 2, mero 1, gitano 1.</li>',src:[['Cuaderno de pesca recreativa (CAIB)','https://www.caib.es/webgoib/documents/81190/1416499/Cuaderno_Pesca+recreativa_2026_es.pdf/f43b0f82-e0b4-54dc-ee5f-4f633807fa88']]},
+ CN:{lic:'Licencia de 2.ª clase del Gobierno de Canarias, 3 años, con certificado médico.',
+   how:'<li>De la salida a la puesta del sol. Boya roja o naranja.</li><li>En aguas interiores, <b>solo en las zonas autorizadas</b>: Fuerteventura F‑1 a F‑4; Gran Canaria G‑1, G‑2, G‑3, G‑6, G‑7 (G‑8 solo fines de semana); Lanzarote L‑1 a L‑3; La Palma P‑1, P‑3; Tenerife T‑2, T‑4 (T‑1, T‑3 solo fines de semana).</li>',
+   dist:'<li><b>150 m</b> de pescadores de superficie, playas, zonas de baño y lugares concurridos.</li><li>Prohibido en zonas portuarias y junto a instalaciones de acuicultura.</li>',
+   lim:'<li><b>5 kg</b> por persona y día; una sola pieza puede superarlo.</li><li>Entre islas, como máximo 10 kg.</li>',src:[['Decreto 182/2004','https://parcan.es/files/documentacion/dosieres/DOSS0280/DOSS0280DOC6810.pdf'],['Zonas (Orden 29 oct 2007)','https://parcan.es/files/documentacion/dosieres/DOSS0280/DOSS0280DOC6811.pdf']]},
+ CE:{lic:'Licencia de 2.ª clase de la Ciudad, 5 años, desde 16 años.',how:'',dist:'',lim:'<li>5 kg por persona y día (cupo general).</li>',src:[]},
+ ML:{lic:'Licencia gratuita de la Ciudad, 1 año, solo válida en Melilla; con seguro de RC o licencia federativa.',how:'',dist:'',lim:'<li>5 kg por persona y día (cupo general).</li>',src:[]}};
+ES_RULES.ANA=ES_RULES.ANM={lic:'Licencia de la Junta, de 1 día a 3 años; gratis desde 65 años.',
+   how:'<li>Todos los días, de la salida a la puesta del sol. Boya roja o naranja con bandera Alfa.</li><li>Marcar cada pieza con un corte en el lóbulo inferior de la cola (en la embarcación o en tierra); desembarcar entera o eviscerada.</li>',
+   dist:'<li><b>250 m</b> de personas en playas, zonas de baño, lugares concurridos, puertos y canales de navegación.</li><li>250 m de artes y barcos profesionales y de acuicultura.</li>',
+   lim:'<li><b>5 kg en vivo o 4 kg eviscerado</b> por persona y día; una pieza puede superarlo.</li><li>Solo cefalópodos: 6 piezas. Embarcación con más de 5 licencias: 25 kg.</li><li><b>Prohibidos</b>: meros, pulpo, erizos, bivalvos, muchos tiburones y rayas.</li>',
+   src:[['Decreto 205/2023 (BOJA)','https://www.juntadeandalucia.es/boja/2023/169/BOJA23-169-00019-13843-01_00288842.pdf']]};
+function esRulesHtml(){const r=ES_RULES[REGP],n=ES_REG[REGP].n,li=s=>s?'<ul>'+s+'</ul>':'<p class="hint">Sin normas propias: se aplican las de toda España.</p>';
+  const safety=(RULES.es.match(/<details class="safety">[\s\S]*?<\/details>/)||[''])[0];
+  return regSelect('ptRegRules')
+   +'<details open><summary>Licencia</summary><p>'+r.lic+'</p></details>'
+   +'<details><summary>Cómo pescar</summary>'+li(r.how)+'</details>'
+   +'<details><summary>Distancias y zonas prohibidas</summary>'+li(r.dist)+'</details>'
+   +'<details><summary>Límites de captura</summary><ul>'+r.lim+'</ul></details>'
+   +ES_NAT+safety
+   +'<p class="hint">'+esc(n)+(r.todo?' · '+esc(r.todo):'')+' · No sustituye a la ley: confírmalo con la comunidad autónoma o la Capitanía Marítima.</p>'
+   +'<p class="sp-links">'+[...r.src,['RD 347/2011 (BOE)','https://www.boe.es/eli/es/rd/2011/03/11/347/con/20260319']].map(([t1,u])=>'<a href="'+u+'" target="_blank" rel="noopener">'+esc(t1)+'</a>').join('')+'</p>'}
+const ES_COMMON={'Dicentrarchus labrax':'Lubina','Sparus aurata':'Dorada','Diplodus sargus':'Sargo','Diplodus cadenati':'Sargo (Canarias)','Diplodus vulgaris':'Mojarra','Diplodus puntazzo':'Sargo picudo','Diplodus annularis':'Raspallón','Diplodus cervinus':'Sargo breado','Epinephelus marginatus':'Mero','Polyprion americanus':'Cherna','Lithognathus mormyrus':'Herrera','Pagrus pagrus':'Pargo (bocinegro)','Pagellus acarne':'Aligote','Pagellus erythrinus':'Breca','Pagellus bogaraveo':'Besugo','Mullus surmuletus':'Salmonete de roca','Merluccius merluccius':'Merluza','Solea solea':'Lenguado','Trachurus trachurus':'Jurel','Boops boops':'Boga','Sarpa salpa':'Salema','Octopus vulgaris':'Pulpo','Belone belone':'Aguja','Pollachius pollachius':'Abadejo','Conger conger':'Congrio','Spondyliosoma cantharus':'Chopa','Molva molva':'Maruca','Scophthalmus rhombus':'Rémol','Scophthalmus maximus':'Rodaballo','Maja squinado':'Centollo','Sparisoma cretense':'Vieja','Mycteroperca fusca':'Abade','Serranus atricauda':'Cabrilla negra','Serranus cabrilla':'Cabrilla','Dentex gibbosus':'Sama de pluma','Dentex macrophthalmus':'Cachucho','Muraena augusti':'Morena negra','Gymnothorax unicolor':'Murión','Chelon auratus':'Lisa amarilla','Dentex dentex':'Dentón','Sciaena umbra':'Corvallo','Seriola dumerili':'Serviola','Mycteroperca rubra':'Gitano'};
+function esSizesHtml(){const L=esLaw(REGP),z=ES_REG[REGP].z,x=ES_X[REGP]||{};
+  const rows=Object.entries(L.min).map(([lat,v])=>[ES_COMMON[lat]||lat,lat,v]).sort((a,b)=>a[0].localeCompare(b[0],'es'));
+  const gen=Object.entries(L.genus).filter(([g])=>!rows.some(r=>r[1].startsWith(g+' '))).map(([g,v])=>esc(g)+' spp. '+esc(v)).join(' · ');
+  const quota=x.quota&&Object.keys(x.quota).length?'<details open><summary>Cupos por especie</summary><div class="tbl"><table>'+Object.entries(x.quota).map(([lat,n])=>'<tr><td>'+esc(ES_COMMON[lat]||lat)+' <i>'+esc(lat)+'</i></td><td>'+n+' al día</td></tr>').join('')+'</table></div></details>':'';
+  const ban=[...L.ban.sp,...L.ban.genus.map(g=>g+' spp.')];
+  const def=L.def.length?'<details open><summary>Vedas</summary><div class="tbl"><table>'+L.def.map(d=>'<tr><td>'+d.lat.map(l=>esc(ES_COMMON[l]||l)).join(', ')+'</td><td>'+esc(dm(d.from))+' – '+esc(dm(d.to))+' · '+esc(d.area.es)+'</td></tr>').join('')+'</table></div></details>':'';
+  return regSelect('ptRegSizes')+'<p class="hint">'+esc(ES_REG[REGP].n)+' · caladero '+esc(ZONE_N[z])+'. RD 560/1995 (consolidado 1 nov 2025)'+(z==='MED'?' y Reglamento (UE) 2019/1241':'')+(x.min?', más normas de la comunidad':'')+'.</p>'
+   +'<details open><summary>Tallas mínimas</summary><div class="tbl"><table>'+rows.map(r=>'<tr><td>'+esc(r[0])+' <i>'+esc(r[1])+'</i></td><td>'+esc(r[2])+'</td></tr>').join('')+'</table></div>'+(gen?'<p class="hint">Además: '+gen+'</p>':'')+(x.note?'<p class="hint">'+esc(x.note)+'</p>':'')+'</details>'
+   +quota+def
+   +'<details><summary>No se pueden pescar</summary><p>'+ban.map(b=>'<i>'+esc(b)+'</i>').join(', ')+'</p><p class="hint">En toda España la pesca recreativa solo admite peces y cefalópodos del Anexo I del RD 347/2011.</p></details>'
+   +'<p class="sp-links"><a href="https://www.boe.es/eli/es/rd/1995/04/07/560/con/20251101" target="_blank" rel="noopener">Tallas mínimas (RD 560/1995)</a><a href="https://www.boe.es/eli/es/rd/2011/03/11/347/con/20260319" target="_blank" rel="noopener">RD 347/2011</a></p>'}
+
+/* ===== Fishing regions: Portugal (Continente / Madeira / Açores) and Spain (comunidades autónomas) ===== */
+const PT_LAW=JSON.parse(JSON.stringify(LAW)),PT_LEGAL=JSON.parse(JSON.stringify(LEGAL)),PT_CK=JSON.parse(JSON.stringify(CK_BASE));
+const isES=r=>!!ES_REG[r],regOk=r=>!!(PT_REG[r]||ES_REG[r]);
 const PT_LANGS=['pt','en','es'],PT_T={};for(const l of PT_LANGS)PT_T[l]={spBanned:T[l].spBanned,spLegalNote:T[l].spLegalNote,libLawNote:T[l].libLawNote,quickPh:T[l].quickPh};
 const RG_UI={h:{pt:'Região de pesca',en:'Fishing region',es:'Región de pesca'},
  l:{pt:'Região',en:'Region',es:'Región'},
  n:{CON:{pt:'Continente',en:'Mainland',es:'Continente'},MAD:{pt:'Madeira',en:'Madeira',es:'Madeira'},AZO:{pt:'Açores',en:'Azores',es:'Azores'}},
- hint:{pt:'As regras, os tamanhos, os defesos e as zonas seguem a região escolhida.',en:'Rules, sizes, closed seasons and zones follow the chosen region.',es:'Las normas, tallas, vedas y zonas siguen la región elegida.'},
+ hint:{pt:'Portugal ou Espanha: as regras, os tamanhos, os defesos, as zonas e a previsão seguem a região escolhida.',en:'Portugal or Spain: rules, sizes, closed seasons, zones and the forecast follow the chosen region.',es:'Portugal o España: las normas, tallas, vedas, zonas y la previsión siguen la región elegida.'},
  banned:{pt:n=>'Proibido para a caça submarina: '+n+'.',en:n=>'Not allowed for spearfishing: '+n+'.',es:n=>'No se puede pescar en apnea: '+n+'.'},
  note:{pt:n=>n+'. Ver Tamanhos para mais detalhes.',en:n=>n+'. See Sizes for details.',es:n=>n+'. Ver Tallas y vedas para más detalles.'},
  lib:{pt:(n,s)=>'Tamanhos mínimos para '+n+': '+s+'.',en:(n,s)=>'Minimum sizes for '+n+': '+s+'.',es:(n,s)=>'Tallas mínimas para '+n+': '+s+'.'}};
 Object.assign(T.pt,{ptRegH:RG_UI.h.pt,ptRegHint:RG_UI.hint.pt});Object.assign(T.en,{ptRegH:RG_UI.h.en,ptRegHint:RG_UI.hint.en});Object.assign(T.es,{ptRegH:RG_UI.h.es,ptRegHint:RG_UI.hint.es});
-let REGP='CON';try{const r=localStorage.getItem('sn-ptreg');if(PT_REG[r])REGP=r}catch(e){}
-const rgName=r=>(RG_UI.n[r]||RG_UI.n.CON)[PT_LANGS.includes(lang)?lang:'en'];
-function regSelect(id){const L=PT_LANGS.includes(lang)?lang:'en';return '<label class="pt-reg"><span>'+esc(RG_UI.l[L])+'</span><select id="'+id+'">'+Object.keys(PT_REG).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')+'</select></label>'}
-function applyPtReg(){const mad=REGP==='MAD',az=REGP==='AZO',isl=mad||az;
-  const L=mad?madLaw():az?azLaw():PT_LAW,qn=mad?MAD_QN:az?AZ_QN:{};
+let REGP='CON';try{const r=localStorage.getItem('sn-ptreg');if(regOk(r))REGP=r}catch(e){}
+const rgName=r=>isES(r)?ES_REG[r].n:(RG_UI.n[r]||RG_UI.n.CON)[PT_LANGS.includes(lang)?lang:'en'];
+const regOpts=()=>'<optgroup label="Portugal">'+Object.keys(PT_REG).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')+'</optgroup><optgroup label="España">'+Object.keys(ES_REG).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')+'</optgroup>';
+function regSelect(id){const L=PT_LANGS.includes(lang)?lang:'en';return '<label class="pt-reg"><span>'+esc(RG_UI.l[L])+'</span><select id="'+id+'">'+regOpts()+'</select></label>'}
+function applyPtReg(){const mad=REGP==='MAD',az=REGP==='AZO',es=isES(REGP),isl=mad||az||es;
+  const L=mad?madLaw():az?azLaw():es?esLaw(REGP):PT_LAW,qn=mad?MAD_QN:az?AZ_QN:es?Object.fromEntries(Object.entries((ES_X[REGP]||{}).qn||{}).map(([k,v])=>[k,{pt:v,en:v,es:v}])):{};
   const G=isl?{min:{},banned:{},defeso:[],note:JSON.parse(JSON.stringify(qn))}:PT_LEGAL;
   for(const k of Object.keys(LAW))delete LAW[k];Object.assign(LAW,JSON.parse(JSON.stringify(L)));
   for(const k of Object.keys(LEGAL))delete LEGAL[k];Object.assign(LEGAL,JSON.parse(JSON.stringify(G)));
-  for(const l of PT_LANGS){Object.assign(T[l],PT_T[l]);if(isl){const n='Portugal · '+RG_UI.n[REGP][l];
-    T[l].quickPh=PT_T[l].quickPh.replace('@Sesimbra',az?'@Caloura':'@Paul do Mar');
-    T[l].spBanned=RG_UI.banned[l](n);T[l].spLegalNote=RG_UI.note[l](n);T[l].libLawNote=RG_UI.lib[l](n,az?'Portaria 89/2026':'Portaria 484/2016')}}
-  const s=$('ptRegSet');if(s){s.innerHTML=Object.keys(PT_REG).map(k=>'<option value="'+k+'">'+esc(rgName(k))+'</option>').join('');s.value=REGP}}
-function setPtReg(r){if(!PT_REG[r])return;const ch=r!==REGP;REGP=r;try{localStorage.setItem('sn-ptreg',r)}catch(e){}
+  for(const k of Object.keys(CK_BASE))delete CK_BASE[k];Object.assign(CK_BASE,JSON.parse(JSON.stringify(es?ES_CK:PT_CK)));
+  for(const l of PT_LANGS){Object.assign(T[l],PT_T[l]);if(isl){const n=es?'España · '+ES_REG[REGP].n:'Portugal · '+RG_UI.n[REGP][l];
+    T[l].quickPh=PT_T[l].quickPh.replace('@Sesimbra',az?'@Caloura':es?'@'+((FC_DEF_R[REGP]||{}).name||'Tarifa'):'@Paul do Mar');
+    T[l].spBanned=RG_UI.banned[l](n);T[l].spLegalNote=RG_UI.note[l](n);T[l].libLawNote=RG_UI.lib[l](n,az?'Portaria 89/2026':es?'RD 560/1995, Reg. (UE) 2019/1241':'Portaria 484/2016')}}
+  document.querySelectorAll('a.tl[href*="beachcam.meo.pt"]').forEach(a=>a.hidden=es);
+  const s=$('ptRegSet');if(s){s.innerHTML=regOpts();s.value=REGP}}
+function setPtReg(r){if(!regOk(r))return;const ch=r!==REGP;REGP=r;try{localStorage.setItem('sn-ptreg',r)}catch(e){}
   if(ch&&typeof FC_DEF_R!=='undefined'){FC_DEF=FC_DEF_R[r];try{localStorage.setItem('sn-fc-spot',norm(FC_DEF.name))}catch(e){}try{seaFirst=true;fcData=null;fcSpot=null;$('fcFind').hidden=true;fcFillSelect();fcLoad()}catch(e){}}applyPtReg();applyLang();render(false);try{defBanner()}catch(e){}
   const rb=$('rulesBody');if(rb&&$('rules').open)rb.innerHTML=ptRulesHtml();const sb=$('sizesBody');if(sb&&$('sizes').open)sb.innerHTML=ptSizesHtml()}
 const ZBTN={pt:'Ver zonas proibidas e condicionadas no mapa',en:'See closed and restricted zones on the map',es:'Ver zonas prohibidas y restringidas en el mapa'};
 const zBtn=()=>'<p><button type="button" class="link zmap-btn" data-zmap="1">'+ICON_ZMAP+esc(ZBTN[PT_LANGS.includes(lang)?lang:'en'])+'</button></p>';
-function ptRulesHtml(){return REGP==='MAD'?madRulesHtml().replace('</label>','</label>'+zBtn()):REGP==='AZO'?azRulesHtml().replace('</label>','</label>'+zBtn()):regSelect('ptRegRules')+zBtn()+LX(RULES)}
-function ptSizesHtml(){return REGP==='MAD'?madSizesHtml():REGP==='AZO'?azSizesHtml():regSelect('ptRegSizes')+LX(SIZES)}
+function ptRulesHtml(){return isES(REGP)?esRulesHtml():REGP==='MAD'?madRulesHtml().replace('</label>','</label>'+zBtn()):REGP==='AZO'?azRulesHtml().replace('</label>','</label>'+zBtn()):regSelect('ptRegRules')+zBtn()+LX(RULES)}
+function ptSizesHtml(){return isES(REGP)?esSizesHtml():REGP==='MAD'?madSizesHtml():REGP==='AZO'?azSizesHtml():regSelect('ptRegSizes')+LX(SIZES)}
 document.addEventListener('change',ev=>{const s=ev.target;if(s&&/^(pt|eu)Reg/.test(s.id||''))setPtReg(s.value)});
 applyPtReg();
 
@@ -4931,7 +5044,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795625616';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795638175';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
