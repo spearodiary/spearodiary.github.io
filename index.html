@@ -1544,6 +1544,7 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .dlmf.ruling .dlmf-i,.dlmf.ruling .zleg{display:none}.dlmf.ruling .dlmf-m{cursor:crosshair}
 .rvw{background:none;border:0}.rv{position:relative;width:34px;height:34px;display:grid;place-items:center;cursor:grab}.rv i{width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #0a1e26;box-shadow:0 0 0 1.5px #fff}
 .rv span{position:absolute;left:26px;top:-6px;white-space:nowrap;background:rgba(10,30,38,.9);color:#fff;font:600 12px/1 system-ui,sans-serif;padding:4px 6px;border-radius:6px;pointer-events:none}.rv span[hidden]{display:none}
+.ctry-seg{display:flex;gap:0;margin:0 0 10px;border:1px solid var(--line);border-radius:999px;padding:3px;width:max-content;max-width:100%}.ctry-seg button{border:0;background:none;color:var(--ink);font:inherit;font-weight:600;padding:7px 16px;border-radius:999px;cursor:pointer}.ctry-seg button[aria-pressed=true]{background:var(--accent);color:var(--on-accent)}
 .pt-reg{display:flex;gap:8px;align-items:center;margin:0 0 10px}.pt-reg select{flex:1;max-width:260px}
 .zbadge{font:inherit;font-size:.78em;border:0;border-radius:999px;padding:2px 9px;margin-left:6px;cursor:pointer;color:#fff;white-space:nowrap}
 .zb-ban{background:#d33b40}.zb-cond{background:#c47b00}.zb-info{background:#2f7fd6}
@@ -4483,6 +4484,7 @@ const isES=r=>!!ES_REG[r],regOk=r=>!!(PT_REG[r]||ES_REG[r]);
 const PT_LANGS=['pt','en','es'],PT_T={};for(const l of PT_LANGS)PT_T[l]={spBanned:T[l].spBanned,spLegalNote:T[l].spLegalNote,libLawNote:T[l].libLawNote,quickPh:T[l].quickPh};
 const RG_UI={h:{pt:'Região de pesca',en:'Fishing region',es:'Región de pesca'},
  l:{pt:'Região',en:'Region',es:'Región'},
+ c:{pt:'País',en:'Country',es:'País'},
  n:{CON:{pt:'Continente',en:'Mainland',es:'Continente'},MAD:{pt:'Madeira',en:'Madeira',es:'Madeira'},AZO:{pt:'Açores',en:'Azores',es:'Azores'}},
  hint:{pt:'Portugal ou Espanha: as regras, os tamanhos, os defesos, as zonas e a previsão seguem a região escolhida.',en:'Portugal or Spain: rules, sizes, closed seasons, zones and the forecast follow the chosen region.',es:'Portugal o España: las normas, tallas, vedas, zonas y la previsión siguen la región elegida.'},
  banned:{pt:n=>'Proibido para a caça submarina: '+n+'.',en:n=>'Not allowed for spearfishing: '+n+'.',es:n=>'No se puede pescar en apnea: '+n+'.'},
@@ -4491,8 +4493,12 @@ const RG_UI={h:{pt:'Região de pesca',en:'Fishing region',es:'Región de pesca'}
 Object.assign(T.pt,{ptRegH:RG_UI.h.pt,ptRegHint:RG_UI.hint.pt});Object.assign(T.en,{ptRegH:RG_UI.h.en,ptRegHint:RG_UI.hint.en});Object.assign(T.es,{ptRegH:RG_UI.h.es,ptRegHint:RG_UI.hint.es});
 let REGP='CON';try{const r=localStorage.getItem('sn-ptreg');if(regOk(r))REGP=r}catch(e){}
 const rgName=r=>isES(r)?ES_REG[r].n:(RG_UI.n[r]||RG_UI.n.CON)[PT_LANGS.includes(lang)?lang:'en'];
-const regOpts=()=>'<optgroup label="Portugal">'+Object.keys(PT_REG).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')+'</optgroup><optgroup label="España">'+Object.keys(ES_REG).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')+'</optgroup>';
-function regSelect(id){const L=PT_LANGS.includes(lang)?lang:'en';return '<label class="pt-reg"><span>'+esc(RG_UI.l[L])+'</span><select id="'+id+'">'+regOpts()+'</select></label>'}
+const ctryOf=r=>isES(r)?'ES':'PT',CTRY_REG={PT:PT_REG,ES:ES_REG},CTRY_DEF={PT:'CON',ES:'ANA'};
+const lastReg=c=>{try{const r=localStorage.getItem('sn-reg-'+c);if(CTRY_REG[c][r])return r}catch(e){}return CTRY_DEF[c]};
+/* region options of the current country only */
+const regOpts=()=>{const c=ctryOf(REGP);return Object.keys(CTRY_REG[c]).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')};
+const ctrySeg=()=>{const L=PT_LANGS.includes(lang)?lang:'en',c=ctryOf(REGP);return '<div class="ctry-seg" role="group" aria-label="'+esc(RG_UI.c[L])+'">'+[['PT','Portugal'],['ES','España']].map(([k,n])=>'<button type="button" data-ctry="'+k+'" aria-pressed="'+(k===c)+'">'+n+'</button>').join('')+'</div>'};
+function regSelect(id){const L=PT_LANGS.includes(lang)?lang:'en';return ctrySeg()+'<label class="pt-reg"><span>'+esc(RG_UI.l[L])+'</span><select id="'+id+'">'+regOpts()+'</select></label>'}
 function applyPtReg(){const mad=REGP==='MAD',az=REGP==='AZO',es=isES(REGP),isl=mad||az||es;
   const L=mad?madLaw():az?azLaw():es?esLaw(REGP):PT_LAW,qn=mad?MAD_QN:az?AZ_QN:es?Object.fromEntries(Object.entries((ES_X[REGP]||{}).qn||{}).map(([k,v])=>[k,{pt:v,en:v,es:v}])):{};
   const G=isl?{min:{},banned:{},defeso:[],note:JSON.parse(JSON.stringify(qn))}:PT_LEGAL;
@@ -4503,8 +4509,8 @@ function applyPtReg(){const mad=REGP==='MAD',az=REGP==='AZO',es=isES(REGP),isl=m
     T[l].quickPh=PT_T[l].quickPh.replace('@Sesimbra',az?'@Caloura':es?'@'+((FC_DEF_R[REGP]||{}).name||'Tarifa'):'@Paul do Mar');
     T[l].spBanned=RG_UI.banned[l](n);T[l].spLegalNote=RG_UI.note[l](n);T[l].libLawNote=RG_UI.lib[l](n,az?'Portaria 89/2026':es?'RD 560/1995, Reg. (UE) 2019/1241':'Portaria 484/2016')}}
   document.querySelectorAll('a.tl[href*="beachcam.meo.pt"]').forEach(a=>a.hidden=es);
-  const s=$('ptRegSet');if(s){s.innerHTML=regOpts();s.value=REGP}}
-function setPtReg(r){if(!regOk(r))return;const ch=r!==REGP;REGP=r;try{localStorage.setItem('sn-ptreg',r)}catch(e){}
+  const s=$('ptRegSet');if(s){s.innerHTML=regOpts();s.value=REGP;const lab=s.closest('.pt-reg'),old=lab&&lab.previousElementSibling;if(old&&old.classList.contains('ctry-seg'))old.remove();if(lab)lab.insertAdjacentHTML('beforebegin',ctrySeg())}}
+function setPtReg(r){if(!regOk(r))return;const ch=r!==REGP;REGP=r;try{localStorage.setItem('sn-ptreg',r);localStorage.setItem('sn-reg-'+ctryOf(r),r)}catch(e){}
   if(ch&&typeof FC_DEF_R!=='undefined'){FC_DEF=FC_DEF_R[r];try{localStorage.setItem('sn-fc-spot',norm(FC_DEF.name))}catch(e){}try{seaFirst=true;fcData=null;fcSpot=null;$('fcFind').hidden=true;fcFillSelect();fcLoad()}catch(e){}}applyPtReg();applyLang();render(false);try{defBanner()}catch(e){}
   const rb=$('rulesBody');if(rb&&$('rules').open)rb.innerHTML=ptRulesHtml();const sb=$('sizesBody');if(sb&&$('sizes').open)sb.innerHTML=ptSizesHtml()}
 const ZBTN={pt:'Ver zonas proibidas e condicionadas no mapa',en:'See closed and restricted zones on the map',es:'Ver zonas prohibidas y restringidas en el mapa'};
@@ -4512,6 +4518,8 @@ const zBtn=()=>'<p><button type="button" class="link zmap-btn" data-zmap="1">'+I
 function ptRulesHtml(){return isES(REGP)?esRulesHtml():REGP==='MAD'?madRulesHtml().replace('</label>','</label>'+zBtn()):REGP==='AZO'?azRulesHtml().replace('</label>','</label>'+zBtn()):regSelect('ptRegRules')+zBtn()+LX(RULES)}
 function ptSizesHtml(){return isES(REGP)?esSizesHtml():REGP==='MAD'?madSizesHtml():REGP==='AZO'?azSizesHtml():regSelect('ptRegSizes')+LX(SIZES)}
 document.addEventListener('change',ev=>{const s=ev.target;if(s&&/^(pt|eu)Reg/.test(s.id||''))setPtReg(s.value)});
+/* country switch: Portugal / España, back to the last region used in that country */
+document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('.ctry-seg [data-ctry]');if(!b||b.getAttribute('aria-pressed')==='true')return;setPtReg(lastReg(b.dataset.ctry))});
 applyPtReg();
 
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
@@ -5044,7 +5052,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795638175';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795645236';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
