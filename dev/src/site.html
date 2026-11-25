@@ -1538,6 +1538,12 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .dlmf-pick .dlmf-top{max-width:440px}
 .dlmf-q,.dlmf-q input{font-family:var(--body);font-weight:400}
 .fc-ren{flex-wrap:nowrap}.fc-ren input{min-width:0}.fc-ren .fc-ib{flex:none;padding:0;border:0}.fc-ren .fc-ok{color:var(--good)}.fc-ren .fc-no{color:var(--muted)}
+.dlmf-z>.dlmf-rb[hidden]{display:none}.dlmf-z>.dlmf-rb.on{background:#fff;color:#0a1e26}.dlmf.picking .dlmf-rb,.dlmf.picking .dlmf-rul{display:none}
+.dlmf-rul{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left,0px));right:calc(66px + env(safe-area-inset-right,0px));max-width:420px;bottom:calc(30px + env(safe-area-inset-bottom,0px));background:rgba(10,30,38,.94);color:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4}
+.dlmf-rul[hidden]{display:none}.dlmf-rul .hint{color:rgba(255,255,255,.72);font-size:13px}.rul-b{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.rul-b button:disabled{opacity:.45}
+.dlmf.ruling .dlmf-i,.dlmf.ruling .zleg{display:none}.dlmf.ruling .dlmf-m{cursor:crosshair}
+.rvw{background:none;border:0}.rv{position:relative;width:34px;height:34px;display:grid;place-items:center;cursor:grab}.rv i{width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #0a1e26;box-shadow:0 0 0 1.5px #fff}
+.rv span{position:absolute;left:26px;top:-6px;white-space:nowrap;background:rgba(10,30,38,.9);color:#fff;font:600 12px/1 system-ui,sans-serif;padding:4px 6px;border-radius:6px;pointer-events:none}.rv span[hidden]{display:none}
 .pt-reg{display:flex;gap:8px;align-items:center;margin:0 0 10px}.pt-reg select{flex:1;max-width:260px}
 .zbadge{font:inherit;font-size:.78em;border:0;border-radius:999px;padding:2px 9px;margin-left:6px;cursor:pointer;color:#fff;white-space:nowrap}
 .zb-ban{background:#d33b40}.zb-cond{background:#c47b00}.zb-info{background:#2f7fd6}
@@ -4290,20 +4296,77 @@ function zoneBadge(c){if(!c)return'';const z=zonesAt(c.lat,c.lon)[0];if(!z)retur
   return '<button type="button" class="zbadge zb-'+z.s+'" data-zone="'+esc(z.id)+'" data-zll="'+c.lat.toFixed(5)+','+c.lon.toFixed(5)+'" title="'+esc(z.n[ZL()])+'">'+(z.s==='ban'?'⛔ ':z.s==='cond'?'⚠️ ':'ℹ️ ')+esc(zTx(ZT[z.s]))+'</button>'}
 function zLegend(host){if(!host||host.querySelector('.zleg'))return;const d=document.createElement('div');d.className='zleg';d.innerHTML=['ban','cond','info'].map(k=>'<span><i style="background:'+ZCOL[k]+'"></i>'+esc(zTx(ZT.leg[k]))+'</span>').join('');host.appendChild(d)}
 function zonesLeaf(L,m,say,only){zLegend(m.getContainer().closest('.dlmf'));ZONES.forEach(z=>{if(only&&z.r!==only)return;const p=L.polygon(z.R,{color:ZCOL[z.s],weight:1.5,fillOpacity:z.s==='ban'?.28:.18,interactive:true}).addTo(m);
-  p.on('click',ev=>{L.DomEvent.stopPropagation(ev);say(zoneInfo(z))})})}
-function zonesG2(m,say){zLegend(m.getDiv().closest('.dlmf'));ZONES.forEach(z=>{const p=new google.maps.Polygon({map:m,paths:z.R.map(r=>r.map(([la,lo])=>({lat:la,lng:lo}))),strokeColor:ZCOL[z.s],strokeWeight:1.5,fillColor:ZCOL[z.s],fillOpacity:z.s==='ban'?.28:.18});p.addListener('click',()=>say(zoneInfo(z)))})}
+  p.on('click',ev=>{L.DomEvent.stopPropagation(ev);const o=m.getContainer().closest('.dlmf');if(o&&o._rulAdd&&o.classList.contains('ruling')){o._rulAdd(ev.latlng.lat,ev.latlng.lng);return}say(zoneInfo(z))})})}
+function zonesG2(m,say){zLegend(m.getDiv().closest('.dlmf'));m._zpolys=[];ZONES.forEach(z=>{const p=new google.maps.Polygon({map:m,paths:z.R.map(r=>r.map(([la,lo])=>({lat:la,lng:lo}))),strokeColor:ZCOL[z.s],strokeWeight:1.5,fillColor:ZCOL[z.s],fillOpacity:z.s==='ban'?.28:.18});m._zpolys.push(p);p.addListener('click',()=>say(zoneInfo(z)))})}
 const ZBOX={CON:[[36.9,-9.6],[42.2,-6.2]],MAD:[[32.35,-17.35],[33.15,-16.2]],AZO:[[36.85,-31.35],[39.8,-24.6]]};
 function zonesMap(focus,zid){const o=mapOverlay(document.querySelector('dialog[open]')||document.body,'');const box=o.querySelector('.dlmf-m'),info=o.querySelector('.dlmf-i');
-  const say=h=>{info.innerHTML=h;info.hidden=!h};say('<span class="hint">'+esc(zTx(ZT.legend))+'</span><br><span class="hint">'+esc(zTx(ZT.disc))+'</span>');
+  const say=h=>{if(o.classList.contains('ruling'))return;info.innerHTML=h;info.hidden=!h};say('<span class="hint">'+esc(zTx(ZT.legend))+'</span><br><span class="hint">'+esc(zTx(ZT.disc))+'</span>');
   dlLeaf().then(L=>{if(!o.isConnected)return;const m=L.map(box,{zoomControl:false});dlMap=m;o._zoom=d=>d>0?m.zoomIn():m.zoomOut();
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(m);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,opacity:.9}).addTo(m);
-    zonesLeaf(L,m,say);const z=zid&&ZONES.find(x=>x.id===zid);
+    zonesLeaf(L,m,say);try{rulerLeaf(L,m,o)}catch(_){}const z=zid&&ZONES.find(x=>x.id===zid);
     if(focus){const ic=L.divIcon({className:'gpin-l',html:pinSvg({r:26,c:'#0a84ff'}),iconSize:[26,26],iconAnchor:[13,13]});L.marker([focus.lat,focus.lon],{icon:ic}).addTo(m);m.setView([focus.lat,focus.lon],13);if(z)say(zoneInfo(z))}
     else if(z){const[a,b,c,d]=z.bb;m.fitBounds([[a,c],[b,d]],{padding:[30,30]});say(zoneInfo(z))}
     else m.fitBounds(ZBOX[REGP]||ZBOX.CON,{padding:[10,10]})}).catch(()=>{box.textContent='—'})}
 document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('[data-zone],[data-zmap]');if(!b)return;ev.preventDefault();ev.stopPropagation();
   if(b.dataset.zmap){zonesMap(null,null);return}const p=(b.dataset.zll||'').split(',').map(Number);zonesMap(p.length===2&&!p.some(isNaN)?{lat:p[0],lon:p[1]}:null,b.dataset.zone)},true);
+
+/* ===== Map ruler: tap to add as many points as needed, drag a point to move it, tap a point to remove it.
+   Works on the Leaflet map and the Google 2D map; in 3D the button opens the 2D map with the ruler on. Hidden while picking a place. A tap on a dive pin adds a point exactly there. ===== */
+const RUT={pt:{btn:'Régua',hint:'Toque no mapa para marcar pontos. Arraste um ponto para o mover; toque nele para o apagar.',undo:'Desfazer',clr:'Limpar',done:'Fechar',pts:'pontos',leg:'último troço'},
+ en:{btn:'Ruler',hint:'Tap the map to add points. Drag a point to move it; tap it to delete it.',undo:'Undo',clr:'Clear',done:'Close',pts:'points',leg:'last leg'},
+ es:{btn:'Regla',hint:'Toque el mapa para marcar puntos. Arrastre un punto para moverlo; tóquelo para borrarlo.',undo:'Deshacer',clr:'Borrar',done:'Cerrar',pts:'puntos',leg:'último tramo'}};
+const rT=k=>(RUT[lang]||RUT.en)[k];
+const ICON_RUL='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 15.5 15.5 3.5l5 5-12 12z"/><path d="m7 12 2 2M10 9l1.5 1.5M13 6l2 2M8.5 10.5l1 1M11.5 7.5l1 1"/></svg>';
+function rDist(a,b){const R=6371008.8,r=Math.PI/180,dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r,h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.min(1,Math.sqrt(h)))}
+function rFmt(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(m<10000?2:1).replace('.',lang==='en'?'.':',')+' km'}
+function rNm(m){return (m/1852).toFixed(m<18520?2:1).replace('.',lang==='en'?'.':',')+' NM'}
+/* called at the start of every mapView render: hide the ruler until the 2D/Leaflet map attaches it again */
+function rulerReset(o){o._rulWas=o._rulWas||o.classList.contains('ruling');o._rulAd=null;let b=o.querySelector('.dlmf-rb');const sw=o.querySelector('.dlmf-sw');
+  if(!b&&sw){b=document.createElement('button');b.type='button';b.className='dlmf-rb';b.innerHTML=ICON_RUL;o.querySelector('.dlmf-z').prepend(b)}
+  if(b){b.classList.remove('on');b.setAttribute('aria-label',rT('btn'));b.title=rT('btn');b.hidden=!sw;b.onclick=()=>{const s2=o.querySelector('.dlmf-sw');if(!s2||s2.textContent!=='2D')return;o._rulWas=true;if(!o._mode)o._mode='3d';s2.click()}}const bar=o.querySelector('.dlmf-rul');if(bar)bar.hidden=true;o.classList.remove('ruling')}
+function rulerInit(o,ad){if(!o||!o.isConnected)return;o._rp=o._rp||[];o._rulAd=ad;let hs=[];
+  let b=o.querySelector('.dlmf-rb');if(!b){b=document.createElement('button');b.type='button';b.className='dlmf-rb';b.innerHTML=ICON_RUL;o.querySelector('.dlmf-z').prepend(b)}
+  b.setAttribute('aria-label',rT('btn'));b.title=rT('btn');b.hidden=false;
+  let bar=o.querySelector('.dlmf-rul');if(!bar){bar=document.createElement('div');bar.className='dlmf-rul';bar.hidden=true;o.appendChild(bar)}
+  bar.innerHTML='<div class="rul-t"></div><div class="rul-b"><button type="button" class="btn sm" data-u>'+esc(rT('undo'))+'</button><button type="button" class="btn sm" data-c>'+esc(rT('clr'))+'</button><button type="button" class="btn sm primary" data-d>'+esc(rT('done'))+'</button></div>';
+  const P=o._rp,on=()=>o.classList.contains('ruling')&&o._rulAd===ad;
+  const draw=()=>{hs.forEach(h=>h.rm());hs=[];let s=0;
+    P.forEach((p,i)=>{if(i)s+=rDist(P[i-1],p);const h=ad.mk(p,i);h.lab(i?rFmt(s):'');hs.push(h)});ad.line(P);info()};
+  const live=i=>{let s=0;P.forEach((p,k)=>{if(k)s+=rDist(P[k-1],p);if(hs[k])hs[k].lab(k?rFmt(s):'')});ad.line(P);info()};
+  const info=()=>{const n=P.length;let s=0;for(let i=1;i<n;i++)s+=rDist(P[i-1],P[i]);
+    bar.querySelector('.rul-t').innerHTML=n<2?'<span class="hint">'+esc(rT('hint'))+'</span>':'<b>'+rFmt(s)+'</b> · '+rNm(s)+' · '+n+' '+esc(rT('pts'))+(n>2?'<br><span class="hint">'+esc(rT('leg'))+': '+rFmt(rDist(P[n-2],P[n-1]))+'</span>':'');
+    bar.querySelector('[data-u]').disabled=!n;bar.querySelector('[data-c]').disabled=!n};
+  ad.onMove=(i,la,ln)=>{P[i]=[la,ln];live(i)};
+  ad.onDel=i=>{if(!on())return;P.splice(i,1);draw()};
+  o._rulAdd=(la,ln)=>{if(!on())return false;if(ad.busy)return true;P.push([la,ln]);draw();return true};
+  const set=v=>{o.classList.toggle('ruling',v);bar.hidden=!v;b.classList.toggle('on',v);ad.mode(v);if(v){const i=o.querySelector('.dlmf-i');if(i)i.hidden=true;draw()}else{P.length=0;hs.forEach(h=>h.rm());hs=[];ad.line([])}};
+  b.onclick=()=>set(!o.classList.contains('ruling'));
+  bar.querySelector('[data-u]').onclick=()=>{P.pop();draw()};
+  bar.querySelector('[data-c]').onclick=()=>{P.length=0;draw()};
+  bar.querySelector('[data-d]').onclick=()=>set(false);
+  if(o._rulWas){o._rulWas=false;set(true)}
+}
+const rVert=()=>{const d=document.createElement('div');d.className='rv';d.innerHTML='<i></i><span></span>';return d};
+function rulerLeaf(L,m,o){if(!o)return;let ln=null,lb=null;
+  const ad={mk(p,i){const el=rVert();const mk=L.marker(p,{icon:L.divIcon({className:'rvw',html:el,iconSize:[34,34],iconAnchor:[17,17]}),draggable:true,keyboard:false,zIndexOffset:1000}).addTo(m);
+      mk.on('dragstart',()=>{ad.busy=true});mk.on('drag',e=>{const q=e.target.getLatLng();ad.onMove(i,q.lat,q.lng)});mk.on('dragend',e=>{const q=e.target.getLatLng();ad.onMove(i,q.lat,q.lng);setTimeout(()=>{ad.busy=false},350)});mk.on('click',e=>{L.DomEvent.stopPropagation(e);if(!ad.busy)ad.onDel(i)});
+      return {rm:()=>m.removeLayer(mk),lab:t=>{const s=el.querySelector('span');s.textContent=t;s.hidden=!t}}},
+    line(P){if(!lb){lb=L.polyline([],{color:'#000',weight:6,opacity:.45,interactive:false}).addTo(m);ln=L.polyline([],{color:'#fff',weight:3,interactive:false}).addTo(m)}lb.setLatLngs(P);ln.setLatLngs(P)},
+    mode(v){v?m.doubleClickZoom.disable():m.doubleClickZoom.enable()}};
+  m.on('click',e=>{if(o.classList.contains('ruling')&&o._rulAd===ad)o._rulAdd(e.latlng.lat,e.latlng.lng)});
+  rulerInit(o,ad)}
+function rulerG2(m,o){if(!o||!google.maps.marker)return;const AM=google.maps.marker.AdvancedMarkerElement;
+  const lb=new google.maps.Polyline({map:m,path:[],strokeColor:'#000',strokeOpacity:.45,strokeWeight:6,clickable:false,zIndex:900}),ln=new google.maps.Polyline({map:m,path:[],strokeColor:'#fff',strokeWeight:3,clickable:false,zIndex:901});
+  const ad={mk(p,i){const el=rVert();el.style.transform='translateY(50%)';const mk=new AM({map:m,position:{lat:p[0],lng:p[1]},content:el,gmpDraggable:true,zIndex:2000});
+      const pos=()=>{const q=mk.position;return q?[typeof q.lat==='function'?q.lat():q.lat,typeof q.lng==='function'?q.lng():q.lng]:null};
+      mk.addListener('dragstart',()=>{ad.busy=true});mk.addListener('drag',e=>{if(e&&e.latLng)ad.onMove(i,e.latLng.lat(),e.latLng.lng())});mk.addListener('dragend',e=>{const q=e&&e.latLng?[e.latLng.lat(),e.latLng.lng()]:pos();if(q)ad.onMove(i,q[0],q[1]);setTimeout(()=>{ad.busy=false},350)});
+      mk.addListener('click',()=>{if(!ad.busy)ad.onDel(i)});
+      return {rm:()=>{mk.map=null},lab:t=>{const s=el.querySelector('span');s.textContent=t;s.hidden=!t}}},
+    line(P){const q=P.map(p=>({lat:p[0],lng:p[1]}));lb.setPath(q);ln.setPath(q)},
+    mode(v){m.setOptions({disableDoubleClickZoom:v});(m._zpolys||[]).forEach(p=>p.setOptions({clickable:!v}))}};
+  m.addListener('click',e=>{if(o.classList.contains('ruling')&&o._rulAd===ad&&e.latLng)o._rulAdd(e.latLng.lat(),e.latLng.lng())});
+  rulerInit(o,ad)}
 
 /* ===== Portugal fishing regions: Continente / Madeira / Açores ===== */
 const PT_LAW=JSON.parse(JSON.stringify(LAW)),PT_LEGAL=JSON.parse(JSON.stringify(LEGAL));
@@ -5879,9 +5942,10 @@ function mapOverlay(host,ext){dlMapClose();const o=document.createElement('div')
 /* pts: [{lat,lng,c,r,g,dim,z,info}], sel: indexes to frame; info0: text shown at start */
 function mapView(o,pts,sel,info0,far){if(!o.isConnected)return;if(dlMap){try{dlMap.remove()}catch(_){}dlMap=null}
   const box=o.querySelector('.dlmf-m'),info=o.querySelector('.dlmf-i'),g=gMode(),mode=g==='leaf'?'leaf':(o._mode||g);box.innerHTML='';o._re=()=>mapView(o,pts,sel,info0,far);o._center=null;
-  const say=h=>{info.innerHTML=h;info.hidden=!h};say(info0||'');
+  const say=h=>{if(o.classList.contains('ruling'))return;info.innerHTML=h;info.hidden=!h};say(info0||'');
   o._zoom=null;let sw=o.querySelector('.dlmf-sw');if(typeof GKEY!=='undefined'&&GKEY){if(!sw){sw=document.createElement('button');sw.type='button';sw.className='dlmf-sw';o.querySelector('.dlmf-z').prepend(sw)}
     sw.textContent=mode==='3d'?'2D':'3D';sw.onclick=()=>{G3OFF=false;if(o._mode)o._mode=mode==='3d'?'2d':'3d';else try{localStorage.setItem('sn-map3d',mode==='3d'?'0':'1')}catch(_){}mapView(o,pts,sel,info0,far)}}
+  try{rulerReset(o)}catch(_){}
   const F=sel.length?sel.map(i=>pts[i]):[{lat:(o._far||[39.6])[0],lng:(o._far||[0,-8.4])[1]}],la=F.reduce((a,x)=>a+x.lat,0)/F.length,ln=F.reduce((a,x)=>a+x.lng,0)/F.length,
     spread=Math.max(0,...F.map(x=>Math.hypot((x.lat-la)*111e3,(x.lng-ln)*111e3*Math.cos(la*Math.PI/180))));
   const fail=()=>{if(!o.isConnected)return;G3OFF=true;mapView(o,pts,sel,info0,far)};
@@ -5895,13 +5959,13 @@ function mapView(o,pts,sel,info0,far){if(!o.isConnected)return;if(dlMap){try{dlM
       m.addEventListener('gmp-click',()=>{if(!o.classList.contains('picking'))say('')});box.appendChild(m);o._goto=(la,ln)=>{m.center={lat:la,lng:ln,altitude:0};m.range=1500};o._center=()=>{const c=m.center;return c?{lat:c.lat,lng:c.lng}:null};o._zoom=d=>{m.range=Math.max(120,Math.min(3e6,(m.range||1000)*(d>0?.5:2)))}}).catch(fail);return}
   if(mode==='2d'){dlGLoad().then(()=>Promise.all([google.maps.importLibrary('maps'),google.maps.importLibrary('marker')])).then(([MM,MK])=>{if(!o.isConnected)return;
       const m=new MM.Map(box,{center:{lat:la,lng:ln},zoom:far?7:17,mapTypeId:'hybrid',mapId:'DEMO_MAP_ID',gestureHandling:'greedy',disableDefaultUI:true,zoomControl:false,clickableIcons:false,tilt:0});
-      pts.forEach(p=>{const mk=new MK.AdvancedMarkerElement({map:m,position:{lat:p.lat,lng:p.lng},content:pinEl(p),zIndex:p.z||0});mk.addListener('click',()=>say(p.info))});
-      m.addListener('click',()=>{if(!o.classList.contains('picking'))say('')});try{zonesG2(m,say)}catch(_){}o._center=()=>{const c=m.getCenter();return {lat:c.lat(),lng:c.lng()}};o._zoom=d=>m.setZoom(m.getZoom()+d);o._goto=(la,ln)=>{m.setCenter({lat:la,lng:ln});m.setZoom(15)};
+      pts.forEach(p=>{const mk=new MK.AdvancedMarkerElement({map:m,position:{lat:p.lat,lng:p.lng},content:pinEl(p),zIndex:p.z||0});mk.addListener('click',()=>{if(o._rulAdd&&o._rulAdd(p.lat,p.lng))return;say(p.info)})});
+      m.addListener('click',()=>{if(!o.classList.contains('picking'))say('')});try{zonesG2(m,say)}catch(_){}try{rulerG2(m,o)}catch(_){}o._center=()=>{const c=m.getCenter();return {lat:c.lat(),lng:c.lng()}};o._zoom=d=>m.setZoom(m.getZoom()+d);o._goto=(la,ln)=>{m.setCenter({lat:la,lng:ln});m.setZoom(15)};
       if(F.length>1){const b=new google.maps.LatLngBounds();F.forEach(x=>b.extend({lat:x.lat,lng:x.lng}));m.fitBounds(b,60)}}).catch(fail);return}
   dlLeaf().then(L=>{if(!o.isConnected)return;const m=L.map(box,{zoomControl:false,attributionControl:true});dlMap=m;o._zoom=d=>d>0?m.zoomIn():m.zoomOut();
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(m);
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,opacity:.9}).addTo(m);try{zonesLeaf(L,m,say)}catch(_){}
-    pts.forEach(p=>{const ic=L.divIcon({className:'gpin-l',html:pinSvg(p),iconSize:[p.r,p.r],iconAnchor:[p.r/2,p.r/2]});L.marker([p.lat,p.lng],{icon:ic,zIndexOffset:p.z||0}).addTo(m).on('click',()=>say(p.info))});
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:18,maxZoom:20,opacity:.9}).addTo(m);try{zonesLeaf(L,m,say)}catch(_){}try{rulerLeaf(L,m,o)}catch(_){}
+    pts.forEach(p=>{const ic=L.divIcon({className:'gpin-l',html:pinSvg(p),iconSize:[p.r,p.r],iconAnchor:[p.r/2,p.r/2]});L.marker([p.lat,p.lng],{icon:ic,zIndexOffset:p.z||0}).addTo(m).on('click',()=>{if(o._rulAdd&&o._rulAdd(p.lat,p.lng))return;say(p.info)})});
     m.on('click',()=>{if(!o.classList.contains('picking'))say('')});o._center=()=>{const c=m.getCenter();return {lat:c.lat,lng:c.lng}};o._goto=(la,ln)=>m.setView([la,ln],15);const fb=F.map(x=>[x.lat,x.lng]);if(fb.length===1)m.setView(fb[0],far?7:17);else m.fitBounds(fb,{padding:[50,50],maxZoom:18})
   }).catch(()=>{box.textContent='—'})}
 /* one place on the map, inside the app; Google Maps button for directions */
