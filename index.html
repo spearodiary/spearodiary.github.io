@@ -2821,11 +2821,17 @@ $('eMood').addEventListener('click',ev=>{const b=ev.target.closest('[data-m]');i
 function tidesOf(e){return[e.tideIn||e.tide||'',e.tideOut||'']}
 function duration(a,b){if(!a||!b)return'';let m=(+b.slice(0,2)*60+ +b.slice(3))-(+a.slice(0,2)*60+ +a.slice(3));if(m<0)m+=1440;return Math.floor(m/60)+'h'+pad(m%60)}
 /* Forecast: wind, waves, water temperature and sky from Open-Meteo (free for non-commercial use, no key) */
-const FC_DEF={name:'Cabo Raso',lat:38.7092,lon:-9.4856};
+const FC_DEF_R={CON:{name:'Cabo Raso',lat:38.7092,lon:-9.4856},MAD:{name:'Funchal',lat:32.6386,lon:-16.915},AZO:{name:'Ponta Delgada',lat:37.737,lon:-25.668}};
+const fcReg=()=>{try{const r=localStorage.getItem('sn-ptreg');return FC_DEF_R[r]?r:'CON'}catch(e){return'CON'}};
+let FC_DEF=FC_DEF_R[fcReg()];
 let fcData=null,fcErr='',fcLoading=false,fcSpot=null;
-const FC_PRESETS=[['Cascais',38.69,-9.43],['Ericeira',38.97,-9.43],['Peniche',39.36,-9.41],['Nazaré',39.6,-9.08],['Figueira da Foz',40.15,-8.87],['Viana do Castelo',41.69,-8.85],['Sines',37.95,-8.88],['Zambujeira do Mar',37.52,-8.79],['Sagres',37.0,-8.94],['Funchal (Madeira)',32.64,-16.92],['Porto Santo',33.06,-16.34],['Ponta Delgada (Açores)',37.73,-25.67],['Horta (Açores)',38.53,-28.62]].map(([name,lat,lon])=>({name,lat,lon,g:'p'}));
+const FC_PRESETS_R={CON:[['Cascais',38.69,-9.43],['Ericeira',38.97,-9.43],['Peniche',39.36,-9.41],['Nazaré',39.6,-9.08],['Figueira da Foz',40.15,-8.87],['Viana do Castelo',41.69,-8.85],['Sesimbra',38.43,-9.11],['Sines',37.95,-8.88],['Zambujeira do Mar',37.52,-8.79],['Sagres',37.0,-8.94],['Lagos',37.09,-8.67],['Albufeira',37.08,-8.25]],
+ MAD:[['Funchal',32.6386,-16.915],['Caniço de Baixo',32.643,-16.845],['Machico',32.715,-16.765],['Porto da Cruz',32.775,-16.825],['São Vicente',32.805,-17.045],['Porto Moniz',32.87,-17.17],['Paul do Mar',32.755,-17.23],['Calheta',32.72,-17.18],['Ribeira Brava',32.67,-17.065],['Porto Santo',33.06,-16.34]],
+ AZO:[['Ponta Delgada',37.737,-25.668],['Mosteiros',37.89,-25.825],['Rabo de Peixe',37.815,-25.585],['Vila Franca do Campo',37.712,-25.432],['Vila do Porto (Santa Maria)',36.943,-25.147],['Angra do Heroísmo',38.652,-27.218],['Praia da Vitória',38.73,-27.055],['Horta (Faial)',38.53,-28.623],['Madalena (Pico)',38.535,-28.53],['Lajes do Pico',38.393,-28.255],['Velas (São Jorge)',38.68,-28.205],['Santa Cruz da Graciosa',39.087,-27.997],['Santa Cruz das Flores',39.453,-31.123],['Corvo',39.672,-31.112]]};
+for(const k in FC_PRESETS_R)FC_PRESETS_R[k]=FC_PRESETS_R[k].map(([name,lat,lon])=>({name,lat,lon,g:'p'}));
+const FC_PRESETS=[].concat(FC_PRESETS_R.CON,FC_PRESETS_R.MAD,FC_PRESETS_R.AZO);
 function fcCustom(){try{return JSON.parse(localStorage.getItem('sn-fc-custom')||'[]')}catch(e){return[]}}
-function fcSpots(){const m=new Map([[norm(FC_DEF.name),{...FC_DEF,g:'d'}]]);entries.forEach(e=>{const c=parseCoords(e.gps);if(c&&e.spot&&!m.has(norm(e.spot)))m.set(norm(e.spot),{name:e.spot.trim(),lat:c.lat,lon:c.lon,g:'m'})});fcCustom().forEach(c=>{if(!m.has(norm(c.name)))m.set(norm(c.name),{...c,g:'c'})});FC_PRESETS.forEach(p=>{if(!m.has(norm(p.name)))m.set(norm(p.name),p)});return[...m.values()]}
+function fcSpots(){const m=new Map([[norm(FC_DEF.name),{...FC_DEF,g:'d'}]]);entries.forEach(e=>{const c=parseCoords(e.gps);if(c&&e.spot&&!m.has(norm(e.spot)))m.set(norm(e.spot),{name:e.spot.trim(),lat:c.lat,lon:c.lon,g:'m'})});fcCustom().forEach(c=>{if(!m.has(norm(c.name)))m.set(norm(c.name),{...c,g:'c'})});(FC_PRESETS_R[fcReg()]||FC_PRESETS_R.CON).forEach(p=>{if(!m.has(norm(p.name)))m.set(norm(p.name),p)});return[...m.values()]}
 function fcPick(){let k='';try{k=localStorage.getItem('sn-fc-spot')||''}catch(e){}return fcSpots().find(s=>norm(s.name)===k)||FC_DEF}
 function fcFillSelect(){
   const sel=$('fcSpot'),list=fcSpots(),cur=(fcSpot||fcPick()).name;
@@ -4320,7 +4326,8 @@ function applyPtReg(){const mad=REGP==='MAD',az=REGP==='AZO',isl=mad||az;
     T[l].quickPh=PT_T[l].quickPh.replace('@Sesimbra',az?'@Caloura':'@Paul do Mar');
     T[l].spBanned=RG_UI.banned[l](n);T[l].spLegalNote=RG_UI.note[l](n);T[l].libLawNote=RG_UI.lib[l](n,az?'Portaria 89/2026':'Portaria 484/2016')}}
   const s=$('ptRegSet');if(s){s.innerHTML=Object.keys(PT_REG).map(k=>'<option value="'+k+'">'+esc(rgName(k))+'</option>').join('');s.value=REGP}}
-function setPtReg(r){if(!PT_REG[r])return;REGP=r;try{localStorage.setItem('sn-ptreg',r)}catch(e){}applyPtReg();applyLang();render(false);
+function setPtReg(r){if(!PT_REG[r])return;const ch=r!==REGP;REGP=r;try{localStorage.setItem('sn-ptreg',r)}catch(e){}
+  if(ch&&typeof FC_DEF_R!=='undefined'){FC_DEF=FC_DEF_R[r];try{localStorage.setItem('sn-fc-spot',norm(FC_DEF.name))}catch(e){}try{seaFirst=true;fcData=null;fcSpot=null;$('fcFind').hidden=true;fcFillSelect();fcLoad()}catch(e){}}applyPtReg();applyLang();render(false);
   const rb=$('rulesBody');if(rb&&$('rules').open)rb.innerHTML=ptRulesHtml();const sb=$('sizesBody');if(sb&&$('sizes').open)sb.innerHTML=ptSizesHtml()}
 const ZBTN={pt:'Ver zonas proibidas e condicionadas no mapa',en:'See closed and restricted zones on the map',es:'Ver zonas prohibidas y restringidas en el mapa'};
 const zBtn=()=>'<p><button type="button" class="link zmap-btn" data-zmap="1">'+ICON_ZMAP+esc(ZBTN[PT_LANGS.includes(lang)?lang:'en'])+'</button></p>';
@@ -4858,7 +4865,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795602426';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795602617';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
