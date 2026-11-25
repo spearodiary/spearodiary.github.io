@@ -4015,7 +4015,7 @@ const ckId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const ckFromBase=a=>a.map(x=>Array.isArray(x)?{id:ckId(),text:x[0],done:false,kids:ckFromBase(x[1])}:{id:ckId(),text:x,done:false});
 function ckLists(){
   const d=checkDoc||{};
-  if(Array.isArray(d.lists)&&d.lists.length)return d.lists.map(l=>l.id==='l1'&&/^(Caça submarina|Spearfishing)$/.test(l.name||'')?{...l,name:t('ckDefName')}:l);
+  if(Array.isArray(d.lists)&&d.lists.length)return d.lists.map(l=>l.id==='l1'&&/^(Caça submarina|Spearfishing|Pesca submarina|Caçada habitual|Usual hunt|Pesca habitual)$/.test(l.name||'')?{...l,name:t('ckDefName')}:l);
   return[{id:'l1',name:t('ckDefName'),items:d.items||[]}];
 }
 function ckCur(){const ls=ckLists();return ls.find(l=>l.id===(checkDoc&&checkDoc.cur))||ls[0]}
@@ -4038,8 +4038,8 @@ function ckRow(x,d){
   const kids=x.kids&&x.kids.length,open=ckOpen.has(x.id),kd=kids?x.kids.filter(k=>k.done).length:0;
   return '<li class="'+(x.done?'on':'')+'" data-id="'+esc(x.id)+'" style="--d:'+d+'"><button type="button" class="ck-h" aria-label="'+esc(t('ckMove'))+'" title="'+esc(t('ckMove'))+'"><svg viewBox="0 0 12 18" width="12" height="18" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="1.6"/><circle cx="9" cy="3" r="1.6"/><circle cx="3" cy="9" r="1.6"/><circle cx="9" cy="9" r="1.6"/><circle cx="3" cy="15" r="1.6"/><circle cx="9" cy="15" r="1.6"/></g></svg></button>'
    +(kids?'<button type="button" class="ck-tg" data-cktg="'+esc(x.id)+'" aria-expanded="'+open+'" aria-label="'+esc(t(open?'ckFold':'ckUnfold'))+'"><svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path d="M3 1.5L7 5 3 8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>':'<span class="ck-tg ck-tg0"></span>')
-   +'<input type="checkbox" data-ck="'+esc(x.id)+'"'+(x.done?' checked':'')+' aria-label="'+esc(x.text)+'">'
-   +(ckEditing===x.id?'<input class="ck-edit" data-ckedit="'+esc(x.id)+'" value="'+esc(x.text)+'">':'<button type="button" class="ck-t" data-cktext="'+esc(x.id)+'" title="'+esc(x.text)+'">'+esc(x.text)+(kids?' <span class="ck-n">'+kd+'/'+x.kids.length+'</span>':'')+'</button>')
+   +'<input type="checkbox" data-ck="'+esc(x.id)+'"'+(x.done?' checked':'')+' aria-label="'+esc(ckTx(x.text))+'">'
+   +(ckEditing===x.id?'<input class="ck-edit" data-ckedit="'+esc(x.id)+'" value="'+esc(ckTx(x.text))+'">':'<button type="button" class="ck-t" data-cktext="'+esc(x.id)+'" title="'+esc(ckTx(x.text))+'">'+esc(ckTx(x.text))+(kids?' <span class="ck-n">'+kd+'/'+x.kids.length+'</span>':'')+'</button>')
    +'<button type="button" class="link ck-sub" data-cksub="'+esc(x.id)+'" aria-label="'+esc(t('ckAddSub'))+'" title="'+esc(t('ckAddSub'))+'">+</button>'
    +'<button type="button" class="link ck-x" data-ckdel="'+esc(x.id)+'" aria-label="'+esc(t('del'))+'">×</button></li>'
    +((kids&&open)||ckAddTo===x.id?(kids&&open?x.kids.map(k=>ckRowTree(k,d+1)).join(''):'')+(ckAddTo===x.id?'<li class="ck-addrow" style="--d:'+(d+1)+'"><input class="ck-subin" data-ckparent="'+esc(x.id)+'" placeholder="'+esc(t('ckSubPh'))+'"></li>':''):'');
@@ -4754,6 +4754,13 @@ document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&document.querySel
 document.addEventListener('click',ev=>{const t=ev.target.closest&&ev.target.closest('.ctry-seg [data-ctry],.reg-dd [data-reg]');if(t&&t.dataset.reg)regDdClose();if(!t||t.getAttribute('aria-pressed')==='true')return;setPtReg(t.dataset.reg||lastReg(t.dataset.ctry))});
 applyPtReg();
 
+/* checklist items made from a base list keep the language they were made in: show them in the current language */
+const CK_TX=(()=>{const m={};const flat=a=>a.flatMap(x=>Array.isArray(x)?[x[0],...flat(x[1])]:[x]);
+  for(const B of [PT_CK,ES_CK]){const F={};for(const l of Object.keys(B))F[l]=flat(B[l]);const n=F.pt.length;
+    for(let i=0;i<n;i++){const row={};for(const l of Object.keys(F))row[l]=F[l][i];for(const l of Object.keys(F))if(row[l]&&!m[row[l]])m[row[l]]=row}}
+  return m})();
+function ckTx(s){const r=CK_TX[s];return r&&r[lang]||s}
+
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
 const isSpecies=lat=>/^[A-Z][a-z]+ [a-z]+$/.test(lat||'')&&!/ spp$/.test(lat);
 const genusOf=lat=>(lat||'').split(' ')[0];
@@ -5284,7 +5291,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795647582';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795647744';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
