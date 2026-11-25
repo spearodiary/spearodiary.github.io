@@ -5488,7 +5488,7 @@ function soMe(){if(!SO.social||!shProf)return;const me=shProf;const fl=SO.fol;
   $('soActUl').innerHTML=SO.act.length?SO.act.map(a=>{const e=entries.find(x=>x.id===a.entry_id);const c=e&&(e.catches||[]).find(x=>x&&x.name);
     return '<li class="so-row so-ar'+(String(a.created_at)>seen?' new':'')+'"><button type="button" class="so-who" data-u="'+esc(a.user_id)+'">'+soAv(a.user_id,SO.cards.get(a.user_id))+'<span class="so-wt"><span><b>'+esc(soName(a.user_id))+'</b> '+esc(a.k==='like'?t('soLiked'):t('soCommented'))+(c?' · '+esc(catchLabel(c)):'')+'</span>'+(a.k==='com'?'<small>«'+esc(a.body)+'»</small>':'')+'</span></button><span class="so-ai'+(a.k==='like'?' on':'')+'">'+(a.k==='like'?SO_I.heart:SO_I.bubble)+'</span></li>'}).join(''):'<li class="hint">'+esc(t('soNoAct'))+'</li>';
   if(SO.act.length&&$('settings').open){try{localStorage.setItem('sn-so-seen-'+shMe,SO.act[0].created_at)}catch(e){}soBadge()}
-  $('soFolN').textContent=followers.length;$('soFingN').textContent=following.length;
+  $('soFolN').textContent=followers.length;{const fa=following.filter(f=>f.status==='accepted').length,fp=following.length-fa;$('soFingN').textContent=fa+(fp?' · '+fp+' '+t('soRequested').toLowerCase():'')}
   $('soFolUl').innerHTML=followers.length?followers.map(f=>soPerson(f.id,f,'<button type="button" class="so-fb so-fb-s" data-r="no" data-id="'+esc(f.id)+'">'+esc(t('soRemove'))+'</button>')).join(''):'<li class="hint">'+esc(t('soNone'))+'</li>';
   $('soFingUl').innerHTML=following.length?following.map(f=>soPerson(f.id,f,soFBtn(f.id,f.status,true))).join(''):'<li class="hint">'+esc(t('soNone'))+'</li>';
   frDrawSettings()}
