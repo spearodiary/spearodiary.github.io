@@ -1670,6 +1670,8 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bs-back{position:absolute;z-index:2;top:calc(6px + env(safe-area-inset-top,0px));left:max(4px,env(safe-area-inset-left,0px));width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
 .bs-t{position:absolute;z-index:1;top:0;left:0;right:0;padding:calc(6px + env(safe-area-inset-top,0px)) 0 6px 48px;background:var(--bg);margin:0;line-height:40px;font-size:17px;color:var(--ink)}
 html.bs-on,html.bs-on body{overflow:hidden}
+#appView[hidden]~#bnav,#appView[hidden]~#bsheet{display:none!important}
+html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:transparent}
 @keyframes msIn{from{transform:translateX(100vw)}to{transform:none}}dialog.mslide[open]{animation:msIn .26s cubic-bezier(.2,.8,.2,1)}dialog.mslide.mout{transform:translateX(100vw);transition:transform .22s ease-in}dialog.mslide::backdrop{background:rgba(4,20,26,.35)}
 @media (prefers-reduced-motion:reduce){dialog.mslide[open]{animation:none}dialog.mslide.mout{transition:none}}
 @keyframes swL{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}@keyframes swR{from{transform:translateX(-28px);opacity:.4}to{transform:none;opacity:1}}
@@ -5438,6 +5440,12 @@ $('gCard').addEventListener('toggle',gDraw);
   new MutationObserver(lay).observe(f,{attributes:true,attributeFilter:['hidden']});
   place();try{mq.addEventListener('change',place)}catch(_){mq.addListener(place)}})();
 
+/* combinar, esconder ou reordenar gráficos (também na janela de ecrã inteiro): atualizar já «Os meus gráficos» */
+(function(){const re=()=>setTimeout(()=>{try{gDraw()}catch(_){}},0);
+  const a=dlOvSet;dlOvSet=function(){const r=a.apply(this,arguments);re();return r};
+  const b=dlHidSet;dlHidSet=function(){const r=b.apply(this,arguments);re();return r};
+  const c=dlOrdSave;dlOrdSave=function(){const r=c.apply(this,arguments);re();return r}})();
+
 /* ---- telemóvel: barra de navegação em baixo (Diário · Análise · Gráficos · Amigos · Mais) ---- */
 Object.assign(T.en,{bnTools:'Tools',bnLinks:'Useful links',bnHome:'Diary',bnSt:'Analysis',bnG:'Charts',bnFeed:'Friends',bnMore:'More',bnBack:'Back',bnSettings:'Settings'});
 Object.assign(T.pt,{bnTools:'Ferramentas',bnLinks:'Ligações úteis',bnHome:'Diário',bnSt:'Análise',bnG:'Gráficos',bnFeed:'Amigos',bnMore:'Mais',bnBack:'Voltar',bnSettings:'Definições'});
@@ -5445,6 +5453,7 @@ Object.assign(T.es,{bnTools:'Herramientas',bnLinks:'Enlaces útiles',bnHome:'Dia
 if(T.it)Object.assign(T.it,{bnTools:'Strumenti',bnLinks:'Link utili',bnHome:'Diario',bnSt:'Analisi',bnG:'Grafici',bnFeed:'Amici',bnMore:'Altro',bnBack:'Indietro',bnSettings:'Impostazioni'});
 if(T.fr)Object.assign(T.fr,{bnTools:'Outils',bnLinks:'Liens utiles',bnHome:'Journal',bnSt:'Analyse',bnG:'Graphiques',bnFeed:'Amis',bnMore:'Plus',bnBack:'Retour',bnSettings:'Réglages'});
 (function(){const mq=matchMedia('(max-width:760px)'),sh=$('bsheet'),body=$('bsBody'),nav=$('bnav'),ttl=$('bsT');if(!sh||!body||!nav)return;
+  {const av=$('appView');if(av&&sh.parentNode===av){av.after(sh);sh.after(nav)}}
   const tx=k=>(T[lang]&&T[lang][k])||T.en[k];
   const ITEMS={st:()=>[$('stCard')],g:()=>[$('gCard')],feed:()=>[$('feedCard')],more:()=>[$('tagline'),document.querySelector('nav.tools')]};
   let moved=[],cur='home';
@@ -5476,7 +5485,15 @@ if(T.fr)Object.assign(T.fr,{bnTools:'Outils',bnLinks:'Liens utiles',bnHome:'Jour
     if(el.nodeType===1){const cs=getComputedStyle(el);if(/(auto|scroll)/.test(cs.overflowX)&&el.scrollWidth>el.clientWidth+2)r.push({l:el.scrollLeft>1,r:el.scrollLeft+el.clientWidth<el.scrollWidth-1})}}return r};
   let sx=null,sy=0,st0=0,ok=false,sc=[];
   addEventListener('touchstart',e=>{if(!mq.matches||e.touches.length!==1||document.querySelector('dialog[open]')){sx=null;return}const p=e.touches[0];sx=p.clientX;sy=p.clientY;st0=Date.now();sc=scs(e.target);ok=sc!==null&&sx>12&&sx<innerWidth-12},{passive:true});
-  addEventListener('touchend',e=>{if(sx==null||!ok)return;const p=e.changedTouches[0],dx=p.clientX-sx,dy=p.clientY-sy;sx=null;
+  /* a página acompanha o dedo enquanto se desliza */
+  let dg=null,hz=false;const pg=()=>sh.hidden?$('appView'):body;
+  addEventListener('touchmove',e=>{if(sx==null||!ok)return;const p=e.touches[0],dx=p.clientX-sx,dy=p.clientY-sy;
+    if(!hz){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){ok=false;return}if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.4){if(sc.some(s=>dx<0?s.r:s.l)){ok=false;return}
+      hz=true;dg=pg();dg.style.transition='none';try{document.activeElement&&document.activeElement.blur&&document.activeElement!==document.body&&document.activeElement.blur()}catch(_){}}else return}
+    const o=order(),i=o.indexOf(sh.hidden?'home':cur),edge=(dx<0&&i===o.length-1)||(dx>0&&i===0);dg.style.transform='translateX('+(dx*(edge?.15:.4))+'px)'},{passive:true});
+  const undrag=()=>{if(!dg)return;const d=dg;dg=null;hz=false;d.style.transition='transform .18s ease-out';d.style.transform='';setTimeout(()=>{d.style.transition=''},200)};
+  addEventListener('touchcancel',()=>{sx=null;undrag()},{passive:true});
+  addEventListener('touchend',e=>{if(sx==null||!ok)return;const p=e.changedTouches[0],dx=p.clientX-sx,dy=p.clientY-sy;sx=null;undrag();
     if(Date.now()-st0>800||Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;
     if(sc.some(s=>dx<0?s.r:s.l))return;
     const o=order(),i=o.indexOf(sh.hidden?'home':cur),j=i+(dx<0?1:-1);if(i<0||j<0||j>=o.length)return;
@@ -6090,7 +6107,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795730203';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795730501';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
