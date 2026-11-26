@@ -1607,7 +1607,8 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .capture.qx .q-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--accent);display:none}.capture.qx .q-sr.on .q-dot{display:block}
 .capture.qx #quickMood{grid-area:mood;justify-self:start!important;align-self:center!important}
 .capture.qx .preview{grid-area:pv}.capture.qx #preview{grid-area:pv;margin:0!important}
-.capture.qx #preview>.qh{max-height:2.2em;transition:none}.capture.qx:not(:focus-within) #preview>.qh{max-height:0;opacity:0;transition:max-height 0s .4s,opacity .1s}
+.capture.qx #preview>.qh{max-height:2.2em;opacity:1;overflow:hidden;transition:max-height .28s cubic-bezier(.3,.7,.3,1),opacity .22s ease .06s}.capture.qx:not(:focus-within) #preview>.qh{max-height:0;opacity:0;transition:max-height .28s cubic-bezier(.4,0,.6,1) .18s,opacity .15s ease .12s}
+@media (prefers-reduced-motion:reduce){.capture.qx #preview>.qh{transition:none!important}}
 
 /* pesquisa aberta: continuação da caixa, separada por linha tracejada laranja */
 #srCard.sr-in:not([open]){display:none}
