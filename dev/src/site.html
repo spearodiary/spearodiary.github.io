@@ -1667,6 +1667,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 /* computador: slogan dentro das Definições; setas da linha alinhadas com a margem */
 #settings #tagline{display:block;position:relative;margin:6px 0 8px;padding:12px 14px 12px 46px;border-radius:14px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);font-size:14px!important;font-weight:600;line-height:1.45;white-space:normal;text-align:left;width:auto;overflow:visible}
 #settings #tagline>*{display:inline!important}
+#setRegion .hint{white-space:pre-line}@media (min-width:761px){#setRegion .hint{margin:-4px 0 -3px}}
 #settings #tagline::before{content:"";position:absolute;left:14px;top:12px;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat}
 @media (min-width:761px){.trio>details>summary::before{margin-left:-3px}}
 /* barra de navegação em baixo (telemóvel) */
@@ -5068,7 +5069,7 @@ const RG_UI={h:{pt:'Região de pesca',en:'Fishing region',es:'Región de pesca'}
  l:{pt:'Região',en:'Region',es:'Región'},
  c:{pt:'País',en:'Country',es:'País'},
  n:{CON:{pt:'Continente',en:'Mainland',es:'Continente'},MAD:{pt:'Madeira',en:'Madeira',es:'Madeira'},AZO:{pt:'Açores',en:'Azores',es:'Azores'}},
- hint:{pt:'Portugal ou Espanha: as regras, os tamanhos, os defesos, as zonas e a previsão seguem a região escolhida.',en:'Portugal or Spain: rules, sizes, closed seasons, zones and the forecast follow the chosen region.',es:'Portugal o España: las normas, tallas, vedas, zonas y la previsión siguen la región elegida.'},
+ hint:{pt:'Portugal ou Espanha: as regras, os tamanhos, os defesos,\nas zonas e a previsão seguem a região escolhida.',en:'Portugal or Spain: rules, sizes, closed seasons,\nzones and the forecast follow the chosen region.',es:'Portugal o España: las normas, tallas, vedas,\nzonas y la previsión siguen la región elegida.'},
  banned:{pt:n=>'Proibido para a caça submarina: '+n+'.',en:n=>'Not allowed for spearfishing: '+n+'.',es:n=>'No se puede pescar en apnea: '+n+'.'},
  note:{pt:n=>n+'. Ver Tamanhos para mais detalhes.',en:n=>n+'. See Sizes for details.',es:n=>n+'. Ver Tallas y vedas para más detalles.'},
  lib:{pt:(n,s)=>'Tamanhos mínimos para '+n+': '+s+'.',en:(n,s)=>'Minimum sizes for '+n+': '+s+'.',es:(n,s)=>'Tallas mínimas para '+n+': '+s+'.'}};
@@ -5626,10 +5627,14 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   const glide=(sc,to,ms)=>{const win=!sc,from=win?scrollY:sc.scrollTop,d=to-from;if(Math.abs(d)<2)return;const t0=performance.now(),ez=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
     if(matchMedia('(prefers-reduced-motion:reduce)').matches){win?scrollTo(0,to):sc.scrollTop=to;return}
     const step=n=>{const k=Math.min(1,(n-t0)/ms),y=from+d*ez(k);win?scrollTo(0,y):sc.scrollTop=y;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)};
-  card.addEventListener('toggle',()=>{if(card.open&&byStrip){byStrip=false;setTimeout(()=>{try{glide(null,Math.max(0,w.getBoundingClientRect().top+scrollY-16),750)}catch(_){}},60)}});
+  card.addEventListener('toggle',()=>{if(card.open&&byStrip){byStrip=false;setTimeout(()=>{try{glide(null,Math.max(0,w.getBoundingClientRect().top+scrollY-8),750)}catch(_){}},60)}});
   /* computador: o slogan passa para as Definições */
   const tg=$('tagline'),setD=$('settings'),hd=tg&&tg.parentNode,dq=matchMedia('(min-width:761px)');
   const tgPlace=()=>{if(!tg||!setD||tg.closest('#bsBody'))return;const si=setD.querySelector('.sheet-in')||setD;if(dq.matches){if(!tg.closest('#settings')){const h=si.querySelector('.sheet-head');const ref=h&&h.parentNode===si?h.nextSibling:si.firstChild;si.insertBefore(tg,ref)}}else if(tg.closest('#settings')&&hd)hd.appendChild(tg)};
+  /* computador: a placa laranja termina onde termina a linha mais comprida do texto da região */
+  const tgW=()=>{if(!tg||!dq.matches||!tg.closest('#settings')){if(tg)tg.style.removeProperty('width');return}const h=document.querySelector('#setRegion .hint');if(!h||!h.offsetWidth)return;
+    const r=document.createRange();r.selectNodeContents(h);const L=[...r.getClientRects()];if(!L.length)return;const left=h.getBoundingClientRect().left,right=Math.max(...L.map(q=>q.right));tg.style.setProperty('width',Math.ceil(right-left)+'px','important')};
+  if(setD)new MutationObserver(()=>{if(setD.open)requestAnimationFrame(tgW)}).observe(setD,{attributes:true,attributeFilter:['open']});
   tgPlace();try{dq.addEventListener('change',tgPlace)}catch(_){dq.addListener(tgPlace)}addEventListener('resize',()=>setTimeout(tgPlace,0));
 
   try{split()}catch(_){}})();
