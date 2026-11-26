@@ -1685,6 +1685,19 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 #bsheet .bs-hd .bs-back{display:none!important}#bsheet .bs-hd{padding-left:max(14px,env(safe-area-inset-left,0px))!important;min-height:calc(52px + env(safe-area-inset-top,0px));box-sizing:border-box}
 #bsheet #bsBody>.bs-pane>details:not(#fcCard)>summary::before{display:none!important}
 #bsheet #bsBody>.bs-pane>details:not(#fcCard)>summary{padding-left:14px!important}
+
+/* registo: a linha de cima é pesquisa */
+.capture.qx.qs #quickMood,.capture.qx.qs #qSr,.capture.qx.qs #preview,.capture.qx.qs .preview{display:none!important}
+.capture.qx.qs{grid-template-areas:"in in" "mood btn"!important}
+.capture.qx.qs .q-left{grid-area:mood;display:flex;align-items:center;gap:4px;justify-self:start}
+.capture.qx.qs .q-left>button{display:grid;place-items:center;width:42px;height:42px;margin:0!important;padding:0!important;border:0!important;border-radius:10px;background:transparent!important;color:var(--sea);cursor:pointer;box-shadow:none;min-height:0}
+.capture.qx.qs .q-left>button:hover{background:color-mix(in srgb,var(--sea) 12%,transparent)!important}
+.capture.qx.qs .q-left svg{width:24px;height:24px}.capture.qx.qs .q-left .ex-btn>span,.capture.qx.qs .q-left .q-ml{display:none!important}
+.capture.qx.qs .q-in #quick{padding-right:44px}
+.capture.qx.qs .q-x{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:38px;height:38px;display:grid;place-items:center;margin:0;padding:0;border:0;background:transparent;color:var(--muted);cursor:pointer;min-height:0}
+.capture.qx.qs .q-x[hidden]{display:none}
+.capture.qx.qs .q-caret{position:relative}.capture.qx.qs .q-caret.on::after{content:"";position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--on-accent,#111)}
+#srCard.sr-in .q-clw{display:none!important}#srCard.sr-in .bar{margin-top:0!important}
 /* barra de navegação em baixo (telemóvel) */
 .bnav,.bsheet{display:none}
 @media (max-width:760px){
@@ -5629,6 +5642,26 @@ Object.assign(T.en,{qMore:'More ways to add',qClr:'Clear search'});Object.assign
   b.addEventListener('click',()=>{sr.open=!sr.open;sync();if(sr.open)setTimeout(()=>{try{$('q').focus({preventScroll:true});sr.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(_){}},30)});
   sr.addEventListener('toggle',sync);if(on)new MutationObserver(sync).observe(on,{attributes:true,attributeFilter:['hidden']});sync();
 })();
+/* ---- a linha de cima é a pesquisa: filtra a lista enquanto se escreve; ▾ abre os filtros; foto e + à esquerda; Adicionar abre o formulário ---- */
+Object.assign(T.pt,{qSearchPh:'Procurar: peixe, local, notas…',qFilt:'Mais filtros de pesquisa'});Object.assign(T.en,{qSearchPh:'Search: fish, spot, notes…',qFilt:'More search filters'});Object.assign(T.es,{qSearchPh:'Buscar: pez, lugar, notas…',qFilt:'Más filtros de búsqueda'});
+if(T.it)Object.assign(T.it,{qSearchPh:'Cerca: pesce, luogo, note…',qFilt:'Altri filtri'});if(T.fr)Object.assign(T.fr,{qSearchPh:'Chercher : poisson, lieu, notes…',qFilt:'Plus de filtres'});
+(function(){const f=$('quickForm'),q=$('quick'),sq=$('q'),ex=$('exBtn'),mo=$('quickMore'),sr=$('srCard'),mb=$('qMenuBtn'),mn=$('qMenu'),act=f&&f.querySelector('.q-act'),on=$('srOn');
+  if(!f||!q||!sq||!ex||!mo||!sr||!mb||!act)return;
+  f.classList.add('qs');
+  q.setAttribute('data-ph','qSearchPh');q.setAttribute('data-al','qSearchPh');q.placeholder=t('qSearchPh');q.setAttribute('enterkeyhint','search');q.setAttribute('autocomplete','off');
+  mb.setAttribute('data-t','qFilt');mb.setAttribute('aria-haspopup','false');mb.title=t('qFilt');const ml=mb.querySelector('.sr-only');if(ml)ml.setAttribute('data-i','qFilt');
+  const left=document.createElement('div');left.className='q-left';act.parentNode.insertBefore(left,act);left.append(ex,mo);ex.removeAttribute('role');mo.removeAttribute('role');if(mn)mn.hidden=true;
+  /* escrever = pesquisar */
+  const push=()=>{if(sq.value!==q.value){sq.value=q.value;sq.dispatchEvent(new Event('input',{bubbles:true}))}cx.hidden=!q.value};
+  q.insertAdjacentHTML('afterend','<button type="button" class="q-x" id="qX" data-t="qClr" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>');
+  const cx=$('qX');cx.addEventListener('click',()=>{q.value='';push();q.focus()});
+  q.addEventListener('input',push);sq.addEventListener('input',()=>{if(sq.value!==q.value){q.value=sq.value;cx.hidden=!q.value}});
+  q.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();q.blur()}});
+  document.addEventListener('submit',e=>{if(e.target===f){e.preventDefault();e.stopImmediatePropagation();mo.click()}},true);
+  /* ▾ abre e fecha os filtros */
+  const sync=()=>{mb.classList.toggle('open',sr.open);mb.setAttribute('aria-expanded',sr.open?'true':'false');mb.classList.toggle('on',!!on&&!on.hidden)};
+  mb.addEventListener('click',e=>{e.stopImmediatePropagation();e.preventDefault();sr.open=!sr.open;sync()},true);
+  sr.addEventListener('toggle',sync);if(on)new MutationObserver(sync).observe(on,{attributes:true,attributeFilter:['hidden']});sync()})();
 
 /* ---- Definições no estilo de «Mais»: lista agrupada com ícones coloridos ---- */
 (function(){const st=$('settings');if(!st)return;
@@ -6222,7 +6255,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795737162';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795737306';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
