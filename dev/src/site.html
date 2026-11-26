@@ -1583,7 +1583,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .st-c.st-tide,.st-c.st-wave,.st-c.st-sst,.st-c.st-vis{border-left-color:#1EA88E;background:color-mix(in srgb,#1EA88E 13%,var(--surface))}
 .st-c.st-wind,.st-c.st-sun{border-left-color:#7DBCEB;background:color-mix(in srgb,#7DBCEB 13%,var(--surface))}
 .st-c.st-moon{border-left-color:#B9B3A0;background:color-mix(in srgb,#B9B3A0 15%,var(--surface))}
-.st-by{margin-top:4px;display:grid;gap:12px}.st-by .nowh{margin-bottom:0}
+.st-by{margin-top:4px}.st-by[open]{display:grid;gap:12px}.st-by>summary{min-height:26px}.st-by>summary .nowh{margin:0}
 @media (min-width:561px){.st-by>summary{pointer-events:auto}.st-by>summary::before{display:block}}
 @media (max-width:560px){.st-r{grid-template-columns:1fr 1.2fr;row-gap:2px}.st-v{grid-column:1/-1}}
 </style>
@@ -5170,12 +5170,12 @@ function stDraw(){const box=$('stBox');if(!box||!$('stCard').open)return;
   h+='<div class="nowh st-h2">'+esc(t('stDays'))+'</div><div class="st-days">'+top.map(e=>{const cs=(e.catches||[]).filter(c=>c&&!c.lost&&(!stSp||c.name===stSp));
     return '<button type="button" class="st-day" data-st-edit="'+esc(e.id)+'"><span class="st-dh"><b>'+esc(e.date.slice(8,10)+'/'+e.date.slice(5,7)+'/'+e.date.slice(0,4))+'</b>'+(e.spot?' · '+esc(e.spot):'')+'<span class="st-n">'+fishOf(e)+' 🐟</span></span><span class="st-df">'+esc(cs.map(c=>(c.count||1)+' × '+catchLabel(c)).join(', '))+'</span><span class="st-cs">'+stConds(e)+'</span></button>'}).join('')+'</div>';
   /* fish per dive by condition */
-  h+='<div class="st-by"><div class="nowh st-h2">'+esc(t('stByCond'))+'</div><p class="hint st-unit">'+esc(t('stFish'))+'</p>'+dims.map(({hd,rows,best,lab})=>{const max=Math.max(...rows.map(([,a])=>a.f/a.n),.01);
+  h+='<details class="fwl st-by"'+(stByOpen?' open':'')+'><summary><span class="nowh">'+esc(t('stByCond'))+'</span></summary><p class="hint st-unit">'+esc(t('stFish'))+'</p>'+dims.map(({hd,rows,best,lab})=>{const max=Math.max(...rows.map(([,a])=>a.f/a.n),.01);
     return '<section class="st-d"><h4>'+esc(t(hd))+'</h4>'+rows.map(([k,a])=>{const r=a.f/a.n,isB=best&&best[0]===k;
-      return '<div class="st-r'+(isB?' best':'')+'"><span class="st-k">'+esc(lab(k))+'</span><span class="st-bar"><i style="width:'+Math.round(r/max*100)+'%"></i></span><span class="st-v"><b>'+stNum(r)+'</b> <small>'+esc(a.n===1?t('stDive1'):t('stDives').replace('{n}',a.n))+' · '+esc(a.f===1?t('stCatch1'):t('stCatch').replace('{n}',a.f))+'</small>'+(isB?' <em>'+esc(t('stBest'))+'</em>':'')+'</span></div>'}).join('')+'</section>'}).join('')+'</div>';
+      return '<div class="st-r'+(isB?' best':'')+'"><span class="st-k">'+esc(lab(k))+'</span><span class="st-bar"><i style="width:'+Math.round(r/max*100)+'%"></i></span><span class="st-v"><b>'+stNum(r)+'</b> <small>'+esc(a.n===1?t('stDive1'):t('stDives').replace('{n}',a.n))+' · '+esc(a.f===1?t('stCatch1'):t('stCatch').replace('{n}',a.f))+'</small>'+(isB?' <em>'+esc(t('stBest'))+'</em>':'')+'</span></div>'}).join('')+'</section>'}).join('')+'</details>';
   box.innerHTML=h+stFillHtml()}
-let stByOpen=false;
-document.addEventListener('toggle',ev=>{if(ev.target&&ev.target.classList&&ev.target.classList.contains('st-by'))stByOpen=ev.target.open},true);
+let stByOpen=true;try{stByOpen=localStorage.getItem('sn-st-by')!=='0'}catch(_){}
+document.addEventListener('toggle',ev=>{if(ev.target&&ev.target.classList&&ev.target.classList.contains('st-by')){stByOpen=ev.target.open;try{localStorage.setItem('sn-st-by',stByOpen?'1':'0')}catch(_){}}},true);
 document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('[data-st-sp]');if(b){stSp=b.dataset.stSp;try{localStorage.setItem('sn-st-sp',stSp)}catch(_){}stDraw();return}
   const d=ev.target.closest&&ev.target.closest('[data-st-edit]');if(d){const e=entries.find(x=>x.id===d.dataset.stEdit);if(e)openForm(e,e.id)}});
 function stFillHtml(){const n=stNeedFill().length;return n?'<div class="st-fill"><button type="button" class="btn sm" id="stFill">'+esc(t('stFill').replace('{n}',n))+'</button><span class="hint">'+esc(t('stFillHint'))+'</span></div>':''}
