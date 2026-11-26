@@ -1682,10 +1682,16 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bsheet:not([hidden]){display:block;position:relative;background:var(--bg);min-height:100dvh}
 html.bs-on #appView{display:none!important}
 .bs-body{padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
-.bs-back{position:fixed;z-index:2;top:calc(6px + env(safe-area-inset-top,0px));left:max(4px,env(safe-area-inset-left,0px));width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
-.bs-t{position:sticky;z-index:1;top:0;padding:calc(6px + env(safe-area-inset-top,0px)) 0 6px 48px;background:var(--bg);margin:0;line-height:40px;font-size:17px;color:var(--ink)}
+.bs-back{position:static;flex:none;width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
+.bs-t{position:static;padding:0;background:none;margin:0;line-height:40px;font-size:17px;color:var(--ink)}
 
 #appView[hidden]~#bnav,#appView[hidden]~#bsheet{display:none!important}
+.bs-hd{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:6px;margin-top:calc(-1 * env(safe-area-inset-top,0px));padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 6px max(4px,env(safe-area-inset-left,0px));background:var(--bg)}
+#bsheet:not([data-mode="more"]):not([data-mode="mt"]) .bs-hd{display:none}
+#bsBody>.bs-pane>details:not(#fcCard)>summary{margin-top:calc(-1 * env(safe-area-inset-top,0px))!important}
+.bs-pane[hidden]{display:block!important;content-visibility:hidden;height:0;overflow:hidden}
+#fcBox{contain:layout paint}
+
 html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:transparent}
 @keyframes msIn{from{transform:translateX(100vw)}to{transform:none}}dialog.mslide[open]{animation:msIn .26s cubic-bezier(.2,.8,.2,1)}dialog.mslide.mout{transform:translateX(100vw);transition:transform .22s ease-in}dialog.mslide::backdrop{background:rgba(4,20,26,.35)}
 @media (prefers-reduced-motion:reduce){dialog.mslide[open]{animation:none}dialog.mslide.mout{transition:none}}
@@ -1699,7 +1705,7 @@ html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:trans
 #bsBody>.bs-pane>details:not(#fcCard)>summary::before{display:block!important;content:"";flex:none;width:12px;height:12px;border:0;border-left:2.5px solid var(--sea);border-bottom:2.5px solid var(--sea);transform:rotate(45deg)!important;margin:0 14px 0 18px;transition:none}
 #bsBody>.bs-pane>details:not(#fcCard)>summary~*{margin-top:6px}
 #bsheet[data-mode="more"] .bs-body,#bsheet[data-mode="mt"] .bs-body{padding-top:6px}
-#bsMt:not([hidden]){display:grid;gap:12px}#bsMt>#fcCard>summary{cursor:default}#bsMt>.fcw{margin:0}.bs-pane[hidden]{display:none!important}.bs-t{z-index:3!important}.bs-back{z-index:4!important}#bsMt>#fcNow.fc-now-out{margin:0 0 -2px}
+#bsMt:not([hidden]){display:grid;gap:12px}#bsMt>#fcCard>summary{cursor:default}#bsMt>.fcw{margin:0}#bsMt>#fcNow.fc-now-out{margin:0 0 -2px}
 #bsBody #tagline{display:block!important;position:relative;padding-left:48px!important;width:auto!important;font-size:14px!important;font-weight:600;line-height:1.45!important;white-space:normal!important;text-align:left!important;margin:0 0 22px!important;transform:none!important;padding:14px 16px;border-radius:16px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
 #bsBody #tagline>*{display:inline!important;width:auto!important;white-space:normal!important}#bsBody #tagline::before{content:"";position:absolute;left:15px;top:14px;width:22px;height:22px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat}
 #bsBody #tagline br{display:none}
@@ -5471,6 +5477,7 @@ if(T.it)Object.assign(T.it,{bnMt:'Mare',bnMtT:'Mare e meteo',bnTools:'Strumenti'
 if(T.fr)Object.assign(T.fr,{bnMt:'Mer',bnMtT:'Mer et météo',bnTools:'Outils',bnLinks:'Liens utiles',bnHome:'Journal',bnSt:'Analyse',bnG:'Graphiques',bnFeed:'Amis',bnMore:'Plus',bnBack:'Retour',bnSettings:'Réglages'});
 (function(){const mq=matchMedia('(max-width:760px)'),sh=$('bsheet'),body=$('bsBody'),nav=$('bnav'),ttl=$('bsT');if(!sh||!body||!nav)return;
   {const av=$('appView');if(av&&sh.parentNode===av){av.after(sh);sh.after(nav)}}
+  {const hd=document.createElement('div');hd.className='bs-hd';sh.insertBefore(hd,sh.firstChild);hd.append($('bsBack'),ttl)}
   const tx=k=>(T[lang]&&T[lang][k])||T.en[k];
   const ITEMS={mt:()=>[$('fcNow'),document.querySelector('.fcw'),$('fcCard')],st:()=>[$('stCard')],g:()=>[$('gCard')],feed:()=>[$('feedCard')],more:()=>[$('tagline'),document.querySelector('nav.tools')]};
   /* cada separador tem o seu painel; no telemóvel os blocos ficam lá (mover blocos grandes a cada toque era lento) */
@@ -5512,18 +5519,18 @@ if(T.fr)Object.assign(T.fr,{bnMt:'Mer',bnMtT:'Mer et météo',bnTools:'Outils',b
   let sx=null,sy=0,st0=0,ok=false,sc=[];
   addEventListener('touchstart',e=>{if(!mq.matches||e.touches.length!==1||document.querySelector('dialog[open]')){sx=null;return}const p=e.touches[0];sx=p.clientX;sy=p.clientY;st0=Date.now();sc=scs(e.target);ok=sc!==null&&sx>12&&sx<innerWidth-12},{passive:true});
   /* a página acompanha o dedo enquanto se desliza */
-  let dg=null,hz=false;const pg=()=>sh.hidden?$('appView'):body;
+  let dg=null,hz=false;const pg=()=>sh.hidden?$('appView'):body;const heavy=()=>!sh.hidden&&cur==='mt';
   addEventListener('touchmove',e=>{if(sx==null||!ok)return;const p=e.touches[0],dx=p.clientX-sx,dy=p.clientY-sy;
     if(!hz){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){ok=false;return}if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.4){if(sc.some(s=>dx<0?s.r:s.l)){ok=false;return}
-      hz=true;dg=pg();dg.style.transition='none';dg.style.willChange='transform';try{document.activeElement&&document.activeElement.blur&&document.activeElement!==document.body&&document.activeElement.blur()}catch(_){}}else return}
-    const o=order(),i=o.indexOf(sh.hidden?'home':cur),edge=(dx<0&&i===o.length-1)||(dx>0&&i===0);const v='translateX('+Math.round(dx*(edge?.15:.4))+'px)';if(!dg._raf)dg._raf=requestAnimationFrame(()=>{if(dg){dg.style.transform=dg._v;dg._raf=0}});dg._v=v},{passive:true});
+      hz=true;dg=heavy()?null:pg();if(dg){dg.style.transition='none';dg.style.willChange='transform'}try{document.activeElement&&document.activeElement.blur&&document.activeElement!==document.body&&document.activeElement.blur()}catch(_){}}else return}
+    if(!dg)return;const o=order(),i=o.indexOf(sh.hidden?'home':cur),edge=(dx<0&&i===o.length-1)||(dx>0&&i===0);const v='translateX('+Math.round(dx*(edge?.15:.4))+'px)';if(!dg._raf)dg._raf=requestAnimationFrame(()=>{if(dg){dg.style.transform=dg._v;dg._raf=0}});dg._v=v},{passive:true});
   const undrag=()=>{hz=false;if(!dg)return;const d=dg;dg=null;if(d._raf){cancelAnimationFrame(d._raf);d._raf=0}d.style.transition='transform .18s ease-out';d.style.transform='';setTimeout(()=>{d.style.transition='';d.style.willChange=''},200)};
   addEventListener('touchcancel',()=>{sx=null;undrag()},{passive:true});
   addEventListener('touchend',e=>{if(sx==null||!ok)return;const p=e.changedTouches[0],dx=p.clientX-sx,dy=p.clientY-sy;sx=null;undrag();
     if(Date.now()-st0>800||Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;
     if(sc.some(s=>dx<0?s.r:s.l))return;
     const o=order(),i=o.indexOf(sh.hidden?'home':cur),j=i+(dx<0?1:-1);if(i<0||j<0||j>=o.length)return;
-    o[j]==='home'?close():open(o[j]);sh.classList.remove('sw-l','sw-r');void sh.offsetWidth;if(!sh.hidden)sh.classList.add(dx<0?'sw-l':'sw-r')},{passive:true});
+    o[j]==='home'?close():open(o[j]);sh.classList.remove('sw-l','sw-r');void sh.offsetWidth;if(!sh.hidden&&cur!=='mt')sh.classList.add(dx<0?'sw-l':'sw-r')},{passive:true});
   /* janelas abertas a partir de «Mais» entram da direita e saem para a direita */
   const pc=HTMLDialogElement.prototype.close;
   const slide=d=>{if(d._ms)return;d._ms=1;
@@ -5614,7 +5621,7 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   const win=document.createElement('div');win.id='fcWin';win.className='fc-win';now.parentNode.insertBefore(win,now);
   w.parentNode.insertBefore(now,w);now.classList.add('fc-now-out');
   /* em vez de «Agora»: data e hora ao segundo */
-  const clk=()=>{const l=now.querySelector('.nowd>summary .nl');if(!l)return;let s;try{const f=new Intl.DateTimeFormat(locale(),{timeZone:typeof TZ!=='undefined'?TZ:undefined,weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date()),g=k=>(f.find(p=>p.type===k)||{}).value||'';
+  const clk=()=>{if(!now.offsetParent)return;const l=now.querySelector('.nowd>summary .nl');if(!l)return;let s;try{const f=new Intl.DateTimeFormat(locale(),{timeZone:typeof TZ!=='undefined'?TZ:undefined,weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date()),g=k=>(f.find(p=>p.type===k)||{}).value||'';
       const wd=g('weekday').replace('.','');s=wd.charAt(0).toUpperCase()+wd.slice(1)+' '+g('day')+'/'+g('month')+' · '+g('hour')+':'+g('minute')+':'+g('second')}catch(_){s=new Date().toLocaleString()}
     if(l.textContent!==s)l.textContent=s};
   setInterval(clk,1000);
@@ -7307,7 +7314,7 @@ $('eDlogX').addEventListener('click',()=>{if(form.dlog)dlogOpen({dlog:form.dlog,
 function dlIcon(){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4v16h18"/><path d="M6.5 8.5l3.5 6 3-3.5 3.5 5.5 3-9"/></svg>'}
 /* phone: while any window is open, the page behind it is pinned so only the window scrolls */
 (function(){if(!matchMedia('(pointer:coarse)').matches)return;let y=0,n=0;const B=document.body;
-  const lock=()=>{if(n++)return;y=scrollY;B.style.position='fixed';B.style.top=(-y)+'px';B.style.left='0';B.style.right='0';B.style.width='100%';document.documentElement.classList.add('dlgopen')};
+  const lock=()=>{if(n++)return;y=scrollY;if(document.documentElement.classList.contains('bs-on')){document.documentElement.classList.add('dlgopen');return}B.style.position='fixed';B.style.top=(-y)+'px';B.style.left='0';B.style.right='0';B.style.width='100%';document.documentElement.classList.add('dlgopen')};
   const unlock=()=>{if(!n||--n)return;B.style.position='';B.style.top='';B.style.left='';B.style.right='';B.style.width='';document.documentElement.classList.remove('dlgopen');scrollTo(0,y)};
   const sm=HTMLDialogElement.prototype.showModal;HTMLDialogElement.prototype.showModal=function(){const was=this.open;const r=sm.apply(this,arguments);if(!was&&!this._lk){this._lk=1;lock();this.addEventListener('close',()=>{if(this._lk){this._lk=0;unlock()}},{once:true})}return r}})();
 /* keep a focused field in view when the phone keyboard opens */
