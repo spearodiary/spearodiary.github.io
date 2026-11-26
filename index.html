@@ -1683,7 +1683,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 html.bs-on #appView{content-visibility:hidden;height:0;overflow:hidden;padding:0!important}
 .bs-body{padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
 .bs-back{position:static;flex:none;width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
-.bs-t{position:static;padding:0;background:none;font:500 19px var(--display)!important;margin:0;line-height:40px;font-size:17px;color:var(--ink)}
+.bs-t{position:static;padding:0;background:none;display:flex;align-items:center;gap:8px;margin-left:4px!important;font:600 14px/21px var(--body)!important;color:var(--sea)!important;margin:0;line-height:40px;font-size:17px;color:var(--ink)}
 
 #appView[hidden]~#bnav,#appView[hidden]~#bsheet{display:none!important}
 .bs-hd{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:6px;margin-top:calc(-1 * env(safe-area-inset-top,0px));padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 6px max(4px,env(safe-area-inset-left,0px));background:var(--bg)}
@@ -1705,7 +1705,7 @@ html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:trans
 #bsBody>.bs-pane>details:not(#fcCard)>summary::before{display:block!important;content:"";flex:none;width:12px;height:12px;border:0;border-left:2.5px solid var(--sea);border-bottom:2.5px solid var(--sea);transform:rotate(45deg)!important;margin:0 14px 0 18px;transition:none}
 #bsBody>.bs-pane>details:not(#fcCard)>summary~*{margin-top:6px}
 #bsheet[data-mode="more"] .bs-body,#bsheet[data-mode="mt"] .bs-body{padding-top:6px}
-#bsMt:not([hidden]){display:grid;gap:12px}#bsMt>#fcCard>summary{cursor:default}#bsMt>.fcw{margin:0}#bsMt>#fcNow.fc-now-out{margin:0 0 -2px}
+#bsMt:not([hidden]){display:grid;gap:12px}#bsMt>#fcCard>summary{cursor:default}#bsMt #fcSum>svg.fc-ic,#bsMt #fcSum>[data-i="fcTitleA"]{display:none}#bsMt>#fcCard{position:relative}#bsMt #fcStamp{position:absolute;right:12px;top:9px;line-height:28px}#bsMt>.fcw{margin:0}#bsMt>#fcNow.fc-now-out{margin:0 0 -2px}
 #bsBody #tagline{display:block!important;position:relative;padding-left:48px!important;width:auto!important;font-size:14px!important;font-weight:600;line-height:1.45!important;white-space:normal!important;text-align:left!important;margin:0 0 22px!important;transform:none!important;padding:14px 16px;border-radius:16px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
 #bsBody #tagline>*{display:inline!important;width:auto!important;white-space:normal!important}#bsBody #tagline::before{content:"";position:absolute;left:15px;top:14px;width:22px;height:22px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat}
 #bsBody #tagline br{display:none}
@@ -5498,7 +5498,8 @@ if(T.fr)Object.assign(T.fr,{bnMt:'Mer',bnMtT:'Mer et météo',bnTools:'Outils',b
     const p=pane(t);Object.values(panes).forEach(x=>{x.hidden=x!==p});
     if(t==='more'){const sc=p.querySelector('.tools-sc'),ex=p.querySelector('.tl-ext');if(sc)sc.dataset.sec=tx('bnTools');if(ex)ex.dataset.sec=tx('bnLinks')}
     if(t==='feed')feedRe();
-    sh.dataset.mode=t;ttl.textContent=t==='more'?tx('bnMore'):t==='mt'?tx('bnMtT'):'';ttl.hidden=t!=='more'&&t!=='mt';
+    sh.dataset.mode=t;{const ic=t==='mt'?document.querySelector('#fcSum>svg.fc-ic'):t==='more'?nav.querySelector('[data-bn="more"] svg'):null;ttl.textContent='';if(ic){const c=ic.cloneNode(true);c.setAttribute('width','19');c.setAttribute('height','19');c.classList.add('fc-ic');ttl.appendChild(c)}
+      const sp=document.createElement('span');sp.textContent=t==='more'?tx('bnMore'):t==='mt'?tx('bnMtT'):'';ttl.appendChild(sp)}ttl.hidden=t!=='more'&&t!=='mt';try{dispatchEvent(new CustomEvent('bs-open',{detail:t}))}catch(_){}
     sh.hidden=false;document.documentElement.classList.add('bs-on');scrollTo(0,+(p.dataset.st||0));act(t)};
   nav.addEventListener('click',e=>{const b=e.target.closest('[data-bn]');if(b)open(b.dataset.bn)});
   $('bsBack').addEventListener('click',close);
@@ -5624,7 +5625,7 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   const clk=()=>{if(!now.offsetParent)return;const l=now.querySelector('.nowd>summary .nl');if(!l)return;let s;try{const f=new Intl.DateTimeFormat(locale(),{timeZone:typeof TZ!=='undefined'?TZ:undefined,weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date()),g=k=>(f.find(p=>p.type===k)||{}).value||'';
       const wd=g('weekday').replace('.','');s=wd.charAt(0).toUpperCase()+wd.slice(1)+' '+g('day')+'/'+g('month')+' · '+g('hour')+':'+g('minute')+':'+g('second')}catch(_){s=new Date().toLocaleString()}
     if(l.textContent!==s)l.textContent=s};
-  setInterval(clk,1000);
+  setInterval(clk,1000);addEventListener('bs-open',()=>requestAnimationFrame(clk));
   const split=()=>{const kids=[...now.childNodes].filter(n=>!(n.nodeType===1&&n.classList.contains('nowd')));win.textContent='';kids.forEach(n=>win.appendChild(n))};
   const d0=drawForecast;drawForecast=function(){const r=d0.apply(this,arguments);try{split();clk()}catch(_){}return r};
   /* a previsão desenha só alguns dias: antes de saltar para um dia mais à frente, desenhar até lá */
@@ -6180,7 +6181,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795736021';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795736191';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
