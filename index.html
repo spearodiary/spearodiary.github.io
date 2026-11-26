@@ -2837,7 +2837,15 @@ let FC_DEF=FC_DEF_R[fcReg()];
 let fcData=null,fcErr='',fcLoading=false,fcSpot=null;
 const FC_PRESETS_R={CON:[['Cascais',38.69,-9.43],['Ericeira',38.97,-9.43],['Peniche',39.36,-9.41],['Nazaré',39.6,-9.08],['Figueira da Foz',40.15,-8.87],['Viana do Castelo',41.69,-8.85],['Sesimbra',38.43,-9.11],['Sines',37.95,-8.88],['Zambujeira do Mar',37.52,-8.79],['Sagres',37.0,-8.94],['Lagos',37.09,-8.67],['Albufeira',37.08,-8.25]],
  MAD:[['Funchal',32.6386,-16.915],['Caniço de Baixo',32.643,-16.845],['Machico',32.715,-16.765],['Porto da Cruz',32.775,-16.825],['São Vicente',32.805,-17.045],['Porto Moniz',32.87,-17.17],['Paul do Mar',32.755,-17.23],['Calheta',32.72,-17.18],['Ribeira Brava',32.67,-17.065],['Porto Santo',33.06,-16.34]],
- AZO:[['Ponta Delgada',37.737,-25.668],['Mosteiros',37.89,-25.825],['Rabo de Peixe',37.815,-25.585],['Vila Franca do Campo',37.712,-25.432],['Vila do Porto (Santa Maria)',36.943,-25.147],['Angra do Heroísmo',38.652,-27.218],['Praia da Vitória',38.73,-27.055],['Horta (Faial)',38.53,-28.623],['Madalena (Pico)',38.535,-28.53],['Lajes do Pico',38.393,-28.255],['Velas (São Jorge)',38.68,-28.205],['Santa Cruz da Graciosa',39.087,-27.997],['Santa Cruz das Flores',39.453,-31.123],['Corvo',39.672,-31.112]]};
+ AZO:[['Ponta Delgada',37.737,-25.668,'São Miguel'],['Lagoa',37.735,-25.575,'São Miguel'],['Caloura',37.705,-25.5,'São Miguel'],['Vila Franca do Campo',37.712,-25.432,'São Miguel'],['Ribeira Quente',37.725,-25.3,'São Miguel'],['Povoação',37.74,-25.245,'São Miguel'],['Nordeste (Ponta do Arnel)',37.823,-25.13,'São Miguel'],['Rabo de Peixe',37.815,-25.585,'São Miguel'],['Capelas',37.845,-25.69,'São Miguel'],['Mosteiros',37.89,-25.825,'São Miguel'],['Ponta da Ferraria',37.86,-25.86,'São Miguel'],
+ ['Vila do Porto',36.943,-25.147,'Santa Maria'],['Praia Formosa',36.94,-25.1,'Santa Maria'],['Maia',36.935,-25.02,'Santa Maria'],['São Lourenço',36.99,-25.05,'Santa Maria'],['Anjos',37.01,-25.155,'Santa Maria'],
+ ['Angra do Heroísmo',38.652,-27.218,'Terceira'],['São Mateus da Calheta',38.645,-27.28,'Terceira'],['Cinco Ribeiras',38.665,-27.32,'Terceira'],['Biscoitos',38.805,-27.26,'Terceira'],['Praia da Vitória',38.73,-27.055,'Terceira'],['Porto Martins',38.68,-27.05,'Terceira'],
+ ['Santa Cruz da Graciosa',39.087,-27.997,'Graciosa'],['Praia (São Mateus)',39.05,-27.955,'Graciosa'],['Carapacho',39.005,-27.96,'Graciosa'],
+ ['Velas',38.68,-28.205,'São Jorge'],['Calheta',38.595,-28.015,'São Jorge'],['Topo',38.55,-27.75,'São Jorge'],['Fajã do Ouvidor',38.695,-28.06,'São Jorge'],
+ ['Madalena',38.535,-28.53,'Pico'],['São Roque do Pico',38.535,-28.32,'Pico'],['Lajes do Pico',38.393,-28.255,'Pico'],['Ribeiras',38.4,-28.18,'Pico'],['Calheta de Nesquim',38.395,-28.08,'Pico'],
+ ['Horta',38.53,-28.623,'Faial'],['Feteira',38.515,-28.68,'Faial'],['Varadouro',38.565,-28.775,'Faial'],['Praia do Almoxarife',38.555,-28.595,'Faial'],
+ ['Santa Cruz das Flores',39.453,-31.123,'Flores'],['Lajes das Flores',39.375,-31.165,'Flores'],['Fajã Grande',39.455,-31.27,'Flores'],
+ ['Vila do Corvo',39.672,-31.112,'Corvo']]};
 Object.assign(FC_PRESETS_R,{GA:[['A Coruña',43.40,-8.42],['Malpica',43.34,-8.84],['Fisterra',42.90,-9.30],['Corrubedo',42.57,-9.10],['Baiona',42.12,-8.88],['Cariño',43.75,-7.87]],
  AS:[['Gijón',43.57,-5.67],['Llanes',43.44,-4.75],['Cudillero',43.58,-6.15],['Luarca',43.56,-6.53],['Tapia de Casariego',43.59,-6.94]],
  CB:[['Santander',43.49,-3.77],['Santoña',43.47,-3.44],['Suances',43.46,-4.05],['San Vicente de la Barquera',43.41,-4.40],['Castro Urdiales',43.40,-3.21]],
@@ -2850,7 +2858,7 @@ Object.assign(FC_PRESETS_R,{GA:[['A Coruña',43.40,-8.42],['Malpica',43.34,-8.84
  IB:[['Palma',39.54,2.63],['Pollença',39.90,3.12],['Cala Rajada',39.71,3.48],['Maó',39.87,4.31],['Ciutadella',39.99,3.81],['Eivissa',38.90,1.46],['Formentera (La Savina)',38.74,1.42]],
  CN:[['Las Palmas',28.14,-15.41],['Arguineguín',27.75,-15.69],['Puerto del Carmen',28.91,-13.67],['Corralejo',28.75,-13.86],['Los Cristianos',28.03,-16.72],['La Restinga',27.63,-17.98],['Santa Cruz de La Palma',28.68,-17.75]],
  CE:[['Ceuta',35.89,-5.29]],ML:[['Melilla',35.29,-2.92]]});
-for(const k in FC_PRESETS_R)FC_PRESETS_R[k]=FC_PRESETS_R[k].map(([name,lat,lon])=>({name,lat,lon,g:'p'}));
+for(const k in FC_PRESETS_R)FC_PRESETS_R[k]=FC_PRESETS_R[k].map(([name,lat,lon,isl])=>({name,lat,lon,isl,g:'p'}));
 const FC_PRESETS=[].concat(...Object.values(FC_PRESETS_R));
 function fcCustom(){try{return JSON.parse(localStorage.getItem('sn-fc-custom')||'[]')}catch(e){return[]}}
 function fcSpots(){const m=new Map([[norm(FC_DEF.name),{...FC_DEF,g:'d'}]]);entries.forEach(e=>{const c=parseCoords(e.gps);if(c&&e.spot&&!m.has(norm(e.spot)))m.set(norm(e.spot),{name:e.spot.trim(),lat:c.lat,lon:c.lon,g:'m'})});fcCustom().forEach(c=>{if(!m.has(norm(c.name)))m.set(norm(c.name),{...c,g:'c'})});(FC_PRESETS_R[fcReg()]||FC_PRESETS_R.CON).forEach(p=>{if(!m.has(norm(p.name)))m.set(norm(p.name),p)});return[...m.values()]}
@@ -2858,7 +2866,7 @@ function fcPick(){let k='';try{k=localStorage.getItem('sn-fc-spot')||''}catch(e)
 function fcFillSelect(){
   const sel=$('fcSpot'),list=fcSpots(),cur=(fcSpot||fcPick()).name;
   const opt=s=>'<option value="'+esc(norm(s.name))+'">'+esc(s.name)+'</option>',grp=(g,l)=>{const a=list.filter(s=>s.g===g);return a.length?'<optgroup label="'+esc(t(l))+'">'+a.map(opt).join('')+'</optgroup>':''};
-  sel.innerHTML=list.filter(s=>s.g==='d').map(opt).join('')+grp('m','fcGrpMine')+grp('c','fcGrpAdded')+grp('p','fcGrpPlaces');sel.value=norm(cur);
+  sel.innerHTML=list.filter(s=>s.g==='d').map(opt).join('')+grp('m','fcGrpMine')+grp('c','fcGrpAdded')+(list.some(s=>s.g==='p'&&s.isl)?[...new Set(list.filter(s=>s.g==='p').map(s=>s.isl||''))].map(i=>'<optgroup label="'+esc(t('fcGrpPlaces')+(i?' · '+i:''))+'">'+list.filter(s=>s.g==='p'&&(s.isl||'')===i).map(opt).join('')+'</optgroup>').join(''):grp('p','fcGrpPlaces'));sel.value=norm(cur);
   $('fcDel').hidden=!list.some(s=>s.g==='c'&&norm(s.name)===norm(cur));$('fcRen').hidden=$('fcDel').hidden;
   {const o=sel.selectedOptions[0];$('fcSpotBtn').textContent=o?o.textContent:''}
 }
@@ -5411,7 +5419,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795672459';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795688276';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
