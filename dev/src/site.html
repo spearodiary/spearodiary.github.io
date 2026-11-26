@@ -1553,6 +1553,7 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .zmap-btn{font-weight:600}
 .zleg{position:absolute;left:8px;bottom:22px;z-index:1000;display:flex;flex-wrap:wrap;gap:4px 10px;padding:5px 9px;border-radius:8px;background:rgba(15,25,30,.78);color:#fff;font-size:12px;line-height:1.3;pointer-events:none;max-width:calc(100% - 90px)}.zleg span{display:inline-flex;align-items:center;gap:5px}.zleg i{width:11px;height:11px;border-radius:3px;display:inline-block;opacity:.9}
 .fc-pg .fc-isl{color:var(--accent);font-weight:800}
+.fc-res .fc-plus{width:34px;height:34px;padding:0;box-sizing:border-box;display:grid;place-items:center;flex:none;border-radius:8px}
 </style>
 </head>
 <body>
@@ -2893,18 +2894,18 @@ async function fcSearch(){
   const q=$('fcQ').value.trim(),res=$('fcRes');if(!q)return;
   const see=(la,lo,nm)=>'<button type="button" class="fc-see" data-see="'+la+','+lo+'" data-name="'+esc(nm)+'" title="'+esc(t('fcSee'))+'" aria-label="'+esc(t('fcSee'))+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></button>';
   /* one exact point (coordinates, a full or short Google Maps link): an editable name + Add */
-  const one=(la,lo,nm)=>{nm=nm||la.toFixed(4)+', '+lo.toFixed(4);res.innerHTML='<li class="fc-new"><input id="fcName" value="'+esc(nm)+'" aria-label="'+esc(t('fcNameL'))+'"><span class="hint">'+esc(la.toFixed(5)+', '+lo.toFixed(5))+'</span>'+see(la,lo,nm)+'<button type="button" class="fc-add" data-lat="'+la+'" data-lon="'+lo+'" data-name="'+esc(nm)+'" data-named="1">'+esc(t('fcAdd'))+'</button></li>'};
+  const one=(la,lo,nm)=>{nm=nm||la.toFixed(4)+', '+lo.toFixed(4);res.innerHTML='<li class="fc-new"><input id="fcName" value="'+esc(nm)+'" aria-label="'+esc(t('fcNameL'))+'"><button type="button" class="hint" data-pick="'+la+','+lo+'" data-name="'+esc(nm)+'" data-named="1" title="'+esc(t('fcMapHint'))+'">'+esc(la.toFixed(5)+', '+lo.toFixed(5))+'</button><button type="button" class="fc-add fc-plus" data-lat="'+la+'" data-lon="'+lo+'" data-name="'+esc(nm)+'" data-named="1" title="'+esc(t('fcAdd'))+'" aria-label="'+esc(t('fcAdd'))+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></li>'};
   const c=parseCoords(q);if(c){let nm='';const pm=/\/maps\/place\/([^/@?]+)/.exec(q);if(pm){try{nm=decodeURIComponent(pm[1].replace(/\+/g,' '))}catch(_){}}if(/\d°/.test(nm))nm='';one(c.lat,c.lon,nm);return}
   res.innerHTML='<li class="hint">'+esc(t(SHORT_RE.test(q)?'fcOpening':'fcLoading'))+'</li>';
   const r=await placeFind(q);if($('fcQ').value.trim()!==q)return;
   if(!r.length){res.innerHTML='<li class="hint">'+esc(t(SHORT_RE.test(q)?'fcShort':'libNone'))+'</li>';return}
   if(r[0].exact){one(r[0].lat,r[0].lng,r[0].name);return}
-  res.innerHTML=r.map(x=>'<li class="fc-row"><button type="button" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'">'+esc(x.name)+(x.sub?' <span class="hint">'+esc(x.sub)+'</span>':'')+'</button>'+see(x.lat,x.lng,x.name)+'<button type="button" class="fc-add" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'">'+esc(t('fcAdd'))+'</button></li>').join('')
+  res.innerHTML=r.map(x=>'<li class="fc-row"><button type="button" data-pick="'+x.lat+','+x.lng+'" data-name="'+esc(x.name)+'" title="'+esc(t('fcMapHint'))+'">'+esc(x.name)+(x.sub?' <span class="hint">'+esc(x.sub)+'</span>':'')+'</button><button type="button" class="fc-add fc-plus" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'" title="'+esc(t('fcAdd'))+'" aria-label="'+esc(t('fcAdd'))+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></li>').join('')
 }
 $('fcGo').addEventListener('click',fcSearch);
 $('fcQ').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();fcSearch()}else if(ev.key==='Escape'){fcFindClose()}});
 $('fcCancel').addEventListener('click',fcFindClose);
-$('fcRes').addEventListener('click',ev=>{const sv=ev.target.closest('button[data-see]');if(sv){const p=sv.dataset.see.split(',').map(Number);spotMapOpen(p[0],p[1],sv.dataset.name);return}
+$('fcRes').addEventListener('click',ev=>{const pk=ev.target.closest('button[data-pick]');if(pk){const a=pk.dataset.pick.split(',').map(Number);let n=pk.dataset.name;if(pk.dataset.named){const v=($('fcName')||{}).value;if(v&&v.trim())n=v.trim()}fcMapPick({lat:a[0],lon:a[1],name:n});return}const sv=ev.target.closest('button[data-see]');if(sv){const p=sv.dataset.see.split(',').map(Number);spotMapOpen(p[0],p[1],sv.dataset.name);return}
   const b=ev.target.closest('button[data-lat]');if(!b)return;let nm=b.dataset.name;if(b.dataset.named){const v=($('fcName')||{}).value;if(v&&v.trim())nm=v.trim()}const sp={name:nm,lat:+b.dataset.lat,lon:+b.dataset.lon};
   const cs=fcCustom().filter(c=>norm(c.name)!==norm(sp.name));cs.unshift(sp);try{localStorage.setItem('sn-fc-custom',JSON.stringify(cs.slice(0,12)));localStorage.setItem('sn-fc-spot',norm(sp.name))}catch(e){}
   $('fcFind').hidden=true;$('fcRes').innerHTML='';$('fcQ').value='';seaFirst=true;fcData=null;fcSpot=null;fcFillSelect();fcLoad()});
@@ -2932,7 +2933,7 @@ async function placeFind(q){const c=parseCoords(q);if(c)return [{name:'',lat:c.l
     (r&&r.results||[]).slice(0,5).forEach(g=>out.push({name:(g.address_components[0]||{}).long_name||q,sub:g.formatted_address,lat:g.geometry.location.lat(),lng:g.geometry.location.lng()}))}catch(_){}
   if(!out.length){try{const j=await fcGet('https://geocoding-api.open-meteo.com/v1/search?count=5&format=json&language='+(lang==='en'?'en':lang)+'&name='+encodeURIComponent(q));(j.results||[]).forEach(x=>out.push({name:x.name,sub:[x.admin1,x.country].filter(Boolean).join(', '),lat:x.latitude,lng:x.longitude}))}catch(_){}}
   return out}
-function fcMapPick(){const cur=fcSpot||fcPick(),o=mapOverlay(document.body,'');o.classList.add('picking','dlmf-pick');o._mode='2d';
+function fcMapPick(ini){if(!ini||ini.type||ini.lat==null)ini=null;const cur=ini||fcSpot||fcPick(),o=mapOverlay(document.body,'');o.classList.add('picking','dlmf-pick');o._mode='2d';
   const cross=document.createElement('div');cross.className='dlmf-cross';o.appendChild(cross);
   const top=o.querySelector('.dlmf-top');top.innerHTML='<form class="dlmf-q"><input type="search" placeholder="'+esc(t('fcMapQ'))+'" aria-label="'+esc(t('fcMapQ'))+'" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="'+esc(t('fcFindGo'))+'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button></form><ul class="dlmf-res" hidden></ul>';
   const bar=document.createElement('div');bar.className='dlmf-bar';bar.innerHTML='<span class="hint">'+esc(t('fcMapHint'))+'</span><input class="dlmf-nm" aria-label="'+esc(t('fcNameL'))+'" placeholder="'+esc(t('fcNameL'))+'"><span class="dlmf-bb"><button type="button" class="btn sm" data-x>'+esc(t('cancel'))+'</button><button type="button" class="btn sm primary" data-s>'+esc(t('fcMapAdd'))+'</button></span>';o.appendChild(bar);
@@ -2942,7 +2943,7 @@ function fcMapPick(){const cur=fcSpot||fcPick(),o=mapOverlay(document.body,'');o
   const keys=ev=>{if(!o.isConnected){removeEventListener('keydown',keys,true);return}const a=document.activeElement;
     if(ev.key.length===1&&!ev.ctrlKey&&!ev.metaKey&&!ev.altKey&&a!==inp&&a!==nm){inp.focus()}};
   addEventListener('keydown',keys,true);
-  mapView(o,[{lat:cur.lat,lng:cur.lon,c:'#0C8A9C',r:18,info:''}],[0],'');
+  mapView(o,[{lat:cur.lat,lng:cur.lon,c:'#0C8A9C',r:18,info:''}],[0],'');if(ini&&ini.name)nm.value=ini.name;
   const go=p=>{ul.hidden=true;if(o._goto)o._goto(p.lat,p.lng);if(p.name)nm.value=p.name};
   top.querySelector('form').addEventListener('submit',async ev=>{ev.preventDefault();const q=inp.value.trim();if(!q)return;inp.blur();ul.hidden=false;ul.innerHTML='<li class="hint">'+esc(t('fcLoading'))+'</li>';
     const r=await placeFind(q);if(!o.isConnected)return;if(!r.length){ul.innerHTML='<li class="hint">'+esc(t('libNone'))+'</li>';return}
