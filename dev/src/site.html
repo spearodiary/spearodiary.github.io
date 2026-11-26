@@ -1586,6 +1586,11 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 #gCard{padding:3px 12px}#gCard[open]{padding-bottom:12px}#gCard:not([open]){background:transparent;border-color:transparent;padding:0 2px}
 #gCard>summary{min-height:30px;color:var(--sea);font-weight:600}#gCard>summary .fc-ic{flex:none}
 #gBox{display:grid;gap:10px;padding:6px 0 4px}#gBox .nowh{margin:4px 0 0}#gBox .nowh small{text-transform:none;letter-spacing:0;font-weight:400}
+.g-dayrow{align-items:center;flex-wrap:nowrap}.g-dayrow .g-dd{flex:1 1 auto;max-width:460px;min-width:0}.g-dayrow .g-dd>button small{padding-left:8px;color:var(--muted);white-space:nowrap}
+.g-nav{flex:none;width:38px;height:42px;padding:0;font-size:22px;line-height:1;display:grid;place-items:center;border-radius:8px}.g-nav:disabled{opacity:.35;cursor:default}
+.g-full{flex:none;margin-left:auto;font-size:13px}
+.g-day .dlst{margin:6px 0 10px}.g-day .dlg{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+@media (max-width:560px){.g-dayrow{flex-wrap:wrap}.g-dayrow .g-dd{order:-1;flex:1 1 100%;max-width:none}.g-full{margin-left:auto}.g-dayrow .g-dd>button small{display:none}}
 #gBox .g-t{font:inherit;color:inherit;text-align:left;cursor:pointer;border-top:0;border-right:0;border-bottom:0;margin:0}#gBox .g-t:hover{filter:brightness(1.06)}#gBox .g-t:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
 .g-row{display:flex;flex-wrap:wrap;gap:8px}.g-dd{flex:1 1 220px;max-width:340px}.g-dd>button .g-ddl{flex:none;color:var(--muted);font-size:12px;margin-right:8px}
 .g-chart{position:relative;display:flex;align-items:flex-end;gap:3px;height:170px;padding:16px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
@@ -1657,6 +1662,16 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
     <details class="fc-info" id="fcInfo"><summary data-i="fcInfo"></summary><p class="hint"><span data-i="fcNote"></span> <span id="fcTideNote"></span> <span data-i="fcData"></span> <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a></p></details>
   </details>
   <div class="fcs" id="fcStrip" hidden role="button" tabindex="0"></div>
+  <details class="tidecard" id="stCard">
+    <summary><svg class="fc-ic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg><span data-i="stTitle"></span></summary>
+    <div id="stBox"></div>
+  </details>
+
+  <details class="tidecard" id="gCard">
+    <summary><svg class="fc-ic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4v16h18"/><path d="m6 15 4-5 3 3 6-7"/></svg><span data-i="gTitle"></span></summary>
+    <div id="gBox"></div>
+  </details>
+
   <form class="capture" id="quickForm" autocomplete="off">
     <div class="capture-row">
       <input id="quick" data-ph="quickPh" data-al="quickAl">
@@ -1702,16 +1717,6 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
         <button type="button" class="link" id="clearFilters" data-i="clear"></button>
       </div>
     </div>
-  </details>
-
-  <details class="tidecard" id="stCard">
-    <summary><svg class="fc-ic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg><span data-i="stTitle"></span></summary>
-    <div id="stBox"></div>
-  </details>
-
-  <details class="tidecard" id="gCard">
-    <summary><svg class="fc-ic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4v16h18"/><path d="m6 15 4-5 3 3 6-7"/></svg><span data-i="gTitle"></span></summary>
-    <div id="gBox"></div>
   </details>
 
   <details class="tidecard" id="tideCard" hidden>
@@ -5211,23 +5216,23 @@ $('stCard').addEventListener('toggle',stDraw);
 document.addEventListener('keydown',ev=>{if(ev.target&&ev.target.id==='stSpBtn')popKeys(ev)});
 
 /* ---- My charts: the dive watch data of every session together (depth, time, rest, heart, temperature) and how it goes with the catch ---- */
-Object.assign(T.en,{gTitle:'My charts',gNone:'Charts appear after importing the dives of a few sessions from a watch (FIT, UDDF or Garmin XML file in an entry).',
+Object.assign(T.en,{gDay:'Day',gPrev:'Previous day',gNext:'Next day',gOpenAll:'Open full screen',gDiveN:'{n} dives',gTitle:'My charts',gNone:'Charts appear after importing the dives of a few sessions from a watch (FIT, UDDF or Garmin XML file in an entry).',
   gRec:'Records',gEvo:'Session by session',gCmp:'Fish by watch data',gDist:'All dives',gSp:'Fish',gMetric:'Show',gAvg:'average',gTrend:'Trend',gTrendUp:'up',gTrendDn:'down',gTrendEq:'steady',
   gDeep:'Deepest dive',gLong:'Longest dive',gHangR:'Longest bottom time',gMost:'Most dives in a session',gTot:'Total under water',gHrR:'Lowest heart rate',gColdR:'Coldest bottom',
   gSess:'{n} sessions',gSess1:'1 session',gDives:'{n} dives',gPerSess:'fish per session',gOpen:'Open the charts of this session',gByDepth:'Dives by depth',gByDur:'Dives by duration',gCnt:'dives',
   gM:{max:'Max depth',avg:'Average depth',dur:'Average dive time',hang:'Average bottom time',surf:'Average surface rest',n:'Dives per session',under:'Time under water',ratio:'Rest ÷ dive',hr:'Lowest heart rate',tb:'Bottom temperature',fish:'Fish per session'}});
-Object.assign(T.pt,{gTitle:'Os meus gráficos',gNone:'Os gráficos aparecem depois de importar os mergulhos de algumas sessões de um relógio (ficheiro FIT, UDDF ou Garmin XML numa entrada).',
+Object.assign(T.pt,{gDay:'Dia',gPrev:'Dia anterior',gNext:'Dia seguinte',gOpenAll:'Abrir em ecrã inteiro',gDiveN:'{n} mergulhos',gTitle:'Os meus gráficos',gNone:'Os gráficos aparecem depois de importar os mergulhos de algumas sessões de um relógio (ficheiro FIT, UDDF ou Garmin XML numa entrada).',
   gRec:'Recordes',gEvo:'Sessão a sessão',gCmp:'Peixe e dados do relógio',gDist:'Todos os mergulhos',gSp:'Peixe',gMetric:'Ver',gAvg:'média',gTrend:'Tendência',gTrendUp:'a subir',gTrendDn:'a descer',gTrendEq:'estável',
   gDeep:'Mergulho mais fundo',gLong:'Mergulho mais longo',gHangR:'Mais tempo no fundo',gMost:'Mais mergulhos numa sessão',gTot:'Tempo total debaixo de água',gHrR:'FC mais baixa',gColdR:'Fundo mais frio',
   gSess:'{n} sessões',gSess1:'1 sessão',gDives:'{n} mergulhos',gPerSess:'peixes por sessão',gOpen:'Abrir os gráficos desta sessão',gByDepth:'Mergulhos por profundidade',gByDur:'Mergulhos por duração',gCnt:'mergulhos',
   gM:{max:'Profundidade máx.',avg:'Profundidade média',dur:'Duração média do mergulho',hang:'Tempo médio no fundo',surf:'Descanso médio à superfície',n:'Mergulhos por sessão',under:'Tempo debaixo de água',ratio:'Descanso ÷ mergulho',hr:'FC mínima',tb:'Temperatura no fundo',fish:'Peixes por sessão'}});
-Object.assign(T.es,{gTitle:'Mis gráficos',gNone:'Los gráficos aparecen tras importar las inmersiones de algunas sesiones desde un reloj (archivo FIT, UDDF o Garmin XML en una entrada).',
+Object.assign(T.es,{gDay:'Día',gPrev:'Día anterior',gNext:'Día siguiente',gOpenAll:'Abrir a pantalla completa',gDiveN:'{n} inmersiones',gTitle:'Mis gráficos',gNone:'Los gráficos aparecen tras importar las inmersiones de algunas sesiones desde un reloj (archivo FIT, UDDF o Garmin XML en una entrada).',
   gRec:'Récords',gEvo:'Sesión a sesión',gCmp:'Pesca y datos del reloj',gDist:'Todas las inmersiones',gSp:'Pez',gMetric:'Ver',gAvg:'media',gTrend:'Tendencia',gTrendUp:'al alza',gTrendDn:'a la baja',gTrendEq:'estable',
   gDeep:'Inmersión más profunda',gLong:'Inmersión más larga',gHangR:'Más tiempo en el fondo',gMost:'Más inmersiones en una sesión',gTot:'Tiempo total bajo el agua',gHrR:'FC más baja',gColdR:'Fondo más frío',
   gSess:'{n} sesiones',gSess1:'1 sesión',gDives:'{n} inmersiones',gPerSess:'peces por sesión',gOpen:'Abrir los gráficos de esta sesión',gByDepth:'Inmersiones por profundidad',gByDur:'Inmersiones por duración',gCnt:'inmersiones',
   gM:{max:'Profundidad máx.',avg:'Profundidad media',dur:'Duración media de la inmersión',hang:'Tiempo medio en el fondo',surf:'Descanso medio en superficie',n:'Inmersiones por sesión',under:'Tiempo bajo el agua',ratio:'Descanso ÷ inmersión',hr:'FC mínima',tb:'Temperatura en el fondo',fish:'Peces por sesión'}});
 
-let gMet='max',gCmpBy='max',gSpSel='';try{gMet=localStorage.getItem('sn-g-met')||'max';gCmpBy=localStorage.getItem('sn-g-cmp')||'max';gSpSel=localStorage.getItem('sn-g-sp')||''}catch(_){}
+let gDay='',gSpSel='';
 const gN1=v=>(Math.round(v*10)/10).toString().replace('.',lang==='en'?'.':',');
 const gMS=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const gAvgOf=a=>{const v=a.filter(x=>x!=null&&isFinite(x));return v.length?v.reduce((p,q)=>p+q,0)/v.length:null};
@@ -5239,48 +5244,26 @@ function gSessions(){return entries.filter(e=>e.dlog&&(e.dlog.dv||[]).length&&e.
 /* how each value is shown, and whether bigger is better (for the trend colour) */
 const G_FMT={max:v=>gN1(v)+' m',avg:v=>gN1(v)+' m',dur:v=>gMS(v),hang:v=>gMS(v),surf:v=>gMS(v),n:v=>String(Math.round(v*10)/10).replace('.',','),under:v=>Math.round(v/60)+' min',ratio:v=>gN1(v)+'×',hr:v=>Math.round(v)+' bpm',tb:v=>gN1(v)+' °C',fish:v=>gN1(v)};
 const G_UP={max:1,avg:1,dur:1,hang:1,surf:-1,n:1,under:1,ratio:-1,hr:-1,tb:0,fish:1};
-function gDd(id,label,cur){return '<div class="fishbox st-spb g-dd"><button type="button" id="'+id+'" aria-haspopup="listbox"><span class="g-ddl">'+esc(label)+'</span><span>'+esc(cur)+'</span></button></div>'}
+/* the card: pick any day with watch data and see all of its charts right here; tap a chart to open it big */
 function gDraw(){const box=$('gBox');if(!box||!$('gCard').open)return;const S=gSessions();
   if(!S.length){box.innerHTML='<p class="hint">'+esc(t('gNone'))+'</p>';return}
-  const M=t('gM'),all=S.flatMap(s=>s.D.map(x=>({...x,s}))),best=(f,mn)=>all.filter(x=>f(x)!=null).sort((a,b)=>mn?f(a)-f(b):f(b)-f(a))[0];
-  const tile=(cls,lab,val,x)=>x?'<button type="button" class="ni ni-'+cls+' g-t" data-g-open="'+esc(x.s.e.id)+'" title="'+esc(t('gOpen'))+'"><span class="nl">'+esc(lab)+'</span><b>'+esc(val)+'</b><span class="ns">'+esc(fmtDate(x.s.date))+(x.s.e.spot?' · '+esc(x.s.e.spot):'')+'</span></button>':'';
-  const deep=best(x=>x.max),long=best(x=>x.dur),hang=best(x=>x.hang),hr=best(x=>x.hn,1),cold=best(x=>x.tb,1),most=[...S].sort((a,b)=>b.n-a.n)[0],tot=S.reduce((a,s)=>a+s.under,0);
-  let h='<div class="nowh">'+esc(t('gRec'))+' <small>'+esc(S.length===1?t('gSess1'):t('gSess').replace('{n}',S.length))+' · '+esc(t('gDives').replace('{n}',all.length))+'</small></div><div class="nowg">'
-    +tile('wave',t('gDeep'),gN1(deep.max)+' m',deep)+tile('tide',t('gLong'),gMS(long.dur),long)+(hang?tile('sst',t('gHangR'),gMS(hang.hang),hang):'')
-    +'<button type="button" class="ni ni-sun g-t" data-g-open="'+esc(most.e.id)+'"><span class="nl">'+esc(t('gMost'))+'</span><b>'+most.n+'</b><span class="ns">'+esc(fmtDate(most.date))+(most.e.spot?' · '+esc(most.e.spot):'')+'</span></button>'
-    +'<span class="ni ni-wind"><span class="nl">'+esc(t('gTot'))+'</span><b>'+(tot>=3600?Math.floor(tot/3600)+' h '+String(Math.round(tot%3600/60)).padStart(2,'0'):Math.round(tot/60)+' min')+'</b><span class="ns">'+esc(t('gDives').replace('{n}',all.length))+'</span></span>'
-    +(hr?tile('moon',t('gHrR'),Math.round(hr.hn)+' bpm',hr):'')+(cold?tile('sst',t('gColdR'),gN1(cold.tb)+' °C',cold):'')+'</div>';
-  /* session by session: one metric to choose, bars over time, the average and the trend */
-  const mets=Object.keys(M).filter(k=>S.some(s=>s[k]!=null&&(k!=='fish'||true)));if(!mets.includes(gMet))gMet='max';
-  const V=S.slice(-40),vals=V.map(s=>s[gMet]),ok=vals.filter(v=>v!=null),mx=Math.max(...ok,0)||1,av=gAvgOf(vals);
-  let tr='';if(ok.length>=4){const hh=Math.ceil(ok.length/2),a=gAvgOf(ok.slice(0,hh)),b=gAvgOf(ok.slice(hh)),d=b-a,rel=a?Math.abs(d)/Math.abs(a):0,dir=rel<.05?0:d>0?1:-1,good=G_UP[gMet]*dir;
-    tr='<span class="g-tr '+(dir===0?'eq':good>0?'up':good<0?'dn':'eq')+'">'+esc(t('gTrend'))+': '+(dir>0?'↗ '+t('gTrendUp'):dir<0?'↘ '+t('gTrendDn'):'→ '+t('gTrendEq'))+(dir?' ('+(d>0?'+':'−')+G_FMT[gMet](Math.abs(d))+')':'')+'</span>'}
-  h+='<div class="nowh st-h2">'+esc(t('gEvo'))+'</div><div class="g-row">'+gDd('gMetBtn',t('gMetric'),M[gMet])+(gMet==='fish'?gDd('gSpBtn',t('gSp'),gSpSel?fishLabel(gSpSel):t('stAll')):'')+'</div>'
-    +'<div class="g-chart" role="img" aria-label="'+esc(M[gMet])+'"><div class="g-avg" style="bottom:'+(av!=null?av/mx*100:0)+'%"'+(av==null?' hidden':'')+'><span>'+esc(t('gAvg'))+' '+(av!=null?esc(G_FMT[gMet](av)):'')+'</span></div>'
-    +V.map(s=>{const v=s[gMet];return '<button type="button" class="g-b'+(v==null?' nil':'')+'" data-g-open="'+esc(s.e.id)+'" title="'+esc(fmtDate(s.date)+(s.e.spot?' · '+s.e.spot:'')+' — '+(v!=null?G_FMT[gMet](v):'—'))+'"><i style="height:'+(v!=null?Math.max(2,v/mx*100):0)+'%"></i><em>'+(v!=null?esc(G_FMT[gMet](v)):'')+'</em></button>'}).join('')+'</div>'
-    +'<div class="g-x"><span>'+esc(fmtDate(V[0].date))+'</span>'+tr+'<span>'+esc(fmtDate(V[V.length-1].date))+'</span></div>';
-  /* fish against the watch data: sessions grouped by the chosen value */
-  const CB={max:[[0,10],[10,15],[15,20],[20,25],[25,99]],avg:[[0,8],[8,12],[12,16],[16,20],[20,99]],dur:[[0,45],[45,60],[60,75],[75,90],[90,999]],hang:[[0,15],[15,25],[25,35],[35,50],[50,999]],surf:[[0,90],[90,120],[120,180],[180,240],[240,9999]],n:[[0,15],[15,25],[25,35],[35,50],[50,999]],under:[[0,900],[900,1500],[1500,2100],[2100,2700],[2700,99999]],ratio:[[0,1.5],[1.5,2],[2,2.5],[2.5,3],[3,99]],hr:[[0,50],[50,60],[60,70],[70,80],[80,999]],tb:[[0,14],[14,16],[16,18],[18,20],[20,99]]};
-  const ck=Object.keys(CB).filter(k=>S.some(s=>s[k]!=null));if(!ck.includes(gCmpBy))gCmpBy='max';
-  const bl=(r,k,i,L)=>{const f=G_FMT[k];return i===L-1?'> '+f(r[0]):r[0]===0?'< '+f(r[1]):f(r[0])+' – '+f(r[1])};
-  const rows=CB[gCmpBy].map((r,i,A)=>{const g=S.filter(s=>s[gCmpBy]!=null&&s[gCmpBy]>=r[0]&&s[gCmpBy]<r[1]);return{r,i,L:A.length,n:g.length,f:g.reduce((a,s)=>a+s.fish,0)}}).filter(x=>x.n),rmx=Math.max(...rows.map(x=>x.f/x.n),.01);
-  const bst=rows.filter(x=>x.n>=2&&x.f>0).sort((a,b)=>b.f/b.n-a.f/a.n)[0];
-  h+='<div class="nowh st-h2">'+esc(t('gCmp'))+'</div><div class="g-row">'+gDd('gCmpBtn',t('gMetric'),M[gCmpBy])+gDd('gSpBtn2',t('gSp'),gSpSel?fishLabel(gSpSel):t('stAll'))+'</div><section class="st-d">'
-    +rows.map(x=>{const r=x.f/x.n,isB=bst===x;return '<div class="st-r'+(isB?' best':'')+'"><span class="st-k">'+esc(bl(x.r,gCmpBy,x.i,x.L))+'</span><span class="st-bar"><i style="width:'+Math.round(r/rmx*100)+'%"></i></span><span class="st-v"><b>'+gN1(r)+'</b> <small>'+esc(t('gPerSess'))+' · '+esc(x.n===1?t('gSess1'):t('gSess').replace('{n}',x.n))+'</small>'+(isB?' <em>'+esc(t('stBest'))+'</em>':'')+'</span></div>'}).join('')+'</section>';
-  /* all the dives: how deep and how long */
-  const hist=(f,bands,lab,fm)=>{const c=bands.map(([a,b])=>all.filter(x=>f(x)!=null&&f(x)>=a&&f(x)<b).length),m=Math.max(...c,1),L=bands.length;
-    return '<section class="st-d"><h4>'+esc(lab)+'</h4>'+bands.map((bd,i)=>c[i]?'<div class="st-r"><span class="st-k">'+esc(i===L-1?'> '+fm(bd[0]):fm(bd[0])+' – '+fm(bd[1]))+'</span><span class="st-bar"><i style="width:'+Math.round(c[i]/m*100)+'%"></i></span><span class="st-v"><b>'+c[i]+'</b> <small>'+esc(c[i]===1?t('stDive1').replace(/^1\s*/,''):t('gCnt'))+'</small></span></div>':'').join('')+'</section>'};
-  h+='<div class="nowh st-h2">'+esc(t('gDist'))+'</div>'+hist(x=>x.max,[[0,5],[5,10],[10,15],[15,20],[20,25],[25,30],[30,99]],t('gByDepth'),v=>v+' m')+hist(x=>x.dur,[[0,30],[30,45],[45,60],[60,75],[75,90],[90,120],[120,999]],t('gByDur'),gMS);
-  box.innerHTML=h}
+  let k=S.findIndex(s=>s.e.id===gDay);if(k<0){k=S.length-1;gDay=S[k].e.id}const s=S[k];
+  const lab=x=>fmtDate(x.date)+(x.e.spot?' · '+x.e.spot:'');
+  let h='<div class="g-row g-dayrow"><button type="button" class="g-nav" id="gPrev" aria-label="'+esc(t('gPrev'))+'" title="'+esc(t('gPrev'))+'"'+(k?'':' disabled')+'>‹</button>'
+    +'<div class="fishbox st-spb g-dd"><button type="button" id="gDayBtn" aria-haspopup="listbox"><span class="g-ddl">'+esc(t('gDay'))+'</span><span>'+esc(lab(s))+'</span><small>'+esc(t('gDiveN').replace('{n}',s.n))+' · '+gN1(s.max)+' m</small></button></div>'
+    +'<button type="button" class="g-nav" id="gNext" aria-label="'+esc(t('gNext'))+'" title="'+esc(t('gNext'))+'"'+(k<S.length-1?'':' disabled')+'>›</button>'
+    +'<button type="button" class="link g-full" data-g-open="'+esc(s.e.id)+'">'+esc(t('gOpenAll'))+'</button></div>';
+  let body='';try{body=dlogHtml(s.e.dlog)}catch(err){body='<p class="hint">'+esc(String(err))+'</p>'}
+  box.innerHTML=h+'<div class="g-day">'+body+'</div>'}
 function gPick(btn,items,onPick){const box=btn.parentNode;if(pop&&pop.box===box){closePop();return}openPop(box,items,v=>{onPick(v);closePop();gDraw();const nb=$(btn.id);if(nb)nb.focus()})}
-document.addEventListener('click',ev=>{const tg=ev.target.closest&&ev.target.closest('#gMetBtn,#gCmpBtn,#gSpBtn,#gSpBtn2,[data-g-open]');if(!tg)return;
-  if(tg.dataset.gOpen){const e=entries.find(x=>x.id===tg.dataset.gOpen);if(e)dlogOpen(e);return}
-  const M=t('gM'),S=gSessions();
-  if(tg.id==='gMetBtn')gPick(tg,Object.keys(M).filter(k=>S.some(s=>s[k]!=null)).map(k=>({v:k,label:M[k],noIcon:true})),v=>{gMet=v;try{localStorage.setItem('sn-g-met',v)}catch(_){}});
-  else if(tg.id==='gCmpBtn')gPick(tg,['max','avg','dur','hang','surf','n','under','ratio','hr','tb'].filter(k=>S.some(s=>s[k]!=null)).map(k=>({v:k,label:M[k],noIcon:true})),v=>{gCmpBy=v;try{localStorage.setItem('sn-g-cmp',v)}catch(_){}});
-  else{const spc=new Map();S.forEach(s=>(s.e.catches||[]).forEach(c=>{if(c&&c.name&&!c.lost)spc.set(c.name,(spc.get(c.name)||0)+(c.count||1))}));
-    gPick(tg,[{v:'',label:t('stAll'),noIcon:true}].concat([...spc].sort((a,b)=>b[1]-a[1]).map(([n,k])=>({v:n,label:fishLabel(n),lat:latinOf(n),n:String(k),icon:fishSvg(fishLabel(n))}))),v=>{gSpSel=v;try{localStorage.setItem('sn-g-sp',v)}catch(_){}})}});
-document.addEventListener('keydown',ev=>{if(ev.target&&/^g(Met|Cmp|Sp)Btn2?$/.test(ev.target.id||''))popKeys(ev)});
+document.addEventListener('click',ev=>{const tg=ev.target.closest&&ev.target.closest('#gDayBtn,#gPrev,#gNext,[data-g-open],#gBox figure.dlc[data-k]');if(!tg)return;
+  const S=gSessions(),k=S.findIndex(s=>s.e.id===gDay);
+  if(tg.id==='gPrev'||tg.id==='gNext'){const n=k+(tg.id==='gNext'?1:-1);if(S[n]){gDay=S[n].e.id;gDraw();const b=$(tg.id);if(b&&!b.disabled)b.focus()}return}
+  if(tg.id==='gDayBtn'){gPick(tg,[...S].reverse().map(s=>({v:s.e.id,label:fmtDate(s.date)+(s.e.spot?' · '+s.e.spot:''),n:t('gDiveN').replace('{n}',s.n)+' · '+gN1(s.max)+' m',noIcon:true})),v=>{gDay=v});return}
+  const e=entries.find(x=>x.id===(tg.dataset.gOpen||gDay));if(!e)return;dlogOpen(e);
+  if(tg.dataset.k!=null){try{dlShow(+tg.dataset.k)}catch(_){}}});
+document.addEventListener('keydown',ev=>{if(ev.target&&ev.target.id==='gDayBtn')popKeys(ev);
+  const f=ev.target&&ev.target.closest&&ev.target.closest('#gBox figure.dlc[data-k]');if(f&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();f.click()}});
 $('gCard').addEventListener('toggle',gDraw);
 
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
