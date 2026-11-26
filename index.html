@@ -5796,7 +5796,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795700355';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795700450';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
@@ -6131,7 +6131,7 @@ Object.assign(T.en,{soPics:"Show friends' photos",soPicsH:"Off: you still see wh
   frIntro:'Your followers only see the catches you share, with the fields you choose. They never see coordinates, spot names, notes or times.',frName:'Display name',frOn:'Share my catches',frShow:'Show',frO_photo:'Photos',frO_weight:'Weight',frO_len:'Length',frO_depth:'Depth',frO_where:'Caught in',frO_region:'Area (e.g. Ericeira, Cascais)',frO_dateExact:'Exact date (otherwise month and year only)',frAccept:'Accept',frDecline:'Decline',frSure:'Are you sure?',frNoName:'No name',frErr:"Couldn't do that. Try again.",noShareL:"Don't share this entry with friends"});
 
 /* ===== Share an entry as an image (Instagram story or post) ===== */
-const SC_OPTS=[['w','scWeight'],['l','scLen'],['tot','scTot'],['dt','scDate'],['md','maxU'],['dv','scDives'],['ap','scApnea'],['gn','scGun'],['wt','°C'],['cu','scCur']];let scSkip=new Set();
+const SC_OPTS=[['w','scWeight'],['l','scLen'],['tot','scTot'],['dt','scDate'],['md','maxU'],['ap','scApnea'],['gn','scGun']];let scSkip=new Set();
 const SC=Object.assign({fmt:'story',loc:'zone',photo:true,o:{w:1,l:1,dt:1,md:1,vi:1,wt:1}},(()=>{try{const v=JSON.parse(localStorage.getItem('sn-sc')||'{}');return v&&v.o?v:{}}catch(e){return{}}})());
 let scE=null,scImgs=[],scPi=0,scFish=new Map(),scRaf=0,scLogo=null,scNear=null,scNearSel=null,scCrop=new Map();
 function scSave(){try{localStorage.setItem('sn-sc',JSON.stringify({fmt:SC.fmt,loc:SC.loc,photo:SC.photo,o:SC.o,bg:SC.bg||''}))}catch(e){}}
@@ -6182,8 +6182,8 @@ async function scNearby(e){let c=scCoords(e);if(!c&&e.spot)c=await scGeo(e.spot)
 function scWith(){return String($('scWithIn').value||'').split(/[\s,;]+/).map(s=>s.replace(/^@+/,'').toLowerCase().replace(/[^a-z0-9._]/g,'')).filter(Boolean).map(s=>'@'+s)}
 function scMeta(e){const o=SC.o,a=[],b=[];
   if(o.dt)a.push({t:e.monthOnly?new Date(e.date+'T12:00').toLocaleDateString(locale(),{month:'long',year:'numeric'}):fmtDate(e.date)});const L=scLocText(e);if(L)a.push({t:L});
-  const md=entryMaxDepth(e);if(o.md&&md!=null)b.push({i:'depth',t:t('maxU')+' '+fmt(md)+' m'});if(o.dv&&e.dives!=null)b.push({t:fmt(e.dives)+' '+t('divesU')});
-  if(o.ap&&e.apnea!=null)b.push({i:'apnea',t:apneaF(e.apnea)});if(o.wt&&e.temp!=null)b.push({t:fmt(e.temp)+' °C'});if(o.cu&&e.current)b.push({t:t('cur_'+e.current)});
+  const md=entryMaxDepth(e);if(o.md&&md!=null)b.push({i:'depth',t:t('maxU')+' '+fmt(md)+' m'});
+  if(o.ap&&e.apnea!=null)b.push({i:'apnea',t:apneaF(e.apnea)});
   /* the share image shows only the gun model: what comes before the first comma ("Salvimar Wild Pro 75 mm, bands 48 cm, …" → "Salvimar Wild Pro 75 mm") */
   if(o.gn&&(e.guns||[]).length){const gm=[...new Set(e.guns.map(g=>String(g||'').split(/\s*[,;(]\s*|\s+[-–—]\s+/)[0].trim()).filter(Boolean))];if(gm.length)b.push({i:'gun',t:gm.slice(0,2).join(' / ')+(gm.length>2?' +'+(gm.length-2):'')})}
   return [a,b]}
