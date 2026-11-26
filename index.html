@@ -1657,6 +1657,8 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bs-back{position:absolute;z-index:2;top:calc(6px + env(safe-area-inset-top,0px));left:max(4px,env(safe-area-inset-left,0px));width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
 .bs-t{position:absolute;z-index:1;top:0;left:0;right:0;padding:calc(6px + env(safe-area-inset-top,0px)) 0 6px 48px;background:var(--bg);margin:0;line-height:40px;font-size:17px;color:var(--ink)}
 html.bs-on,html.bs-on body{overflow:hidden}
+@keyframes msIn{from{transform:translateX(100vw)}to{transform:none}}dialog.mslide[open]{animation:msIn .26s cubic-bezier(.2,.8,.2,1)}dialog.mslide.mout{transform:translateX(100vw);transition:transform .22s ease-in}dialog.mslide::backdrop{background:rgba(4,20,26,.35)}
+@media (prefers-reduced-motion:reduce){dialog.mslide[open]{animation:none}dialog.mslide.mout{transition:none}}
 @keyframes swL{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}@keyframes swR{from{transform:translateX(-28px);opacity:.4}to{transform:none;opacity:1}}
 .bsheet.sw-l .bs-body{animation:swL .2s ease-out}.bsheet.sw-r .bs-body{animation:swR .2s ease-out}
 @media (prefers-reduced-motion:reduce){.bsheet .bs-body{animation:none!important}}
@@ -5462,7 +5464,19 @@ if(T.fr)Object.assign(T.fr,{bnTools:'Outils',bnLinks:'Liens utiles',bnHome:'Jour
     if(Date.now()-st0>700||Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.8)return;
     const o=order(),i=o.indexOf(sh.hidden?'home':cur),j=i+(dx<0?1:-1);if(i<0||j<0||j>=o.length)return;
     o[j]==='home'?close():open(o[j]);sh.classList.remove('sw-l','sw-r');void sh.offsetWidth;if(!sh.hidden)sh.classList.add(dx<0?'sw-l':'sw-r')},{passive:true});
+  /* janelas abertas a partir de «Mais» entram da direita e saem para a direita */
+  const pc=HTMLDialogElement.prototype.close;
+  const slide=d=>{if(d._ms)return;d._ms=1;
+    d.close=function(v){if(!this.classList.contains('mslide')||!this.open)return pc.call(this,v);this.classList.add('mout');setTimeout(()=>{this.classList.remove('mout','mslide');pc.call(this,v)},220)};
+    d.addEventListener('cancel',e=>{if(d.classList.contains('mslide')){e.preventDefault();d.close()}})};
+  new MutationObserver(ms=>ms.forEach(m=>{const d=m.target;if(d.tagName!=='DIALOG'||!d.open||d.classList.contains('so-page'))return;
+    if(mq.matches&&!sh.hidden&&cur==='more'){slide(d);d.classList.remove('mout');d.classList.add('mslide')}})).observe(document.body,{subtree:true,attributes:true,attributeFilter:['open']});
   act('home')})();
+/* nome do perfil: letra que encolhe até caber */
+(function(){const fit=()=>{const i=$('frName');if(!i||!i.offsetWidth)return;let s=18;i.style.fontSize=s+'px';while(i.scrollWidth>i.clientWidth+1&&s>12){s-=1;i.style.fontSize=s+'px'}};
+  document.addEventListener('input',e=>{if(e.target&&e.target.id==='frName')fit()});
+  new MutationObserver(()=>setTimeout(fit,30)).observe(document.body,{subtree:true,attributes:true,attributeFilter:['open']});
+  addEventListener('resize',fit);setInterval(()=>{const st=$('settings');if(st&&st.open)fit()},1500)})();
 
 /* Amigos no painel do telemóvel: a lista toda, 10 de cada vez */
 const soFeed1=soFeed;let soFA={off:0,more:false,busy:false};
@@ -6045,7 +6059,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795727172';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795727347';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
