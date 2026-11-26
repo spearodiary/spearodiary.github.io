@@ -1571,7 +1571,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 #stCard{padding:3px 12px}#stCard[open]{padding-bottom:12px}#stCard:not([open]){background:transparent;border-color:transparent;padding:0 2px}
 #stCard>summary{min-height:30px;color:var(--sea);font-weight:600}#stCard:not([open])>summary{min-height:28px}#stCard>summary .fc-ic{flex:none}
 #stBox .nowh{margin:4px 0 7px}#stBox .st-h2{margin-top:6px}
-.st-sp{display:flex;flex-wrap:wrap;gap:6px}.st-sp .fwc{background:transparent;border-color:var(--line);color:var(--ink)}.st-sp .fwc small{color:var(--muted);font-size:11.5px}
+.st-spb{max-width:340px}.st-spb>button small{padding-left:8px;color:var(--muted)}.st-spb>button>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.st-spb>button::after{content:'';flex:none;width:7px;height:7px;margin:0 4px 0 10px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-2px) rotate(45deg)}.st-spb .fishpop{max-height:min(60vh,420px)}.st-sp .fwc{background:transparent;border-color:var(--line);color:var(--ink)}.st-sp .fwc small{color:var(--muted);font-size:11.5px}
 .st-sp .fwc.on{background:rgba(47,191,113,.18);border-color:rgba(47,191,113,.6);font-weight:600}
 .st-days{display:grid;gap:6px}
 .st-day{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:4px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
@@ -5157,7 +5157,8 @@ function stDraw(){const box=$('stBox');if(!box||!$('stCard').open)return;
   const spc=new Map();dives.forEach(e=>(e.catches||[]).forEach(c=>{if(c&&c.name&&!c.lost)spc.set(c.name,(spc.get(c.name)||0)+(c.count||1))}));
   if(stSp&&!spc.has(stSp))stSp='';
   const sps=[...spc].sort((a,b)=>b[1]-a[1]);
-  let h='<div class="st-sp" role="group" aria-label="'+esc(t('fish'))+'"><button type="button" class="fwc'+(stSp?'':' on')+'" data-st-sp="" aria-pressed="'+!stSp+'">'+esc(t('stAll'))+'</button>'+sps.map(([n,k])=>'<button type="button" class="fwc'+(stSp===n?' on':'')+'" data-st-sp="'+esc(n)+'" aria-pressed="'+(stSp===n)+'">'+esc(fishLabel(n))+' <small>'+k+'</small></button>').join('')+'</div>';
+  const spLab=stSp?fishLabel(stSp):t('stAll');
+  let h='<div class="fishbox st-spb"><button type="button" id="stSpBtn" aria-haspopup="listbox" aria-label="'+esc(t('fish'))+'">'+(stSp?fishSvg(spLab):'')+'<span>'+esc(spLab)+'</span>'+(stSp?'<small>'+spc.get(stSp)+'</small>':'')+'</button></div>';
   const fishOf=e=>stFish(e,stSp),tot=dives.reduce((s,e)=>s+fishOf(e),0);
   if(!tot){box.innerHTML=h+'<p class="hint">'+esc(t('stNoFish'))+'</p>'+stFillHtml();return}
   const dims=stDims().map(([hd,cls,fn,keys,lab])=>{const agg=new Map(keys.map(k=>[k,{n:0,f:0}]));dives.forEach(e=>{const k=fn(e);if(k==null||!agg.has(k))return;const a=agg.get(k);a.n++;a.f+=fishOf(e)});
@@ -5176,7 +5177,10 @@ function stDraw(){const box=$('stBox');if(!box||!$('stCard').open)return;
   box.innerHTML=h+stFillHtml()}
 let stByOpen=true;try{stByOpen=localStorage.getItem('sn-st-by')!=='0'}catch(_){}
 document.addEventListener('toggle',ev=>{if(ev.target&&ev.target.classList&&ev.target.classList.contains('st-by')){stByOpen=ev.target.open;try{localStorage.setItem('sn-st-by',stByOpen?'1':'0')}catch(_){}}},true);
-document.addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('[data-st-sp]');if(b){stSp=b.dataset.stSp;try{localStorage.setItem('sn-st-sp',stSp)}catch(_){}stDraw();return}
+document.addEventListener('click',ev=>{const sb=ev.target.closest&&ev.target.closest('#stSpBtn');if(sb){const box=sb.parentNode;if(pop&&pop.box===box){closePop();return}
+    const spc=new Map();entries.filter(e=>kindOf(e)==='dive').forEach(e=>(e.catches||[]).forEach(c=>{if(c&&c.name&&!c.lost)spc.set(c.name,(spc.get(c.name)||0)+(c.count||1))}));
+    const items=[{v:'',label:t('stAll'),noIcon:true}].concat([...spc].sort((a,b)=>b[1]-a[1]).map(([n,k])=>({v:n,label:fishLabel(n),lat:latinOf(n),n:String(k),icon:fishSvg(fishLabel(n))})));
+    openPop(box,items,v=>{stSp=v;try{localStorage.setItem('sn-st-sp',stSp)}catch(_){}closePop();stDraw();const nb=$('stSpBtn');if(nb)nb.focus()});return}
   const d=ev.target.closest&&ev.target.closest('[data-st-edit]');if(d){const e=entries.find(x=>x.id===d.dataset.stEdit);if(e)openForm(e,e.id)}});
 function stFillHtml(){const n=stNeedFill().length;return n?'<div class="st-fill"><button type="button" class="btn sm" id="stFill">'+esc(t('stFill').replace('{n}',n))+'</button><span class="hint">'+esc(t('stFillHint'))+'</span></div>':''}
 let stBusy=false;
@@ -5187,6 +5191,7 @@ document.addEventListener('click',async ev=>{if(!(ev.target.closest&&ev.target.c
     if(x){const cur=entries.find(z=>z.id===e.id);if(cur&&!cur.wx){const ok=await saveEntry(e.id,{...wxPatch(cur,x),wx:x});if(ok)done++}}}
   stBusy=false;toast(t('stFilled').replace('{n}',done));stDraw()});
 $('stCard').addEventListener('toggle',stDraw);
+document.addEventListener('keydown',ev=>{if(ev.target&&ev.target.id==='stSpBtn')popKeys(ev)});
 
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
 const isSpecies=lat=>/^[A-Z][a-z]+ [a-z]+$/.test(lat||'')&&!/ spp$/.test(lat);
@@ -5718,7 +5723,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795693536';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795694979';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
