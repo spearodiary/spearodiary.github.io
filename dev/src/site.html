@@ -3331,7 +3331,7 @@ function drawForecast(){
   try{fcStrip()}catch(e){}
   const card=$('fcCard');if(!card)return;window.__fcHid=!card.open;fcDrawn={d:fcData,l:lang,t:Date.now()};
   const box=$('fcBox'),nowEl=$('fcNow'),nowMs=Date.now(),p=lisbonParts(nowMs),t0=nowMs-((p.hour*60+p.minute)*60+p.second)*1000-nowMs%1000;
-  const lastW=fcData&&fcData.w&&fcData.w.time?fcData.w.time[fcData.w.time.length-1]*1000:t0+3*864e5,DAYS=Math.max(3,Math.min(14,Math.ceil((lastW-t0)/864e5))),ST=fcStep(),HALF=ST*18e5,NH=DAYS*24/ST,CW=32,W=NH*CW,cx=i=>i*CW+CW/2,XT=t=>(t-t0)/(36e5*ST)*CW+CW/2;
+  const lastW=fcData&&fcData.w&&fcData.w.time?fcData.w.time[fcData.w.time.length-1]*1000:t0+3*864e5,DMAX=Math.max(3,Math.min(14,Math.ceil((lastW-t0)/864e5))),DAYS=Math.min(DMAX,Math.max((seaFirst?0:window.__fcDays)||(fcStep()>1?5:2),...[fcGoT,fcKeepT].filter(v=>v!=null).map(v=>Math.ceil((v-t0)/864e5)+1))),ST=fcStep(),HALF=ST*18e5,NH=DAYS*24/ST,CW=32,W=NH*CW,cx=i=>i*CW+CW/2,XT=t=>(t-t0)/(36e5*ST)*CW+CW/2;
   const R=[['day',22],['hour',20],['win',20],['sun',22],['sky',34],['air',20],['g0',10],['wind',22],['windA',48],['g1',22],['wave',16],['waveA',48],['gc',10],['clar',30],['g2',10],['sst',16],['g3',8],['tide',60]];
   const sp0=fcSpot||FC_DEF,tst=tideStation(sp0.lat,sp0.lon);let farT=false;
   if(tst.d<=150)LT=tideLocal(tst);
@@ -3375,7 +3375,7 @@ function drawForecast(){
   mv.forEach((m,i)=>{const y=Y.waveA[0];if(m.wave_height!=null)g+='<rect x="'+(i*CW+2)+'" y="'+(y+2)+'" width="'+(CW-4)+'" height="'+(Y.waveA[1]-4)+'" rx="5" class="cvb" style="fill:'+fcsCol(fcsSc('v'),m.wave_height)+'" fill-opacity=".55"/>';if(m.wave_direction!=null)g+=arrow(cx(i),y+10,m.wave_direction,'fa2',1);if(m.wave_height!=null)g+='<text x="'+cx(i)+'" y="'+(y+29)+'" text-anchor="middle" class="sv">'+f1(m.wave_height)+'</text><text x="'+cx(i)+'" y="'+(y+42)+'" text-anchor="middle" class="ss">'+f0(m.wave_period)+'s</text>'});
   /* fishing windows always come from every hour, whatever step the table shows, so 'hora a hora' and 'de 3 em 3 horas' agree */
   const hrs1=ST>1?[...Array(NH*ST)].map((_,i)=>t0+i*36e5):hrs;
-  const FWIN=ST>1?fwWindows(hrs1,hrs1.map(t=>near(wm,t)||{}),hrs1.map(t=>near(mm,t)||{}),1,sp0):fwWindows(hrs,wv,mv,ST,sp0);
+  const hrsF=[...Array(DMAX*24)].map((_,i)=>t0+i*36e5);const FWIN=fwWindows(hrsF,hrsF.map(t=>near(wm,t)||{}),hrsF.map(t=>near(mm,t)||{}),1,sp0);
   FWIN.forEach(x=>{const xa=XT(x.s)+1,xb=XT(x.e)-1,y=Y.win[0];g+='<rect x="'+xa+'" y="'+(y+3)+'" width="'+(xb-xa)+'" height="'+(Y.win[1]-6)+'" rx="6" class="fwin"/>';if(xb-xa>=60)g+='<text x="'+((xa+xb)/2)+'" y="'+(y+14)+'" text-anchor="middle" class="fwint">'+hhmm(x.s)+'–'+hhmm(x.e)+'</text>'});
   const cl=hrs.map(t=>clarity(t,wm,mm,near,farT));
   cl.forEach((c,i)=>{if(!c)return;const y=Y.clar[0];g+='<rect x="'+(i*CW+1)+'" y="'+(y+5)+'" width="'+(CW-2)+'" height="'+(Y.clar[1]-10)+'" rx="3" class="vc vc-'+c.k+'"/>';const prev=cl[i-1];if((!prev||prev.k!==c.k||lisbonParts(hrs[i]).hour%3===0)&&cl._l!==i-1){cl._l=i;g+='<text x="'+cx(i)+'" y="'+(y+Y.clar[1]/2+4)+'" text-anchor="middle" class="vct">'+esc(t('vc_'+c.k))+'</text>'}});
@@ -3399,7 +3399,7 @@ function drawForecast(){
   const left='<div class="sea-l" style="height:'+HT+'px;zoom:'+FK+'">'+R.map(([k,h],ri)=>'<div style="height:'+h+'px" class="sl-'+k+(k==='g1'?' uw0':ri>gi1&&gi1>=0?' uw':'')+'"'+(k==='tide'?' title="'+esc(LT.name||'')+'"':'')+'>'+(k==='day'?'<button type="button" class="sea-tg" aria-expanded="'+!nol+'" title="'+esc(t(nol?'fcColShow':'fcColHide'))+'" aria-label="'+esc(t(nol?'fcColShow':'fcColHide'))+'">'+(nol?'›':'‹')+'</button>':'')+(STK[k]?STK[k].map((x,j)=>'<span class="stk stk'+j+'">'+esc(x)+'</span>').join(''):L[k]?(k==='sun'?'<span><span class="lsun">'+esc(t('sSun'))+'</span> · '+esc(t('nMoon'))+'</span>':esc(L[k])):'')+(k==='wind'?'<button type="button" class="wunit" aria-haspopup="listbox" aria-label="'+esc(t('fcWindT'))+'">'+esc(WU[wUnit].l)+'</button>':'')+'</div>').join('')+'</div>';
   const keep=seaFirst?null:(box.querySelector('.sea-r')||{}).scrollLeft;
   box.innerHTML='<div class="sea'+(nol?' nol':'')+'">'+left+'<div class="sea-r"><svg width="'+(W*FK)+'" height="'+(HT*FK)+'" viewBox="0 0 '+W+' '+HT+'">'+g+'</svg></div></div>';
-  const r=box.querySelector('.sea-r');r.scrollLeft=keep!=null?keep:Math.max(0,(nx-CW*2)*FK);seaFirst=false;fcXT=t=>XT(t)*FK;fcTX=px=>t0+((px/FK)-CW/2)/CW*36e5*ST;
+  const r=box.querySelector('.sea-r');r.scrollLeft=keep!=null?keep:Math.max(0,(nx-CW*2)*FK);seaFirst=false;window.__fcT0=t0;window.__fcDays=DAYS;window.__fcDaysR=DAYS;if(DAYS<DMAX){let ext=false;r.addEventListener('scroll',()=>{if(ext||r.scrollLeft+r.clientWidth<r.scrollWidth-r.clientWidth*.8)return;ext=true;window.__fcDays=Math.min(DMAX,DAYS+2);requestAnimationFrame(()=>drawForecast())},{passive:true})}fcXT=t=>XT(t)*FK;fcTX=px=>t0+((px/FK)-CW/2)/CW*36e5*ST;
   /* switching hour-by-hour <-> every 3 hours keeps the same moment at the left edge, so a chosen day or window stays in view */
   if(fcKeepT!=null){r.scrollLeft=Math.max(0,XT(fcKeepT)*FK);fcKeepT=null}
   /* a day tapped on the folded week strip opens the table on that day, from the early morning */
@@ -5627,6 +5627,10 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   setInterval(clk,1000);
   const split=()=>{const kids=[...now.childNodes].filter(n=>!(n.nodeType===1&&n.classList.contains('nowd')));win.textContent='';kids.forEach(n=>win.appendChild(n))};
   const d0=drawForecast;drawForecast=function(){const r=d0.apply(this,arguments);try{split();clk()}catch(_){}return r};
+  /* a previsão desenha só alguns dias: antes de saltar para um dia mais à frente, desenhar até lá */
+  const need=t=>{const T0=window.__fcT0;if(!T0||t==null||!isFinite(t))return;const d=Math.ceil((t-T0)/864e5)+1;if(d>(window.__fcDaysR||0)){window.__fcDays=d;try{drawForecast()}catch(_){}}};
+  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.fwc[data-t]');if(b)need(+b.dataset.t)},true);
+  st.addEventListener('click',e=>{const bar=st.querySelector('.fcs-b'),T0=+st.dataset.t0,nd=+st.dataset.nd;if(!bar||!T0||!nd)return;const r=bar.getBoundingClientRect(),f=Math.min(.999,Math.max(0,(e.clientX-r.left)/r.width)),d=Math.floor(f*nd);if(d>0&&card.open)need(T0+d*864e5+18*36e5)},true);
   /* mini gráfico: abre e fecha a previsão; tocar num dia só abre (e mostra esse dia) */
   let byStrip=false;
   st.addEventListener('click',e=>{if(w.closest('#bsBody'))return;if(card.open&&!e.target.closest('.fcs-d')){e.stopImmediatePropagation();card.open=false;return}if(!card.open)byStrip=true},true);
