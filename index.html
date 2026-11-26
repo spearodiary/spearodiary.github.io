@@ -1556,6 +1556,19 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .fc-res .fc-plus{width:34px;height:34px;padding:0;box-sizing:border-box;display:grid;place-items:center;flex:none;border-radius:8px}
 .fc-find .fc-ib{width:34px;height:34px;padding:0;box-sizing:border-box;display:grid;place-items:center;flex:none;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}.fc-find .fc-ib:hover{background:var(--sea-soft)}
 header .tagline{margin:2px auto 0;max-width:34em;text-align:center;color:var(--muted);font-size:clamp(13px,3.4vw,15px);line-height:1.35;text-wrap:balance}
+.ex-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px 5px 10px;border-radius:999px;font-size:13.5px;font-weight:600;margin-left:10px}.ex-btn svg{width:18px;height:18px}
+.capture .preview #exBtn{margin-right:auto}@media (max-width:560px){.capture .preview #exBtn{grid-area:more;justify-self:end;margin:0}}
+#entryForm .check.gl{margin-top:-4px;font-size:13px;color:var(--muted)}
+.wxbox{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--sea-soft);display:grid;gap:4px;font-size:13.5px}
+.wxbox .wx-h{display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.wxbox .wx-l{display:flex;flex-wrap:wrap;gap:4px 14px}.wxbox .wx-l b{font-weight:600;color:var(--muted);margin-right:3px}
+#stBox{display:grid;gap:14px;padding:6px 0 4px}.st-unit{margin:0}
+.st-d h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.st-r{display:grid;grid-template-columns:minmax(110px,26%) 1fr 250px;gap:8px;align-items:center;font-size:13.5px;padding:2px 0}
+.st-bar{height:8px;border-radius:4px;background:var(--sea-soft);overflow:hidden}.st-bar i{display:block;height:100%;background:var(--sea);border-radius:4px}
+.st-r.best .st-bar i{background:var(--accent)}.st-r.best .st-k{font-weight:700}.st-v small{color:var(--muted)}.st-v em{color:var(--accent);font-style:normal;font-weight:700;font-size:12px}
+.st-fill{display:grid;gap:4px;justify-items:start}
+@media (max-width:560px){.st-r{grid-template-columns:1fr 1.2fr;row-gap:2px}.st-v{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -1623,7 +1636,7 @@ header .tagline{margin:2px auto 0;max-width:34em;text-align:center;color:var(--m
     </div>
     <div class="preview">
       <div class="chips" id="preview"></div>
-      <button type="button" class="link" id="quickMore" data-i="details"></button>
+      <button type="button" class="link" id="quickMore" data-i="details"></button><button type="button" class="ex-btn" id="exBtn" data-t="exBtn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2.5h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.5"/></svg><span data-i="exBtnS"></span></button><input id="exInput" class="vh-file" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple tabindex="-1" aria-hidden="true">
     </div>
   </form>
 
@@ -1662,6 +1675,11 @@ header .tagline{margin:2px auto 0;max-width:34em;text-align:center;color:var(--m
     </div>
   </details>
 
+  <details class="tidecard" id="stCard">
+    <summary><svg class="fc-ic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg><span data-i="stTitle"></span></summary>
+    <div id="stBox"></div>
+  </details>
+
   <details class="tidecard" id="tideCard" hidden>
     <summary><span data-i="tideTitle"></span></summary>
     <div class="tide-now" id="tideNow"></div>
@@ -1691,6 +1709,7 @@ header .tagline{margin:2px auto 0;max-width:34em;text-align:center;color:var(--m
       <input id="eGps" data-ph="coordsPh">
       <span class="hint" id="gpsHint"></span>
     </label>
+    <label class="check gl" id="eGpsLocL" data-for="dive spot" hidden><input type="checkbox" id="eGpsLoc"> <span data-i="gpsLocL"></span></label>
     <div data-for="dive" class="lbl">
       <div class="catch-head"><span data-i="fish"></span><span class="hsub" data-i="variety"></span><span data-i="qty"></span><span class="hm" style="white-space:nowrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>m</span><span class="hm">L, cm</span><span data-i="kg"></span><span></span></div>
       <div id="eCatches" style="display:grid;gap:6px"></div>
@@ -1701,6 +1720,7 @@ header .tagline{margin:2px auto 0;max-width:34em;text-align:center;color:var(--m
       <label class="fx" for="eTideIn"><span data-i="tideIn"></span><select id="eTideIn"></select></label>
       <label class="fx" for="eTideOut"><span data-i="tideOut"></span><select id="eTideOut"></select></label>
       <span class="hint fx" id="tideHint" hidden data-i="tideAuto" style="grid-column:1/-1"></span>
+      <div class="wxbox fx" id="wxBox" hidden style="grid-column:1/-1"></div>
     </div>
     <div class="cf-quick" id="cfQuick" hidden></div>
     <div data-for="dive" class="lbl"><span data-i="moodQ"></span><div class="moods" id="eMood" role="group" data-al="moodQ"></div></div>
@@ -2597,7 +2617,7 @@ function dbStore(db,uid){
     backup(id,d,del){const n=Date.now();return hist.doc(id+'-'+n).set({entryId:id,savedAt:n,deleted:!!del,data:d})},
     async history(){const q=await hist.orderBy('savedAt','desc').limit(1000).get();return q.docs.map(x=>x.data())}};
 }
-function onData(list,meta){setTimeout(()=>{try{shSoon()}catch(e){}},0);checkDoc=list.find(e=>e.id==='checklist')||null;entries=list.filter(e=>e.id!=='checklist'&&e.type!=='checklist');if($('checklist').open&&!ckEditing&&!ckAddTo&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('#checklist input')))ckDraw();if(!meta||!meta.fromCache){loaded=true;clearTimeout(loadTimer)}render(true);if(loaded)restoreDraft();try{fcFillSelect()}catch(e){}}
+function onData(list,meta){setTimeout(()=>{try{stDraw()}catch(e){}},0);setTimeout(()=>{try{shSoon()}catch(e){}},0);checkDoc=list.find(e=>e.id==='checklist')||null;entries=list.filter(e=>e.id!=='checklist'&&e.type!=='checklist');if($('checklist').open&&!ckEditing&&!ckAddTo&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('#checklist input')))ckDraw();if(!meta||!meta.fromCache){loaded=true;clearTimeout(loadTimer)}render(true);if(loaded)restoreDraft();try{fcFillSelect()}catch(e){}}
 function showMode(k){modeKey=k;$('modeNotice').textContent=k?t(k):'';$('modeNotice').hidden=!k}
 /* Supabase: accounts, entries, history and photos. Every row belongs to one user (row level security). */
 const CFG=window.NOTEBOOK_CONFIG||{};
@@ -2653,7 +2673,7 @@ function sbStore(uid){
     el.textContent=n&&(offline||old)?t('offPend')(n):offline?t('offView'):'';el.hidden=!el.textContent;
     if(n&&!offline&&!old)noteT=setTimeout(note,4200)};
   const saveOut=()=>{try{localStorage.setItem(OK,JSON.stringify(outbox))}catch(e){}note()};
-  const view=()=>{const m=new Map(rows);for(const[id,o] of Object.entries(outbox.e)){if(o.op==='del')m.delete(id);else m.set(id,{u:'',d:o.d})}return[...m].map(([id,r])=>({...r.d,id}))};
+  const view=()=>{const m=new Map(rows);for(const[id,o] of Object.entries(outbox.e)){if(o.op==='del')m.delete(id);else m.set(id,{u:'',d:o.d})}return[...m].map(([id,r])=>gpsLocIn(uid,{...r.d,id}))};
   const emit=()=>{listener&&listener(view())};
   let flushing=null;
   const flush=async()=>{if(!pend())return;if(flushing)return flushing;flushing=(async()=>{
@@ -2685,11 +2705,11 @@ function sbStore(uid){
     sub(fn,fail){listener=fn;const had=rows.size>0||pend()>0;if(had)emit();note();
       load().then(()=>{if(pend())tryFlush()}).catch(e=>{if(isNetErr(e)){offline=true;note();if(!had)emit()}else fail(e)})},
     newId(){return (crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)).replace(/-/g,'')},
-    async save(id,d){outbox.e[id]={op:'save',d,t:new Date().toISOString()};saveOut();emit();
+    async save(id,d){d=gpsLocOut(uid,id,d);outbox.e[id]={op:'save',d,t:new Date().toISOString()};saveOut();emit();
       try{await flush();await load()}catch(e){if(isNetErr(e)){offline=true;note();return}throw e}},
     async remove(id){outbox.e[id]={op:'del',t:new Date().toISOString()};saveOut();emit();
       try{await flush();await load()}catch(e){if(isNetErr(e)){offline=true;note();return}throw e}},
-    async backup(id,d,del){outbox.h.push({user_id:uid,entry_id:id,saved_at:Date.now(),deleted:!!del,data:d});saveOut();
+    async backup(id,d,del){d=gpsLocStrip(d);outbox.h.push({user_id:uid,entry_id:id,saved_at:Date.now(),deleted:!!del,data:d});saveOut();
       try{await flush()}catch(e){if(!isNetErr(e))throw e}},
     pending:pend,
     async history(){const{data,error}=await sb.from('history').select('entry_id,saved_at,deleted,data').order('saved_at',{ascending:false}).limit(1000);if(error)throw error;return data.map(h=>({entryId:h.entry_id,savedAt:+h.saved_at,deleted:h.deleted,data:h.data}))}
@@ -3646,7 +3666,7 @@ function openForm(e,id){
   const x=e||{};form.id=id||null;form.original=id?x:null;form.photos=(x.photos||[]).slice();form.mood=x.mood||'';form.shots=(x.shots||[]).map(q=>({...q}));confirmDel=false;fixState(null);$('tideHint').hidden=true;
   $('dlgTitle').textContent=t(id?'editEntry':'newEntry');$('eDelete').hidden=!id;$('eHist').hidden=!id;$('eHist').open=false;$('eHistList').innerHTML='';$('eDelete').innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5.500 7l1 12.500a2 2 0 0 0 2 1.500h7a2 2 0 0 0 2-1.500l1-12.500M9 7V4.500h6V7"/></svg>';
   const set=(i,v)=>{$(i).value=v==null?'':v};
-  set('eDate',x.date||today());set('eSpot',x.spot);set('eGps',x.gps);set('eDepth',decS(x.maxDepth!=null?x.maxDepth:x.depth));set('eDives',x.dives);set('eVis',decS(x.vis));set('eTemp',decS(x.temp));
+  set('eDate',x.date||today());set('eSpot',x.spot);set('eGps',x.gps);$('eGpsLoc').checked=!!x.gpsLoc;form.wx=x.wx||null;set('eDepth',decS(x.maxDepth!=null?x.maxDepth:x.depth));set('eDives',x.dives);set('eVis',decS(x.vis));set('eTemp',decS(x.temp));
   set('eIn',x.timeIn);set('eOut',x.timeOut);setTimeout(sessDur,0);$('eNoShare').checked=!!(x.noShare||x.postOff);set('eTideIn',tidesOf(x)[0]);set('eTideOut',tidesOf(x)[1]);set('eCurrent',x.current);set('eDir',x.currentDir);set('eWeather',x.weather);set('eSea',x.sea);set('eWind',x.wind);set('eGear',x.gear);set('eNotes',x.notes);set('eTags',(x.tags||[]).join(', '));$('eNoShareL').hidden=!(shMe&&shCfg().on);
   windOpt(x.wind);set('eWind',x.wind);set('eTempDeep',decS(x.tempDeep));set('eThermo',decS(x.thermo));set('eLastro',decS(x.lastro));set('ePoita',decS(x.poita));set('eColete',decS(x.colete));set('eNeutral',decS(x.neutral));set('eApnea',apneaF(x.apnea));set('eFeel',x.feel);set('eEq',x.equal);set('eTactic',x.tactic);set('eErrNote',x.errNote);set('eLesson',x.lesson);
   form.access=x.access||'';drawAccess();form.errs=[];{const ol=(x.errors||[]).filter(k=>ERRS.includes(k)).map(k=>t('er_'+k)).join(', ');if(ol)$('eErrNote').value=[ol,x.errNote].filter(Boolean).join('. ')}drawGuns(x.guns&&x.guns.length?x.guns:['']);
@@ -3654,7 +3674,7 @@ function openForm(e,id){
   if(!id&&gearCopyOn()){const L=lastGear();if(L){if(!x.gear&&L.gear)set('eGear',L.gear);if(!(x.guns&&x.guns.length)&&L.guns&&L.guns.length)drawGuns(L.guns.slice());
     [['lastro','eLastro'],['poita','ePoita'],['colete','eColete']].forEach(([k,i])=>{if(x[k]==null&&L[k]!=null)set(i,decS(L[k]))})}}
   $('eCatches').innerHTML='';(x.catches&&x.catches.length?x.catches:[null]).forEach(catchRow);
-  document.querySelectorAll('#entryForm details.esec').forEach(d=>d.open=false);cfApply();setType('dive');drawPhotos();drawShots();drawMoods();gpsHint();spotHint();$('ePhotoInput').value='';form.dlog=x.dlog||null;dlogChip();
+  document.querySelectorAll('#entryForm details.esec').forEach(d=>d.open=false);cfApply();setType('dive');drawPhotos();drawShots();drawMoods();gpsHint();spotHint();$('ePhotoInput').value='';form.dlog=x.dlog||null;dlogChip();gpsLocShow();wxDraw();
   $('dlg').showModal();
 }
 $('eType').addEventListener('click',ev=>{const b=ev.target.closest('[data-t]');if(b)setType(b.dataset.t)});
@@ -3669,7 +3689,7 @@ $('addCatch').addEventListener('click',()=>catchRow().querySelector('input').foc
 $('eCancel').addEventListener('click',()=>$('dlg').close());
 $('ePhotos').addEventListener('click',ev=>{const b=ev.target.closest('[data-rm]');if(b){form.photos=form.photos.filter(p=>p!==b.dataset.rm);drawPhotos()}});
 $('ePhotoInput').addEventListener('change',async ev=>{
-  const files=[...ev.target.files];ev.target.value='';if(!assets||!files.length)return;
+  const files=[...ev.target.files];ev.target.value='';if(files.length)exApply(files);if(!assets||!files.length)return;
   $('eSave').disabled=true;
   for(const f of files){
     try{const r=await assets.upload(await prepImage(f));form.photos.push(r.id);drawPhotos();saveDraft()}
@@ -3690,7 +3710,7 @@ $('entryForm').addEventListener('submit',async ev=>{
 function readForm(){
   const v=i=>$(i).value.trim();
   const catches=[...$('eCatches').children].map(r=>({name:r.querySelector('.cName').value.trim(),sub:r.dataset.sub||'',count:num(r.querySelector('.cCount').value)||1,len:num(r.querySelector('.cLen').value),depth:num(r.querySelector('.cDep').value),where:r.dataset.where?r.dataset.where.split(','):undefined,method:r.dataset.method||undefined,lost:r.dataset.lost?true:undefined,note:r.querySelector('.cNote').value.trim()||undefined,weight:num(r.querySelector('.cWeight').value)})).filter(c=>c.name).map(clean);
-  return{type:(form.original&&kindOf(form.original)!=='dive'&&!catches.length&&!form.mood&&!v('eIn')&&!v('eOut'))?kindOf(form.original):'dive',mood:form.mood,date:v('eDate')||today(),spot:v('eSpot'),gps:normCoords(v('eGps')),catches,
+  return{type:(form.original&&kindOf(form.original)!=='dive'&&!catches.length&&!form.mood&&!v('eIn')&&!v('eOut'))?kindOf(form.original):'dive',mood:form.mood,date:v('eDate')||today(),spot:v('eSpot'),gps:normCoords(v('eGps')),gpsLoc:(normCoords(v('eGps'))&&$('eGpsLoc').checked)?1:undefined,wx:form.wx||undefined,catches,
     depth:num(v('eDepth')),maxDepth:undefined,dives:num(v('eDives')),vis:num(v('eVis')),temp:num(v('eTemp')),
     timeIn:v('eIn'),timeOut:v('eOut'),tideIn:v('eTideIn'),tideOut:v('eTideOut'),tide:'',
     current:v('eCurrent'),currentDir:v('eDir'),weather:v('eWeather'),shots:form.shots,sea:v('eSea'),wind:v('eWind'),gear:v('eGear'),
@@ -4961,6 +4981,156 @@ async function gpsSafe(f){
       const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.9));if(b)return new File([b],(f.name||'photo').replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'})}
     return f}catch(_){return f}}
 
+/* ---- an entry from a fish photo: date, time and place from the photo, then the sea and weather of that hour from the archive ---- */
+Object.assign(T.en,{exBtnS:'From a photo',stDive1:'1 dive',stCatch1:'1 fish',exBtn:'New entry from photos',gpsLocL:'Keep this point on this device only (never sent to the cloud)',
+  exGot:'From the photo: {d}',exGps:'point kept on this device only',exNoGps:'The photo has no location (phones often remove it when picking from the gallery). Choose the place.',exNone:'No date or place found in these photos.',
+  wxT:'Conditions at that hour',wxGo:'Get the conditions of that hour',wxBusy:'Looking up the archive…',wxFail:'The archive did not answer. Try again later.',wxNeed:'Add the date, a time and the place to get the conditions.',wxSrc:'Archive Open-Meteo · {d}',wxRedo:'Look up again',
+  stTitle:'My statistics',stNone:'Statistics appear after a few dives with a date.',stFish:'Fish per dive. «best» needs at least 2 dives.',stDives:'{n} dives',stCatch:'{n} fish',stBest:'best',
+  stTide:'Tide',stMoon:'Moon',stSea:'Sea',stWind:'Wind',stWater:'Water',stHour:'Time of day',stWave:'Waves (archive)',
+  stMoonB:['New moon','Waxing','Full moon','Waning'],stHourB:['before 8:00','8–12','12–17','after 17:00'],
+  stFill:'Fill in the conditions for {n} older dives',stFilling:'Filling in {i} of {n}…',stFilled:'Done: {n} dives filled in.',stFillHint:'Only empty fields are filled; nothing you wrote is changed.'});
+Object.assign(T.pt,{exBtnS:'A partir de foto',stDive1:'1 mergulho',stCatch1:'1 peixe',exBtn:'Nova entrada a partir de fotos',gpsLocL:'Guardar este ponto só neste aparelho (nunca vai para a nuvem)',
+  exGot:'Da foto: {d}',exGps:'ponto guardado só neste aparelho',exNoGps:'A foto não tem localização (os telemóveis costumam retirá-la ao escolher da galeria). Escolha o local.',exNone:'Estas fotos não têm data nem local.',
+  wxT:'Condições àquela hora',wxGo:'Ver as condições daquela hora',wxBusy:'A procurar no arquivo…',wxFail:'O arquivo não respondeu. Tente mais tarde.',wxNeed:'Indique a data, uma hora e o local para obter as condições.',wxSrc:'Arquivo Open-Meteo · {d}',wxRedo:'Procurar de novo',
+  stTitle:'As minhas estatísticas',stNone:'As estatísticas aparecem depois de alguns mergulhos com data.',stFish:'Peixes por mergulho. «melhor» só conta com 2 ou mais mergulhos.',stDives:'{n} mergulhos',stCatch:'{n} peixes',stBest:'melhor',
+  stTide:'Maré',stMoon:'Lua',stSea:'Mar',stWind:'Vento',stWater:'Água',stHour:'Hora do dia',stWave:'Ondas (arquivo)',
+  stMoonB:['Lua nova','Crescente','Lua cheia','Minguante'],stHourB:['antes das 8h','8–12h','12–17h','depois das 17h'],
+  stFill:'Preencher as condições de {n} mergulhos antigos',stFilling:'A preencher {i} de {n}…',stFilled:'Feito: {n} mergulhos preenchidos.',stFillHint:'Só se preenchem campos vazios; nada do que escreveu muda.'});
+Object.assign(T.es,{exBtnS:'Desde una foto',stDive1:'1 inmersión',stCatch1:'1 pez',exBtn:'Nueva entrada desde fotos',gpsLocL:'Guardar este punto solo en este dispositivo (nunca va a la nube)',
+  exGot:'De la foto: {d}',exGps:'punto guardado solo en este dispositivo',exNoGps:'La foto no tiene ubicación (los móviles suelen quitarla al elegir de la galería). Elige el lugar.',exNone:'Estas fotos no tienen fecha ni lugar.',
+  wxT:'Condiciones a esa hora',wxGo:'Ver las condiciones de esa hora',wxBusy:'Buscando en el archivo…',wxFail:'El archivo no respondió. Inténtalo más tarde.',wxNeed:'Indica la fecha, una hora y el lugar para obtener las condiciones.',wxSrc:'Archivo Open-Meteo · {d}',wxRedo:'Buscar de nuevo',
+  stTitle:'Mis estadísticas',stNone:'Las estadísticas aparecen tras unas cuantas inmersiones con fecha.',stFish:'Peces por inmersión. «mejor» solo cuenta con 2 o más inmersiones.',stDives:'{n} inmersiones',stCatch:'{n} peces',stBest:'mejor',
+  stTide:'Marea',stMoon:'Luna',stSea:'Mar',stWind:'Viento',stWater:'Agua',stHour:'Hora del día',stWave:'Olas (archivo)',
+  stMoonB:['Luna nueva','Creciente','Luna llena','Menguante'],stHourB:['antes de las 8','8–12 h','12–17 h','después de las 17'],
+  stFill:'Rellenar las condiciones de {n} inmersiones antiguas',stFilling:'Rellenando {i} de {n}…',stFilled:'Hecho: {n} inmersiones rellenadas.',stFillHint:'Solo se rellenan campos vacíos; no cambia nada de lo que escribiste.'});
+
+/* points kept on this device only: the cloud copy of the entry has no coordinates, this browser keeps them by entry id */
+function gpsLocMap(uid){try{return JSON.parse(localStorage.getItem('sd-gpsloc-'+uid)||'{}')||{}}catch(_){return{}}}
+function gpsLocSet(uid,id,v){const m=gpsLocMap(uid);if(v)m[id]=v;else delete m[id];try{localStorage.setItem('sd-gpsloc-'+uid,JSON.stringify(m))}catch(_){}}
+function gpsLocOut(uid,id,d){if(!d)return d;
+  if(d.gpsLoc){if(d.gps)gpsLocSet(uid,id,d.gps);const c={...d};delete c.gps;return c}
+  gpsLocSet(uid,id,null);return d}
+function gpsLocStrip(d){if(!d||!d.gpsLoc)return d;const c={...d};delete c.gps;return c}
+function gpsLocIn(uid,e){if(e&&e.gpsLoc){const g=gpsLocMap(uid)[e.id];if(g)e.gps=g}return e}
+function gpsLocShow(){const L=$('eGpsLocL');if(!L)return;L.hidden=!(store&&assets&&$('eGps').value.trim())}
+
+/* nearest known place for a point: the diver's own spots first, then the forecast places */
+function exNearSpot(lat,lon){const k=Math.cos(lat*Math.PI/180),d=(a,b)=>Math.hypot((a-lat)*111,(b-lon)*111*k);let best=null,bd=1e9;
+  spotCoords().forEach(v=>{const x=d(v.c.lat,v.c.lon);if(x<bd){bd=x;best=v.name}});if(best&&bd<=1.5)return best;
+  best=null;bd=1e9;try{fcSpots().forEach(p=>{const x=d(p.lat,p.lon);if(x<bd){bd=x;best=p.name}})}catch(_){}return best&&bd<=3?best:null}
+function exPlace(){const g=parseCoords($('eGps').value);if(g)return{lat:g.lat,lon:g.lon};const sp=norm($('eSpot').value);if(!sp)return null;
+  const m=spotCoords().get(sp);if(m)return{lat:m.c.lat,lon:m.c.lon};try{const p=fcSpots().find(p=>norm(p.name)===sp);if(p)return{lat:p.lat,lon:p.lon}}catch(_){}return null}
+const exFire=id=>$(id).dispatchEvent(new Event('change',{bubbles:true}));
+
+/* read the photos: fill only what is still empty, then fetch the conditions */
+async function exApply(files){
+  const ms=(await Promise.all(files.map(exifRead))).filter(Boolean);
+  const dated=ms.filter(m=>m.date).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)),geo=ms.find(m=>m.lat!=null);
+  if(!dated.length&&!geo){toast(t('exNone'));return}
+  const msg=[];
+  if(dated.length){const last=dated[dated.length-1];
+    if(!form.id||!$('eDate').value){$('eDate').value=last.date;exFire('eDate');try{if(typeof dpTxt==='function')dpTxt()}catch(_){}}
+    if($('eDate').value===last.date&&!$('eIn').value&&!$('eOut').value){const first=dated.filter(m=>m.date===last.date)[0];
+      if(first.time!==last.time){$('eIn').value=first.time;exFire('eIn')}$('eOut').value=last.time;exFire('eOut');try{sessDur()}catch(_){}}
+    msg.push(last.date.slice(8)+'/'+last.date.slice(5,7)+' '+last.time)}
+  if(geo&&!$('eGps').value.trim()){$('eGps').value=geo.lat.toFixed(5)+', '+geo.lon.toFixed(5);$('eGpsLoc').checked=true;exFire('eGps');
+    if(!$('eSpot').value.trim()){const n=exNearSpot(geo.lat,geo.lon);if(n){$('eSpot').value=n;exFire('eSpot')}}
+    msg.push(store&&assets?t('exGps'):geo.lat.toFixed(4)+', '+geo.lon.toFixed(4))}
+  gpsLocShow();try{autoTide()}catch(_){}
+  toast(t('exGot').replace('{d}',msg.join(' · '))+(!geo&&!$('eGps').value.trim()?'. '+t('exNoGps'):''));
+  saveDraft();if(exPlace())wxFetch()}
+
+/* ---- the archive: Open-Meteo historical forecast (weather) + marine (waves, sea temperature) for that place and hour ---- */
+const WX_DEG=d=>d==null?'':DIRS[Math.round(((d%360)+360)%360/45)%8];
+async function wxGetJson(u){const c=new AbortController(),tm=setTimeout(()=>c.abort(),15000);try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json()}finally{clearTimeout(tm)}}
+async function wxArchive(date,time,lat,lon){
+  const hh=Math.min(23,Math.max(0,Math.round((+time.slice(0,2))+(+time.slice(3,5))/60))),key=date+'T'+String(hh).padStart(2,'0')+':00';
+  const q='&start_date='+date+'&end_date='+date+'&timezone=auto';
+  const pick=(j,k)=>{const h=j&&j.hourly;if(!h||!h.time)return null;const i=h.time.indexOf(key);if(i<0)return null;const v=h[k]&&h[k][i];return v==null?null:v};
+  const wq='&hourly=temperature_2m,weather_code,cloud_cover,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m'+q;
+  let w=null;try{w=await wxGetJson('https://historical-forecast-api.open-meteo.com/v1/forecast?latitude='+lat.toFixed(4)+'&longitude='+lon.toFixed(4)+wq)}catch(_){}
+  if(pick(w,'temperature_2m')==null){try{w=await wxGetJson('https://archive-api.open-meteo.com/v1/archive?latitude='+lat.toFixed(4)+'&longitude='+lon.toFixed(4)+wq)}catch(_){}}
+  const mq='&hourly=wave_height,wave_period,wave_direction,sea_surface_temperature'+q;let m=null;
+  /* a coastal point can fall on land in the wave model: step a little out to sea */
+  for(const [dy,dx] of [[0,0],[0,-.05],[-.05,0],[.05,0],[0,.05],[0,-.1],[-.08,-.08]]){
+    try{m=await wxGetJson('https://marine-api.open-meteo.com/v1/marine?latitude='+(lat+dy).toFixed(4)+'&longitude='+(lon+dx).toFixed(4)+mq)}catch(_){m=null}
+    if(pick(m,'wave_height')!=null)break}
+  const x={at:key,lat:+lat.toFixed(3),lon:+lon.toFixed(3)},put=(k,v,r)=>{if(v!=null)x[k]=r?Math.round(v*r)/r:v};
+  put('air',pick(w,'temperature_2m'),10);put('code',pick(w,'weather_code'));put('cloud',pick(w,'cloud_cover'));put('rain',pick(w,'precipitation'),10);
+  put('wind',pick(w,'wind_speed_10m'),1);put('gust',pick(w,'wind_gusts_10m'),1);put('wdir',pick(w,'wind_direction_10m'),1);
+  put('wave',pick(m,'wave_height'),100);put('per',pick(m,'wave_period'),10);put('vdir',pick(m,'wave_direction'),1);put('sst',pick(m,'sea_surface_temperature'),10);
+  return Object.keys(x).length>3?x:null}
+const wxSea=h=>h==null?'':h<.3?'calm':h<.7?'ripple':h<1.5?'swell':h<2.5?'waves':'storm';
+const wxWind=k=>k==null?'':k<3?'none':k<10?'light':k<20?'moderate':k<30?'fresh':k<40?'strong':'gale';
+const wxSky=c=>c==null?'':c<=1?'sunny':c===2?'partly':c===3?'cloudy':c<=48?'fog':c<=57?'drizzle':c<=82?'rain':c>=95?'storm':'cloudy';
+/* empty fields of an entry from the archive values (nothing the diver wrote is replaced) */
+function wxPatch(e,x){const p={};if(!x)return p;
+  if(!e.sea&&x.wave!=null)p.sea=wxSea(x.wave);if(!e.wind&&x.wind!=null)p.wind=wxWind(x.wind);if(!e.weather&&x.code!=null)p.weather=wxSky(x.code);
+  if(e.temp==null&&x.sst!=null)p.temp=Math.round(x.sst*2)/2;return p}
+let wxBusy=false;
+async function wxFetch(){
+  const d=$('eDate').value,tm=$('eOut').value||$('eIn').value,pl=exPlace();if(!d||!tm||!pl){wxDraw('need');return}
+  if(wxBusy)return;wxBusy=true;wxDraw('busy');let x=null;try{x=await wxArchive(d,tm,pl.lat,pl.lon)}catch(_){}wxBusy=false;
+  if(!$('dlg').open)return;if(!x){wxDraw('fail');return}
+  form.wx=x;const p=wxPatch({sea:$('eSea').value,wind:$('eWind').value,weather:$('eWeather').value,temp:num($('eTemp').value)},x);
+  if(p.sea)$('eSea').value=p.sea;if(p.wind)$('eWind').value=p.wind;if(p.weather)$('eWeather').value=p.weather;if(p.temp!=null)$('eTemp').value=decS(p.temp);
+  try{autoTide()}catch(_){}wxDraw();saveDraft()}
+function wxLine(x,date,time){if(!x)return'';const f=v=>String(v).replace('.',lang==='en'?'.':','),dl=d=>d?dirLabel(d):'',it=[];
+  if(x.wave!=null)it.push('<span><b>'+esc(t('fcWavesT'))+'</b> '+f(x.wave.toFixed(1))+' m'+(x.per!=null?' · '+Math.round(x.per)+' s':'')+(x.vdir!=null?' · '+dl(WX_DEG(x.vdir)):'')+'</span>');
+  if(x.wind!=null)it.push('<span><b>'+esc(t('fcWindT'))+'</b> '+Math.round(x.wind)+' km/h'+(x.wdir!=null?' '+dl(WX_DEG(x.wdir)):'')+(x.gust!=null?' · '+esc(t('fcGust'))+' '+Math.round(x.gust):'')+'</span>');
+  if(x.air!=null)it.push('<span><b>'+esc(t('nAir'))+'</b> '+f(x.air.toFixed(0))+' °C</span>');
+  if(x.sst!=null)it.push('<span><b>'+esc(t('nWater'))+'</b> '+f(x.sst.toFixed(1))+' °C</span>');
+  if(x.code!=null)it.push('<span>'+esc(t('w_'+wxSky(x.code)))+(x.rain?' · '+f(x.rain)+' mm':'')+'</span>');
+  if(date){const p=moonAge(lisbonMs(date,time||'12:00'));it.push('<span><b>'+esc(t('nMoon'))+'</b> '+Math.round((1-Math.cos(2*Math.PI*p))/2*100)+'% · '+esc(t(moonName(p)))+'</span>')}
+  return it.join('')}
+function wxDraw(st){const b=$('wxBox');if(!b)return;const x=form.wx,d=$('eDate').value,tm=$('eOut').value||$('eIn').value,pl=exPlace();
+  const btn=(k)=>'<button type="button" class="link" id="wxGo">'+esc(t(k))+'</button>';
+  if(st==='busy'){b.innerHTML='<span class="hint">'+esc(t('wxBusy'))+'</span>';b.hidden=false;return}
+  if(x){b.innerHTML='<div class="wx-h"><span>'+esc(t('wxT'))+'</span>'+btn('wxRedo')+'</div><div class="wx-l">'+wxLine(x,d,tm)+'</div><span class="hint">'+esc(t('wxSrc').replace('{d}',x.at.slice(8,10)+'/'+x.at.slice(5,7)+'/'+x.at.slice(0,4)+' '+x.at.slice(11)))+'</span>'+(st==='fail'?'<span class="hint">'+esc(t('wxFail'))+'</span>':'');b.hidden=false;return}
+  if(st==='fail'){b.innerHTML='<span class="hint">'+esc(t('wxFail'))+'</span> '+btn('wxRedo');b.hidden=false;return}
+  if(d&&tm&&pl){b.innerHTML=btn('wxGo');b.hidden=false;return}
+  b.innerHTML=st==='need'?'<span class="hint">'+esc(t('wxNeed'))+'</span>':'';b.hidden=st!=='need'}
+document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#wxGo'))wxFetch()});
+['eDate','eIn','eOut','eGps','eSpot'].forEach(i=>{const el=$(i);if(el)el.addEventListener('change',()=>{if(i==='eGps')gpsLocShow();if(!wxBusy)wxDraw()})});
+if($('eGps'))$('eGps').addEventListener('input',gpsLocShow);
+
+/* main page: pick photos first, then the form opens already filled */
+$('exBtn').addEventListener('click',()=>$('exInput').click());
+$('exInput').addEventListener('change',async ev=>{const files=[...ev.target.files];ev.target.value='';if(!files.length)return;
+  openForm({type:'dive'});await exApply(files);
+  if(assets){$('eSave').disabled=true;for(const f of files){try{const r=await assets.upload(await prepImage(f));form.photos.push(r.id);drawPhotos();saveDraft()}catch(e){toast(t(e&&e.code==='heic'?'errHeic':e&&e.code==='too_large'?'errLarge':e&&e.code==='unsupported_type'?'errType':'errPhoto'))}}$('eSave').disabled=false}});
+
+/* ---- personal statistics: where the fish were, by tide, moon, sea, wind, water and hour ---- */
+function stFish(e){return(e.catches||[]).filter(c=>c&&!c.lost).reduce((s,c)=>s+(c.count||1),0)}
+function stDims(){const L=k=>t(k);return[
+  ['stTide',e=>{const v=tidesOf(e)[0]||tidesOf(e)[1];return v&&TIDES.includes(v)?v:null},TIDES,k=>t('tide_'+k)],
+  ['stMoon',e=>{if(!e.date)return null;const p=moonAge(lisbonMs(e.date,e.timeIn||e.timeOut||'12:00'));return p<.0625||p>=.9375?0:p<.4375?1:p<.5625?2:3},[0,1,2,3],k=>L('stMoonB')[k]],
+  ['stSea',e=>SEAS.includes(e.sea)?e.sea:null,SEAS,k=>t('sea_'+k)],
+  ['stWave',e=>e.wx&&e.wx.wave!=null?(e.wx.wave<.5?0:e.wx.wave<1?1:e.wx.wave<1.5?2:e.wx.wave<2?3:4):null,[0,1,2,3,4],k=>['< 0,5 m','0,5–1 m','1–1,5 m','1,5–2 m','> 2 m'][k]],
+  ['stWind',e=>WINDS.includes(e.wind)?e.wind:null,WINDS,k=>t('wd_'+k).replace(/\s*\(.*\)$/,'')],
+  ['stWater',e=>{const v=e.temp!=null?e.temp:e.wx&&e.wx.sst;return v==null?null:v<15?0:v<17?1:v<19?2:v<21?3:4},[0,1,2,3,4],k=>['< 15 °C','15–17 °C','17–19 °C','19–21 °C','> 21 °C'][k]],
+  ['stHour',e=>{const tm=e.timeIn||e.timeOut;if(!tm)return null;const h=+tm.slice(0,2);return h<8?0:h<12?1:h<17?2:3},[0,1,2,3],k=>L('stHourB')[k]]]}
+function stNeedFill(){return entries.filter(e=>kindOf(e)==='dive'&&e.date&&(e.timeIn||e.timeOut)&&!e.wx&&coordsOf(e,spotCoords()))}
+function stDraw(){const box=$('stBox');if(!box||!$('stCard').open)return;
+  const dives=entries.filter(e=>kindOf(e)==='dive'&&e.date);
+  if(dives.length<2){box.innerHTML='<p class="hint">'+esc(t('stNone'))+'</p>'+stFillHtml();return}
+  const f=v=>(Math.round(v*10)/10).toString().replace('.',lang==='en'?'.':',');
+  box.innerHTML='<p class="hint st-unit">'+esc(t('stFish'))+'</p>'+stDims().map(([h,fn,keys,lab])=>{const agg=new Map(keys.map(k=>[k,{n:0,f:0}]));dives.forEach(e=>{const k=fn(e);if(k==null||!agg.has(k))return;const a=agg.get(k);a.n++;a.f+=stFish(e)});
+    const rows=[...agg].filter(([,a])=>a.n);if(!rows.length)return'';const max=Math.max(...rows.map(([,a])=>a.f/a.n),.01);
+    const best=rows.filter(([,a])=>a.n>=2).sort((x,y)=>y[1].f/y[1].n-x[1].f/x[1].n)[0];
+    return '<section class="st-d"><h4>'+esc(t(h))+'</h4>'+rows.map(([k,a])=>{const r=a.f/a.n,isB=best&&best[0]===k&&r>0;
+      return '<div class="st-r'+(isB?' best':'')+'"><span class="st-k">'+esc(lab(k))+'</span><span class="st-bar"><i style="width:'+Math.round(r/max*100)+'%"></i></span><span class="st-v"><b>'+f(r)+'</b> <small>'+esc(a.n===1?t('stDive1'):t('stDives').replace('{n}',a.n))+' · '+esc(a.f===1?t('stCatch1'):t('stCatch').replace('{n}',a.f))+'</small>'+(isB?' <em>'+esc(t('stBest'))+'</em>':'')+'</span></div>'}).join('')+'</section>'}).join('')
+    +stFillHtml()}
+function stFillHtml(){const n=stNeedFill().length;return n?'<div class="st-fill"><button type="button" class="btn sm" id="stFill">'+esc(t('stFill').replace('{n}',n))+'</button><span class="hint">'+esc(t('stFillHint'))+'</span></div>':''}
+let stBusy=false;
+document.addEventListener('click',async ev=>{if(!(ev.target.closest&&ev.target.closest('#stFill'))||stBusy)return;stBusy=true;
+  const list=stNeedFill(),sm=spotCoords(),btn=$('stFill');let done=0;
+  for(let i=0;i<list.length;i++){if(btn&&btn.isConnected)btn.textContent=t('stFilling').replace('{i}',i+1).replace('{n}',list.length);
+    const e=list[i],c=coordsOf(e,sm);let x=null;try{x=await wxArchive(e.date,e.timeOut||e.timeIn,c.lat,c.lon)}catch(_){}
+    if(x){const cur=entries.find(z=>z.id===e.id);if(cur&&!cur.wx){const ok=await saveEntry(e.id,{...wxPatch(cur,x),wx:x});if(ok)done++}}}
+  stBusy=false;toast(t('stFilled').replace('{n}',done));stDraw()});
+$('stCard').addEventListener('toggle',stDraw);
+
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
 const isSpecies=lat=>/^[A-Z][a-z]+ [a-z]+$/.test(lat||'')&&!/ spp$/.test(lat);
 const genusOf=lat=>(lat||'').split(' ')[0];
@@ -5491,7 +5661,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795691389';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795692047';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
