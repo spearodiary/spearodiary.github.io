@@ -1583,7 +1583,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .st-c.st-tide,.st-c.st-wave,.st-c.st-sst,.st-c.st-vis{border-left-color:#1EA88E;background:color-mix(in srgb,#1EA88E 13%,var(--surface))}
 .st-c.st-wind,.st-c.st-sun{border-left-color:#7DBCEB;background:color-mix(in srgb,#7DBCEB 13%,var(--surface))}
 .st-c.st-moon{border-left-color:#B9B3A0;background:color-mix(in srgb,#B9B3A0 15%,var(--surface))}
-.st-by{margin-top:4px}.st-by>summary{min-height:26px}.st-by[open]{display:grid;gap:12px}
+.st-by{margin-top:4px;display:grid;gap:12px}.st-by .nowh{margin-bottom:0}
 @media (min-width:561px){.st-by>summary{pointer-events:auto}.st-by>summary::before{display:block}}
 @media (max-width:560px){.st-r{grid-template-columns:1fr 1.2fr;row-gap:2px}.st-v{grid-column:1/-1}}
 </style>
@@ -5012,21 +5012,21 @@ async function gpsSafe(f){
 Object.assign(T.en,{stAll:'All fish',stNoFish:'No catches of this species yet.',stWhen:'When there is most fish',stDays:'Best days',stByCond:'Fish per dive by condition',stPerDive:'per dive',exBtnS:'From a photo',stDive1:'1 dive',stCatch1:'1 fish',exBtn:'New entry from photos',gpsLocL:'Keep this point on this device only (never sent to the cloud)',
   exGot:'From the photo: {d}',exGps:'point kept on this device only',exNoGps:'The photo has no location (phones often remove it when picking from the gallery). Choose the place.',exNone:'No date or place found in these photos.',
   wxT:'Conditions at that hour',wxGo:'Get the conditions of that hour',wxBusy:'Looking up the archive…',wxFail:'The archive did not answer. Try again later.',wxNeed:'Add the date, a time and the place to get the conditions.',wxSrc:'Archive Open-Meteo · {d}',wxRedo:'Look up again',
-  stTitle:'My statistics',stNone:'Statistics appear after a few dives with a date.',stFish:'Fish per dive. «best» needs at least 2 dives.',stDives:'{n} dives',stCatch:'{n} fish',stBest:'best',
+  stTitle:'My catch',stNone:'Statistics appear after a few dives with a date.',stFish:'Fish per dive. «best» needs at least 2 dives.',stDives:'{n} dives',stCatch:'{n} fish',stBest:'best',
   stTide:'Tide',stMoon:'Moon',stSea:'Sea',stWind:'Wind',stWater:'Water',stHour:'Time of day',stWave:'Waves (archive)',
   stMoonB:['New moon','Waxing','Full moon','Waning'],stHourB:['before 8:00','8–12','12–17','after 17:00'],
   stFill:'Fill in the conditions for {n} older dives',stFilling:'Filling in {i} of {n}…',stFilled:'Done: {n} dives filled in.',stFillHint:'Only empty fields are filled; nothing you wrote is changed.'});
 Object.assign(T.pt,{stAll:'Todos os peixes',stNoFish:'Ainda não há capturas desta espécie.',stWhen:'Quando há mais peixe',stDays:'Melhores dias',stByCond:'Peixes por mergulho, por condição',stPerDive:'por mergulho',exBtnS:'A partir de foto',stDive1:'1 mergulho',stCatch1:'1 peixe',exBtn:'Nova entrada a partir de fotos',gpsLocL:'Guardar este ponto só neste aparelho (nunca vai para a nuvem)',
   exGot:'Da foto: {d}',exGps:'ponto guardado só neste aparelho',exNoGps:'A foto não tem localização (os telemóveis costumam retirá-la ao escolher da galeria). Escolha o local.',exNone:'Estas fotos não têm data nem local.',
   wxT:'Condições àquela hora',wxGo:'Ver as condições daquela hora',wxBusy:'A procurar no arquivo…',wxFail:'O arquivo não respondeu. Tente mais tarde.',wxNeed:'Indique a data, uma hora e o local para obter as condições.',wxSrc:'Arquivo Open-Meteo · {d}',wxRedo:'Procurar de novo',
-  stTitle:'As minhas estatísticas',stNone:'As estatísticas aparecem depois de alguns mergulhos com data.',stFish:'Peixes por mergulho. «melhor» só conta com 2 ou mais mergulhos.',stDives:'{n} mergulhos',stCatch:'{n} peixes',stBest:'melhor',
+  stTitle:'As minhas capturas',stNone:'As estatísticas aparecem depois de alguns mergulhos com data.',stFish:'Peixes por mergulho. «melhor» só conta com 2 ou mais mergulhos.',stDives:'{n} mergulhos',stCatch:'{n} peixes',stBest:'melhor',
   stTide:'Maré',stMoon:'Lua',stSea:'Mar',stWind:'Vento',stWater:'Água',stHour:'Hora do dia',stWave:'Ondas (arquivo)',
   stMoonB:['Lua nova','Crescente','Lua cheia','Minguante'],stHourB:['antes das 8h','8–12h','12–17h','depois das 17h'],
   stFill:'Preencher as condições de {n} mergulhos antigos',stFilling:'A preencher {i} de {n}…',stFilled:'Feito: {n} mergulhos preenchidos.',stFillHint:'Só se preenchem campos vazios; nada do que escreveu muda.'});
 Object.assign(T.es,{stAll:'Todos los peces',stNoFish:'Aún no hay capturas de esta especie.',stWhen:'Cuándo hay más pesca',stDays:'Mejores días',stByCond:'Peces por inmersión, por condición',stPerDive:'por inmersión',exBtnS:'Desde una foto',stDive1:'1 inmersión',stCatch1:'1 pez',exBtn:'Nueva entrada desde fotos',gpsLocL:'Guardar este punto solo en este dispositivo (nunca va a la nube)',
   exGot:'De la foto: {d}',exGps:'punto guardado solo en este dispositivo',exNoGps:'La foto no tiene ubicación (los móviles suelen quitarla al elegir de la galería). Elige el lugar.',exNone:'Estas fotos no tienen fecha ni lugar.',
   wxT:'Condiciones a esa hora',wxGo:'Ver las condiciones de esa hora',wxBusy:'Buscando en el archivo…',wxFail:'El archivo no respondió. Inténtalo más tarde.',wxNeed:'Indica la fecha, una hora y el lugar para obtener las condiciones.',wxSrc:'Archivo Open-Meteo · {d}',wxRedo:'Buscar de nuevo',
-  stTitle:'Mis estadísticas',stNone:'Las estadísticas aparecen tras unas cuantas inmersiones con fecha.',stFish:'Peces por inmersión. «mejor» solo cuenta con 2 o más inmersiones.',stDives:'{n} inmersiones',stCatch:'{n} peces',stBest:'mejor',
+  stTitle:'Mis capturas',stNone:'Las estadísticas aparecen tras unas cuantas inmersiones con fecha.',stFish:'Peces por inmersión. «mejor» solo cuenta con 2 o más inmersiones.',stDives:'{n} inmersiones',stCatch:'{n} peces',stBest:'mejor',
   stTide:'Marea',stMoon:'Luna',stSea:'Mar',stWind:'Viento',stWater:'Agua',stHour:'Hora del día',stWave:'Olas (archivo)',
   stMoonB:['Luna nueva','Creciente','Luna llena','Menguante'],stHourB:['antes de las 8','8–12 h','12–17 h','después de las 17'],
   stFill:'Rellenar las condiciones de {n} inmersiones antiguas',stFilling:'Rellenando {i} de {n}…',stFilled:'Hecho: {n} inmersiones rellenadas.',stFillHint:'Solo se rellenan campos vacíos; no cambia nada de lo que escribiste.'});
@@ -5170,9 +5170,9 @@ function stDraw(){const box=$('stBox');if(!box||!$('stCard').open)return;
   h+='<div class="nowh st-h2">'+esc(t('stDays'))+'</div><div class="st-days">'+top.map(e=>{const cs=(e.catches||[]).filter(c=>c&&!c.lost&&(!stSp||c.name===stSp));
     return '<button type="button" class="st-day" data-st-edit="'+esc(e.id)+'"><span class="st-dh"><b>'+esc(e.date.slice(8,10)+'/'+e.date.slice(5,7)+'/'+e.date.slice(0,4))+'</b>'+(e.spot?' · '+esc(e.spot):'')+'<span class="st-n">'+fishOf(e)+' 🐟</span></span><span class="st-df">'+esc(cs.map(c=>(c.count||1)+' × '+catchLabel(c)).join(', '))+'</span><span class="st-cs">'+stConds(e)+'</span></button>'}).join('')+'</div>';
   /* fish per dive by condition */
-  h+='<details class="fwl st-by"'+(stByOpen?' open':'')+'><summary><span class="nowh" style="margin:0">'+esc(t('stByCond'))+'</span></summary><p class="hint st-unit">'+esc(t('stFish'))+'</p>'+dims.map(({hd,rows,best,lab})=>{const max=Math.max(...rows.map(([,a])=>a.f/a.n),.01);
+  h+='<div class="st-by"><div class="nowh st-h2">'+esc(t('stByCond'))+'</div><p class="hint st-unit">'+esc(t('stFish'))+'</p>'+dims.map(({hd,rows,best,lab})=>{const max=Math.max(...rows.map(([,a])=>a.f/a.n),.01);
     return '<section class="st-d"><h4>'+esc(t(hd))+'</h4>'+rows.map(([k,a])=>{const r=a.f/a.n,isB=best&&best[0]===k;
-      return '<div class="st-r'+(isB?' best':'')+'"><span class="st-k">'+esc(lab(k))+'</span><span class="st-bar"><i style="width:'+Math.round(r/max*100)+'%"></i></span><span class="st-v"><b>'+stNum(r)+'</b> <small>'+esc(a.n===1?t('stDive1'):t('stDives').replace('{n}',a.n))+' · '+esc(a.f===1?t('stCatch1'):t('stCatch').replace('{n}',a.f))+'</small>'+(isB?' <em>'+esc(t('stBest'))+'</em>':'')+'</span></div>'}).join('')+'</section>'}).join('')+'</details>';
+      return '<div class="st-r'+(isB?' best':'')+'"><span class="st-k">'+esc(lab(k))+'</span><span class="st-bar"><i style="width:'+Math.round(r/max*100)+'%"></i></span><span class="st-v"><b>'+stNum(r)+'</b> <small>'+esc(a.n===1?t('stDive1'):t('stDives').replace('{n}',a.n))+' · '+esc(a.f===1?t('stCatch1'):t('stCatch').replace('{n}',a.f))+'</small>'+(isB?' <em>'+esc(t('stBest'))+'</em>':'')+'</span></div>'}).join('')+'</section>'}).join('')+'</div>';
   box.innerHTML=h+stFillHtml()}
 let stByOpen=false;
 document.addEventListener('toggle',ev=>{if(ev.target&&ev.target.classList&&ev.target.classList.contains('st-by'))stByOpen=ev.target.open},true);
@@ -5718,7 +5718,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795692961';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795693308';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
