@@ -1680,10 +1680,10 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bnav button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bnav button.on{color:var(--accent)}.bnav button:active{background:color-mix(in srgb,var(--ink) 8%,transparent)}
 .bsheet:not([hidden]){display:block;position:relative;background:var(--bg);min-height:100dvh}
-html.bs-on #appView{display:none!important}
+html.bs-on #appView{content-visibility:hidden;height:0;overflow:hidden;padding:0!important}
 .bs-body{padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
 .bs-back{position:static;flex:none;width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
-.bs-t{position:static;padding:0;background:none;margin:0;line-height:40px;font-size:17px;color:var(--ink)}
+.bs-t{position:static;padding:0;background:none;font:500 19px var(--display)!important;margin:0;line-height:40px;font-size:17px;color:var(--ink)}
 
 #appView[hidden]~#bnav,#appView[hidden]~#bsheet{display:none!important}
 .bs-hd{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:6px;margin-top:calc(-1 * env(safe-area-inset-top,0px));padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 6px max(4px,env(safe-area-inset-left,0px));background:var(--bg)}
@@ -3409,7 +3409,7 @@ function drawForecast(){
   const col=sv.querySelector('.scol'),cur=sv.querySelector('.scur');
   sv.addEventListener('pointermove',ev=>{if(ev.pointerType!=='mouse'||!matchMedia('(hover:hover)').matches){cur.setAttribute('visibility','hidden');col.setAttribute('visibility','hidden');return}const b=sv.getBoundingClientRect(),x=(ev.clientX-b.left)/FK,i=Math.max(0,Math.min(NH-1,Math.floor(x/CW)));cur.setAttribute('x1',x);cur.setAttribute('x2',x);col.setAttribute('x',i*CW);cur.setAttribute('visibility','visible');col.setAttribute('visibility','visible')});
   sv.addEventListener('pointerleave',()=>{cur.setAttribute('visibility','hidden');col.setAttribute('visibility','hidden')});
-  box.querySelector('.sea-l').addEventListener('click',ev=>{if(ev.target.closest('select'))return;if(!ev.target.closest('.sea-tg')&&!matchMedia('(max-width:700px)').matches)return;try{localStorage.setItem('sn-fc-nol',nol?'0':'1')}catch(e){}drawForecast()});
+  box.querySelector('.sea-l').addEventListener('click',ev=>{if(ev.target.closest('select'))return;if(!ev.target.closest('.sea-tg')&&!matchMedia('(max-width:700px)').matches)return;const sea=box.querySelector('.sea'),n2=!sea.classList.contains('nol');sea.classList.toggle('nol',n2);try{localStorage.setItem('sn-fc-nol',n2?'1':'0')}catch(e){}const tg=sea.querySelector('.sea-tg');if(tg){const l=t(n2?'fcColShow':'fcColHide');tg.setAttribute('aria-expanded',String(!n2));tg.textContent=n2?'›':'‹';tg.title=l;tg.setAttribute('aria-label',l)}});
   box.querySelector('.wunit').addEventListener('click',ev=>{ev.stopPropagation();wuPopFixed(ev.currentTarget)});
   // summary line
   const cw=near(wm,Math.round(nowMs/36e5)*36e5)||{},cm=near(mm,Math.round(nowMs/36e5)*36e5)||{},st=ltState(nowMs),nxt=ltEx(nowMs,nowMs+864e5).filter(e=>e.t>nowMs)[0];
