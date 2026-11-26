@@ -1654,7 +1654,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .fcw>.fcs .fcs-d{padding-right:0}
 #fcCard:not([open]){display:none}
 #fcCard>summary::before{display:none!important}#fcCard>summary{padding-left:0}
-.fc-now-out{margin-top:-8px}.fc-now-out .nowd>summary{pointer-events:none;cursor:default}.fc-now-out .nowd>summary::before{display:none}.fc-now-out .nowd{margin-top:0}
+.fc-now-out{margin-bottom:-10px}.fc-now-out .nowd>summary .nl{font-variant-numeric:tabular-nums;font-weight:600}.fc-now-out .nowd>summary{pointer-events:none;cursor:default}.fc-now-out .nowd>summary::before{display:none}.fc-now-out .nowd{margin-top:0}
 .fc-win:empty{display:none}
 .nowd{margin-top:4px}.nowd>.nowg{margin-top:8px}
 /* painel do telemóvel: cabeçalho com altura fixa (Amigos tem botões) */
@@ -5590,9 +5590,14 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
 (function(){const st=$('fcStrip'),card=$('fcCard'),pal=$('fcPal'),now=$('fcNow');if(!st||!card||!now)return;
   const w=document.createElement('div');w.className='fcw';st.parentNode.insertBefore(w,st);w.appendChild(st);if(pal)w.appendChild(pal);
   const win=document.createElement('div');win.id='fcWin';win.className='fc-win';now.parentNode.insertBefore(win,now);
-  card.parentNode.insertBefore(now,card);now.classList.add('fc-now-out');
+  w.parentNode.insertBefore(now,w);now.classList.add('fc-now-out');
+  /* em vez de «Agora»: data e hora ao segundo */
+  const clk=()=>{const l=now.querySelector('.nowd>summary .nl');if(!l)return;let s;try{const f=new Intl.DateTimeFormat(locale(),{timeZone:typeof TZ!=='undefined'?TZ:undefined,weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date()),g=k=>(f.find(p=>p.type===k)||{}).value||'';
+      const wd=g('weekday').replace('.','');s=wd.charAt(0).toUpperCase()+wd.slice(1)+' '+g('day')+'/'+g('month')+' · '+g('hour')+':'+g('minute')+':'+g('second')}catch(_){s=new Date().toLocaleString()}
+    if(l.textContent!==s)l.textContent=s};
+  setInterval(clk,1000);
   const split=()=>{const kids=[...now.childNodes].filter(n=>!(n.nodeType===1&&n.classList.contains('nowd')));win.textContent='';kids.forEach(n=>win.appendChild(n))};
-  const d0=drawForecast;drawForecast=function(){const r=d0.apply(this,arguments);try{split()}catch(_){}return r};
+  const d0=drawForecast;drawForecast=function(){const r=d0.apply(this,arguments);try{split();clk()}catch(_){}return r};
   /* tocar no título fecha a previsão */
   try{split()}catch(_){}})();
 
