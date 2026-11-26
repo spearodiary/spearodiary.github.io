@@ -1611,8 +1611,12 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 
 /* pesquisa aberta: continuação da caixa, separada por linha tracejada laranja */
 #srCard.sr-in:not([open]){display:none}
-.capture.qx.sr-open{border-bottom:2px dashed var(--accent);border-bottom-left-radius:0;border-bottom-right-radius:0}
-#srCard.sr-in[open]{border:2px solid var(--accent);border-top:0;border-radius:0 0 8px 8px;background:var(--surface);padding:10px 12px 12px!important}
+.capture.qx.sr-open{border-bottom:1px solid var(--accent);border-bottom-left-radius:0;border-bottom-right-radius:0}
+#srCard.sr-in[open]{border:1.5px dashed var(--accent);border-top:0;border-radius:0 0 8px 8px;background:var(--surface);padding:16px 12px 14px!important}
+#srCard .q-clw{position:relative;display:block}#srCard #q::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;display:none}#srCard .q-clw>#q{width:100%;box-sizing:border-box;padding-right:44px}
+#srCard .q-clr{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:grid;place-items:center;margin:0;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;min-height:0}
+#srCard .q-clr:hover{color:var(--ink)}#srCard .q-clr[hidden]{display:none}
+#srCard .q-clr span{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--muted) 35%,transparent);color:var(--surface)}
 #srCard.sr-in>summary{display:none}
 #srCard.sr-in .bar{margin-top:8px}
 /* Definições: lista agrupada */
@@ -1725,7 +1729,8 @@ html.bs-on,html.bs-on body{overflow:hidden}
 .g-x{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}.g-tr{font-weight:600}.g-tr.up{color:#1EA88E}.g-tr.dn{color:var(--accent)}
 .st-by{margin-top:4px}.st-by[open]{display:grid;gap:12px}.st-by>summary{min-height:26px}.st-by>summary .nowh{margin:0}
 @media (min-width:561px){.st-by>summary{pointer-events:auto}.st-by>summary::before{display:block}}
-@media (max-width:560px){.st-r{grid-template-columns:1fr 1.2fr;row-gap:2px}.st-v{grid-column:1/-1}}
+@media (max-width:560px){.st-r{grid-template-columns:1fr 1.2fr;row-gap:4px;padding:10px 0;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent)}.st-v{grid-column:1/-1}.st-d h4{margin:18px 0 2px}.st-d h4+.st-r{border-top:0}}
+.st-by>.hint,.st-by>p{margin:0 0 4px}
 </style>
 </head>
 <body>
@@ -5167,21 +5172,21 @@ async function gpsSafe(f){
     return f}catch(_){return f}}
 
 /* ---- an entry from a fish photo: date, time and place from the photo, then the sea and weather of that hour from the archive ---- */
-Object.assign(T.en,{stAll:'All fish',stNoFish:'No catches of this species yet.',stWhen:'When there is most fish',stDays:'Best days',stByCond:'Fish per dive by condition',stPerDive:'per dive',exBtnS:'From a photo',stDive1:'1 dive',stCatch1:'1 fish',exBtn:'New entry from photos',gpsLocL:'Keep this point on this device only (never sent to the cloud)',
+Object.assign(T.en,{stAll:'All fish',stNoFish:'No catches of this species yet.',stWhen:'When I caught the most fish',stDays:'Best days',stByCond:'Fish per dive by condition',stPerDive:'per dive',exBtnS:'From a photo',stDive1:'1 dive',stCatch1:'1 fish',exBtn:'New entry from photos',gpsLocL:'Keep this point on this device only (never sent to the cloud)',
   exGot:'From the photo: {d}',exGps:'point kept on this device only',exNoGps:'The photo has no location (phones often remove it when picking from the gallery). Choose the place.',exNone:'No date or place found in these photos.',
   wxT:'Conditions at that hour',wxGo:'Get the conditions of that hour',wxBusy:'Looking up the archive…',wxFail:'The archive did not answer. Try again later.',wxNeed:'Add the date, a time and the place to get the conditions.',wxSrc:'Archive Open-Meteo · {d}',wxRedo:'Look up again',
   stTitle:'Catch analysis',stNone:'Statistics appear after a few dives with a date.',stFish:'Fish per dive. «best» needs at least 2 dives.',stDives:'{n} dives',stCatch:'{n} fish',stBest:'best',
   stTide:'Tide',stMoon:'Moon',stSea:'Sea',stWind:'Wind',stWater:'Water',stHour:'Time of day',stWave:'Waves (archive)',
   stMoonB:['New moon','Waxing','Full moon','Waning'],stHourB:['before 8:00','8–12','12–17','after 17:00'],
   stFill:'Fill in the conditions for {n} older dives',stFilling:'Filling in {i} of {n}…',stFilled:'Done: {n} dives filled in.',stFillHint:'Only empty fields are filled; nothing you wrote is changed.'});
-Object.assign(T.pt,{stAll:'Todos os peixes',stNoFish:'Ainda não há capturas desta espécie.',stWhen:'Quando há mais peixe',stDays:'Melhores dias',stByCond:'Peixes por mergulho, por condição',stPerDive:'por mergulho',exBtnS:'A partir de foto',stDive1:'1 mergulho',stCatch1:'1 peixe',exBtn:'Nova entrada a partir de fotos',gpsLocL:'Guardar este ponto só neste aparelho (nunca vai para a nuvem)',
+Object.assign(T.pt,{stAll:'Todos os peixes',stNoFish:'Ainda não há capturas desta espécie.',stWhen:'Quando apanhei mais peixe',stDays:'Melhores dias',stByCond:'Peixes por mergulho, por condição',stPerDive:'por mergulho',exBtnS:'A partir de foto',stDive1:'1 mergulho',stCatch1:'1 peixe',exBtn:'Nova entrada a partir de fotos',gpsLocL:'Guardar este ponto só neste aparelho (nunca vai para a nuvem)',
   exGot:'Da foto: {d}',exGps:'ponto guardado só neste aparelho',exNoGps:'A foto não tem localização (os telemóveis costumam retirá-la ao escolher da galeria). Escolha o local.',exNone:'Estas fotos não têm data nem local.',
   wxT:'Condições àquela hora',wxGo:'Ver as condições daquela hora',wxBusy:'A procurar no arquivo…',wxFail:'O arquivo não respondeu. Tente mais tarde.',wxNeed:'Indique a data, uma hora e o local para obter as condições.',wxSrc:'Arquivo Open-Meteo · {d}',wxRedo:'Procurar de novo',
   stTitle:'Análise das capturas',stNone:'As estatísticas aparecem depois de alguns mergulhos com data.',stFish:'Peixes por mergulho. «melhor» só conta com 2 ou mais mergulhos.',stDives:'{n} mergulhos',stCatch:'{n} peixes',stBest:'melhor',
   stTide:'Maré',stMoon:'Lua',stSea:'Mar',stWind:'Vento',stWater:'Água',stHour:'Hora do dia',stWave:'Ondas (arquivo)',
   stMoonB:['Lua nova','Crescente','Lua cheia','Minguante'],stHourB:['antes das 8h','8–12h','12–17h','depois das 17h'],
   stFill:'Preencher as condições de {n} mergulhos antigos',stFilling:'A preencher {i} de {n}…',stFilled:'Feito: {n} mergulhos preenchidos.',stFillHint:'Só se preenchem campos vazios; nada do que escreveu muda.'});
-Object.assign(T.es,{stAll:'Todos los peces',stNoFish:'Aún no hay capturas de esta especie.',stWhen:'Cuándo hay más pesca',stDays:'Mejores días',stByCond:'Peces por inmersión, por condición',stPerDive:'por inmersión',exBtnS:'Desde una foto',stDive1:'1 inmersión',stCatch1:'1 pez',exBtn:'Nueva entrada desde fotos',gpsLocL:'Guardar este punto solo en este dispositivo (nunca va a la nube)',
+Object.assign(T.es,{stAll:'Todos los peces',stNoFish:'Aún no hay capturas de esta especie.',stWhen:'Cuándo pesqué más',stDays:'Mejores días',stByCond:'Peces por inmersión, por condición',stPerDive:'por inmersión',exBtnS:'Desde una foto',stDive1:'1 inmersión',stCatch1:'1 pez',exBtn:'Nueva entrada desde fotos',gpsLocL:'Guardar este punto solo en este dispositivo (nunca va a la nube)',
   exGot:'De la foto: {d}',exGps:'punto guardado solo en este dispositivo',exNoGps:'La foto no tiene ubicación (los móviles suelen quitarla al elegir de la galería). Elige el lugar.',exNone:'Estas fotos no tienen fecha ni lugar.',
   wxT:'Condiciones a esa hora',wxGo:'Ver las condiciones de esa hora',wxBusy:'Buscando en el archivo…',wxFail:'El archivo no respondió. Inténtalo más tarde.',wxNeed:'Indica la fecha, una hora y el lugar para obtener las condiciones.',wxSrc:'Archivo Open-Meteo · {d}',wxRedo:'Buscar de nuevo',
   stTitle:'Análisis de capturas',stNone:'Las estadísticas aparecen tras unas cuantas inmersiones con fecha.',stFish:'Peces por inmersión. «mejor» solo cuenta con 2 o más inmersiones.',stDives:'{n} inmersiones',stCatch:'{n} peces',stBest:'mejor',
@@ -5388,7 +5393,7 @@ function gDraw(){const box=$('gBox');if(!box||!$('gCard').open)return;const S=gS
   let h='<div class="g-row g-dayrow"><button type="button" class="g-nav" id="gPrev" aria-label="'+esc(t('gPrev'))+'" title="'+esc(t('gPrev'))+'"'+(k?'':' disabled')+'>‹</button>'
     +'<div class="fishbox st-spb g-dd"><button type="button" id="gDayBtn" aria-haspopup="listbox"><span class="g-ddl">'+esc(t('gDay'))+'</span><span>'+esc(lab(s))+'</span><small>'+esc(t('gDiveN').replace('{n}',s.n))+' · '+gN1(s.max)+' m</small></button></div>'
     +'<button type="button" class="g-nav" id="gNext" aria-label="'+esc(t('gNext'))+'" title="'+esc(t('gNext'))+'"'+(k<S.length-1?'':' disabled')+'>›</button>'
-    +'<button type="button" class="link g-full" data-g-open="'+esc(s.e.id)+'">'+esc(t('gOpenAll'))+'</button></div>';
+    +'</div>';
   let body='';try{body=dlogHtml(s.e.dlog)}catch(err){body='<p class="hint">'+esc(String(err))+'</p>'}
   box.innerHTML=h+'<div class="g-day">'+body+'</div>'}
 function gPick(btn,items,onPick){const box=btn.parentNode;if(pop&&pop.box===box){closePop();return}openPop(box,items,v=>{onPick(v);closePop();gDraw();const nb=$(btn.id);if(nb)nb.focus()})}
@@ -5492,7 +5497,7 @@ async function soFeedAllMore(first){const el=$('so_feed');if(soFA.busy||!soFA.mo
 document.addEventListener('click',e=>{if(e.target.closest('.so-moreb2'))soFeedAllMore()});
 (function(){const bb=$('bsBody');if(bb)bb.addEventListener('scroll',()=>{if($('bsheet').dataset.mode==='feed'&&!$('bsheet').hidden&&bb.scrollTop+bb.clientHeight>bb.scrollHeight-600)soFeedAllMore()},{passive:true})})();
 
-Object.assign(T.en,{qMore:'More ways to add'});Object.assign(T.pt,{qMore:'Outras formas de adicionar'});Object.assign(T.es,{qMore:'Otras formas de añadir'});if(T.it)Object.assign(T.it,{qMore:'Altri modi per aggiungere'});if(T.fr)Object.assign(T.fr,{qMore:"Autres façons d'ajouter"});
+Object.assign(T.en,{qMore:'More ways to add',qClr:'Clear search'});Object.assign(T.pt,{qMore:'Outras formas de adicionar',qClr:'Apagar pesquisa'});Object.assign(T.es,{qMore:'Otras formas de añadir',qClr:'Borrar búsqueda'});if(T.it)Object.assign(T.it,{qMore:'Altri modi per aggiungere',qClr:'Cancella ricerca'});if(T.fr)Object.assign(T.fr,{qMore:"Autres façons d'ajouter",qClr:'Effacer la recherche'});
 /* ---- caixa de registo rápido: foto e detalhes como ícones dentro do campo; pesquisa como ícone ao lado de Adicionar ---- */
 (function(){const f=$('quickForm'),q=$('quick'),ex=$('exBtn'),mo=$('quickMore'),sr=$('srCard'),on=$('srOn'),sub=f&&f.querySelector('.capture-row>.primary');
   if(!f||!q||!ex||!mo||!sr||!sub)return;
@@ -5514,7 +5519,11 @@ Object.assign(T.en,{qMore:'More ways to add'});Object.assign(T.pt,{qMore:'Outras
   document.addEventListener('click',e=>{if(!mn.hidden&&!e.target.closest('#qMenu,#qMenuBtn'))mset(false)});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!mn.hidden)mset(false)});
   if(f.nextElementSibling!==sr)f.parentNode.insertBefore(sr,f.nextSibling);
-  sr.classList.add('sr-in');const b=$('qSr');
+  sr.classList.add('sr-in');
+  const qi=$('q');if(qi){const wr=document.createElement('span');wr.className='q-clw';qi.parentNode.insertBefore(wr,qi);wr.appendChild(qi);
+    wr.insertAdjacentHTML('beforeend','<button type="button" class="q-clr" id="qClr" data-t="qClr" hidden><span>'+S('<path d="M7 7l10 10M17 7L7 17"/>',14).replace('stroke-width="2"','stroke-width="3"')+'</span><i class="sr-only" data-i="qClr"></i></button>');
+    const cb=$('qClr'),cu=()=>{cb.hidden=!qi.value};qi.addEventListener('input',cu);
+    cb.addEventListener('click',()=>{qi.value='';qi.dispatchEvent(new Event('input',{bubbles:true}));cu();qi.focus()});setInterval(cu,1000)}const b=$('qSr');
   const sync=()=>{b.classList.toggle('open',sr.open);f.classList.toggle('sr-open',sr.open);if(sr.open){const g=parseFloat(getComputedStyle(f.parentNode).rowGap)||0,mb=parseFloat(getComputedStyle(f).marginBottom)||0;sr.style.marginTop=(-(g+mb))+'px'}else sr.style.marginTop='';b.setAttribute('aria-expanded',sr.open?'true':'false');b.classList.toggle('on',!!on&&!on.hidden)};
   b.addEventListener('click',()=>{sr.open=!sr.open;sync();if(sr.open)setTimeout(()=>{try{$('q').focus({preventScroll:true});sr.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(_){}},30)});
   sr.addEventListener('toggle',sync);if(on)new MutationObserver(sync).observe(on,{attributes:true,attributeFilter:['hidden']});sync();
@@ -6059,7 +6068,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795727347';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795728057';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
