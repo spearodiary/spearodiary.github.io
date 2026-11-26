@@ -1661,8 +1661,8 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .fc-win:empty{display:none}
 .nowd{margin-top:4px}.nowd>.nowg{margin-top:8px}
 /* painel do telemóvel: cabeçalho com altura fixa (Amigos tem botões) */
-#bsBody>.bs-pane>details>summary{height:calc(52px + env(safe-area-inset-top,0px));min-height:0!important;overflow:visible}
-#bsBody>.bs-pane>details>summary button{max-height:36px}
+#bsBody>.bs-pane>details:not(#fcCard)>summary{height:calc(52px + env(safe-area-inset-top,0px));min-height:0!important;overflow:visible}
+#bsBody>.bs-pane>details:not(#fcCard)>summary button{max-height:36px}
 
 /* computador: slogan dentro das Definições; setas da linha alinhadas com a margem */
 #settings #tagline{display:block;position:relative;margin:6px 0 8px;padding:12px 14px 12px 46px;border-radius:14px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);font-size:14px!important;font-weight:600;line-height:1.45;white-space:normal;text-align:left;width:auto;overflow:visible}
@@ -1678,11 +1678,12 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bnav button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px 4px;background:none;border:0;border-radius:10px;color:var(--muted);font:600 11px var(--body);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bnav button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bnav button.on{color:var(--accent)}.bnav button:active{background:color-mix(in srgb,var(--ink) 8%,transparent)}
-.bsheet:not([hidden]){display:block;position:fixed;inset:0;z-index:5;background:var(--bg);overflow:hidden}
-.bs-body{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
-.bs-back{position:absolute;z-index:2;top:calc(6px + env(safe-area-inset-top,0px));left:max(4px,env(safe-area-inset-left,0px));width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
-.bs-t{position:absolute;z-index:1;top:0;left:0;right:0;padding:calc(6px + env(safe-area-inset-top,0px)) 0 6px 48px;background:var(--bg);margin:0;line-height:40px;font-size:17px;color:var(--ink)}
-html.bs-on,html.bs-on body{overflow:hidden}
+.bsheet:not([hidden]){display:block;position:relative;background:var(--bg);min-height:100dvh}
+html.bs-on #appView{display:none!important}
+.bs-body{padding:calc(6px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+.bs-back{position:fixed;z-index:2;top:calc(6px + env(safe-area-inset-top,0px));left:max(4px,env(safe-area-inset-left,0px));width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:var(--sea);cursor:pointer}
+.bs-t{position:sticky;z-index:1;top:0;padding:calc(6px + env(safe-area-inset-top,0px)) 0 6px 48px;background:var(--bg);margin:0;line-height:40px;font-size:17px;color:var(--ink)}
+
 #appView[hidden]~#bnav,#appView[hidden]~#bsheet{display:none!important}
 html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:transparent}
 @keyframes msIn{from{transform:translateX(100vw)}to{transform:none}}dialog.mslide[open]{animation:msIn .26s cubic-bezier(.2,.8,.2,1)}dialog.mslide.mout{transform:translateX(100vw);transition:transform .22s ease-in}dialog.mslide::backdrop{background:rgba(4,20,26,.35)}
@@ -1690,14 +1691,14 @@ html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:trans
 @keyframes swL{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}@keyframes swR{from{transform:translateX(-28px);opacity:.4}to{transform:none;opacity:1}}
 .bsheet.sw-l .bs-body{animation:swL .2s ease-out}.bsheet.sw-r .bs-body{animation:swR .2s ease-out}
 @media (prefers-reduced-motion:reduce){.bsheet .bs-body{animation:none!important}}
-#bsBody>.bs-pane>details{margin:0;border:0;background:transparent;padding:0!important}
+#bsBody>.bs-pane>details:not(#fcCard){margin:0;border:0;background:transparent;padding:0!important}
 #bsheet:not([data-mode="more"]):not([data-mode="mt"]) .bs-back{display:none}
 #bsheet:not([data-mode="more"]):not([data-mode="mt"]) .bs-body{padding-top:0}
-#bsBody>.bs-pane>details>summary{position:sticky;top:0;z-index:1;background:var(--bg);margin:0 -14px;padding:calc(6px + env(safe-area-inset-top,0px)) 14px 6px 0;min-height:52px;box-sizing:border-box;cursor:default}
-#bsBody>.bs-pane>details>summary::before{display:block!important;content:"";flex:none;width:12px;height:12px;border:0;border-left:2.5px solid var(--sea);border-bottom:2.5px solid var(--sea);transform:rotate(45deg)!important;margin:0 14px 0 18px;transition:none}
-#bsBody>.bs-pane>details>summary~*{margin-top:6px}
-#bsheet[data-mode="more"] .bs-body,#bsheet[data-mode="mt"] .bs-body{padding-top:calc(52px + env(safe-area-inset-top,0px))}
-#bsMt:not([hidden]){display:grid;gap:16px}.bs-pane[hidden]{display:none!important}#bsBody .fcw{scroll-margin-top:calc(58px + env(safe-area-inset-top,0px))}.bs-t{z-index:3!important}.bs-back{z-index:4!important}#bsMt>#fcNow.fc-now-out{margin:0 0 -2px}
+#bsBody>.bs-pane>details:not(#fcCard)>summary{position:sticky;top:0;z-index:1;background:var(--bg);margin:0 -14px;padding:calc(6px + env(safe-area-inset-top,0px)) 14px 6px 0;min-height:52px;box-sizing:border-box;cursor:default}
+#bsBody>.bs-pane>details:not(#fcCard)>summary::before{display:block!important;content:"";flex:none;width:12px;height:12px;border:0;border-left:2.5px solid var(--sea);border-bottom:2.5px solid var(--sea);transform:rotate(45deg)!important;margin:0 14px 0 18px;transition:none}
+#bsBody>.bs-pane>details:not(#fcCard)>summary~*{margin-top:6px}
+#bsheet[data-mode="more"] .bs-body,#bsheet[data-mode="mt"] .bs-body{padding-top:6px}
+#bsMt:not([hidden]){display:grid;gap:12px}#bsMt>#fcCard>summary{cursor:default}#bsMt>.fcw{margin:0}.bs-pane[hidden]{display:none!important}.bs-t{z-index:3!important}.bs-back{z-index:4!important}#bsMt>#fcNow.fc-now-out{margin:0 0 -2px}
 #bsBody #tagline{display:block!important;position:relative;padding-left:48px!important;width:auto!important;font-size:14px!important;font-weight:600;line-height:1.45!important;white-space:normal!important;text-align:left!important;margin:0 0 22px!important;transform:none!important;padding:14px 16px;border-radius:16px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
 #bsBody #tagline>*{display:inline!important;width:auto!important;white-space:normal!important}#bsBody #tagline::before{content:"";position:absolute;left:15px;top:14px;width:22px;height:22px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat}
 #bsBody #tagline br{display:none}
@@ -2122,8 +2123,8 @@ html,body,button,a,summary,label,[role=button]{-webkit-tap-highlight-color:trans
   <div class="sheet-head"><h2><span data-i="ckTitle"></span> <span class="hint" id="ckCount"></span></h2><button type="button" id="ckClose" class="x-close" data-al="close"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
   <div class="grid2 ck-top"><label for="ckSel"><span data-i="ckListL" class="sr-only"></span><select id="ckSel"></select></label><label for="ckName"><span data-i="ckNameL"></span><input id="ckName" autocomplete="off"></label></div>
   <div class="ck-lbtn"><button type="button" id="ckNewList" class="ck-ib" data-al="ckNewL"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" id="ckDupList" class="ck-ib" data-al="ckDupL"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1.5"/><path d="M15 9V5.5A1.5 1.5 0 0 0 13.5 4h-8A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15H9"/></svg></button><button type="button" id="ckDelList" class="danger"></button><button type="button" id="ckReset" class="primary" data-i="ckResetL"></button></div>
-  <ul class="ck" id="ckList"></ul>
   <form id="ckForm" class="ck-add"><input id="ckNew" data-ph="ckPh" data-al="ckPh" autocomplete="off"><button type="submit" data-i="add"></button></form>
+  <ul class="ck" id="ckList"></ul>
   <div class="row"><button type="button" id="ckBase" data-i="ckBaseL"></button></div>
 </div></dialog>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -5478,23 +5479,26 @@ if(T.fr)Object.assign(T.fr,{bnMt:'Mer',bnMtT:'Mer et météo',bnTools:'Outils',b
   const pane=t=>{if(panes[t])return panes[t];const p=document.createElement('div');p.className='bs-pane';p.dataset.p=t;if(t==='mt')p.id='bsMt';p.hidden=true;body.appendChild(p);
     ITEMS[t]().filter(Boolean).forEach(el=>{homes.push([el,el.parentNode,el.nextSibling,el.tagName==='DETAILS'?el.open:null]);p.appendChild(el);if(t!=='mt'&&el.tagName==='DETAILS'&&!el.open)el.open=true});
     if(t==='more'){const sc=p.querySelector('.tools-sc'),gb=$('gearBtn'),sp=p.querySelector('.tl-sep');if(gb&&sc&&sp){homes.push([gb,gb.parentNode,gb.nextSibling,null]);sc.insertBefore(gb,sp)}}
+    if(t==='mt'){const c=$('fcCard');if(c&&!c.open)c.open=true}
     panes[t]=p;return p};
   const restoreAll=()=>{const extra=[];Object.values(panes).forEach(p=>[...p.children].forEach(c=>{if(!homes.some(h=>h[0]===c))extra.push(c)}));homes.reverse().forEach(([el,par,nx,op])=>{par.insertBefore(el,nx&&nx.parentNode===par?nx:null);if(op!==null&&el.open!==op&&el.id!=='fcCard')el.open=op});homes=[];const w=$('fcNow')||document.querySelector('.fcw');extra.forEach(c=>{if(w&&w.parentNode)w.parentNode.insertBefore(c,w);else $('appView').appendChild(c)});
     Object.keys(panes).forEach(k=>{panes[k].remove();delete panes[k]})};
-  const close=()=>{if(sh.hidden)return;const p=panes[cur];if(p)p.dataset.st=body.scrollTop;sh.hidden=true;document.documentElement.classList.remove('bs-on');act('home')};
+  let homeY=0;const close=()=>{if(sh.hidden)return;const p=panes[cur];if(p)p.dataset.st=scrollY;sh.hidden=true;document.documentElement.classList.remove('bs-on');act('home');scrollTo(0,homeY)};
   const open=t=>{if(t==='home'){const was=!sh.hidden;close();if(!was)scrollTo({top:0,behavior:'smooth'});return}
     if(cur===t&&!sh.hidden){close();return}
-    const old=panes[cur];if(old&&!sh.hidden)old.dataset.st=body.scrollTop;
+    const old=panes[cur];if(old&&!sh.hidden)old.dataset.st=scrollY;if(sh.hidden)homeY=scrollY;
     const p=pane(t);Object.values(panes).forEach(x=>{x.hidden=x!==p});
     if(t==='more'){const sc=p.querySelector('.tools-sc'),ex=p.querySelector('.tl-ext');if(sc)sc.dataset.sec=tx('bnTools');if(ex)ex.dataset.sec=tx('bnLinks')}
     if(t==='feed')feedRe();
     sh.dataset.mode=t;ttl.textContent=t==='more'?tx('bnMore'):t==='mt'?tx('bnMtT'):'';ttl.hidden=t!=='more'&&t!=='mt';
-    sh.hidden=false;document.documentElement.classList.add('bs-on');body.scrollTop=+(p.dataset.st||0);act(t)};
+    sh.hidden=false;document.documentElement.classList.add('bs-on');scrollTo(0,+(p.dataset.st||0));act(t)};
   nav.addEventListener('click',e=>{const b=e.target.closest('[data-bn]');if(b)open(b.dataset.bn)});
   $('bsBack').addEventListener('click',close);
   addEventListener('keydown',e=>{if(e.key==='Escape'&&!sh.hidden&&!document.querySelector('dialog[open]'))close()});
+  /* no separador Mar a previsão fica sempre aberta */
+  body.addEventListener('click',e=>{const s=e.target.closest('#bsMt #fcSum');if(s&&!e.target.closest('button,a,input,select'))e.preventDefault()},true);
   /* no painel, o título do cartão não fecha o cartão */
-  body.addEventListener('click',e=>{const s=e.target.closest('summary');if(s&&s.parentNode&&s.parentNode.parentNode&&s.parentNode.parentNode.classList.contains('bs-pane')&&!e.target.closest('button,a,input,select,label')){e.preventDefault();if(e.clientX-s.getBoundingClientRect().left<52)close()}},true);
+  body.addEventListener('click',e=>{const s=e.target.closest('summary');if(s&&s.parentNode&&s.parentNode.id!=='fcCard'&&s.parentNode.parentNode&&s.parentNode.parentNode.classList.contains('bs-pane')&&!e.target.closest('button,a,input,select,label')){e.preventDefault();if(e.clientX-s.getBoundingClientRect().left<52)close()}},true);
   /* abrir Checklist, Regras, Definições… a partir de «Mais»: os diálogos ficam por cima; o painel fica onde está */
   const f=$('feedCard'),fb=nav.querySelector('[data-bn="feed"]');const syncF=()=>{if(fb&&f)fb.hidden=f.hidden};
   if(f)new MutationObserver(()=>{syncF();if(f.hidden&&cur==='feed')close()}).observe(f,{attributes:true,attributeFilter:['hidden']});syncF();
@@ -5555,7 +5559,7 @@ async function soFeedAllMore(first){const el=$('so_feed');if(soFA.busy||!soFA.mo
     if(soFA.more)el.insertAdjacentHTML('beforeend','<button type="button" class="so-moreb so-moreb2">'+esc(t('soMore'))+'</button>')}
   catch(e){if(first)el.innerHTML='<p class="hint">'+esc(t('frErr'))+'</p>'}finally{soFA.busy=false}}
 document.addEventListener('click',e=>{if(e.target.closest('.so-moreb2'))soFeedAllMore()});
-(function(){const bb=$('bsBody');if(bb)bb.addEventListener('scroll',()=>{if($('bsheet').dataset.mode==='feed'&&!$('bsheet').hidden&&bb.scrollTop+bb.clientHeight>bb.scrollHeight-600)soFeedAllMore()},{passive:true})})();
+addEventListener('scroll',()=>{const sh=$('bsheet');if(sh&&!sh.hidden&&sh.dataset.mode==='feed'&&scrollY+innerHeight>document.documentElement.scrollHeight-600)soFeedAllMore()},{passive:true});
 
 Object.assign(T.en,{qMore:'More ways to add',qClr:'Clear search'});Object.assign(T.pt,{qMore:'Outras formas de adicionar',qClr:'Apagar pesquisa'});Object.assign(T.es,{qMore:'Otras formas de añadir',qClr:'Borrar búsqueda'});if(T.it)Object.assign(T.it,{qMore:'Altri modi per aggiungere',qClr:'Cancella ricerca'});if(T.fr)Object.assign(T.fr,{qMore:"Autres façons d'ajouter",qClr:'Effacer la recherche'});
 /* ---- caixa de registo rápido: foto e detalhes como ícones dentro do campo; pesquisa como ícone ao lado de Adicionar ---- */
@@ -5617,14 +5621,12 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   const d0=drawForecast;drawForecast=function(){const r=d0.apply(this,arguments);try{split();clk()}catch(_){}return r};
   /* mini gráfico: abre e fecha a previsão; tocar num dia só abre (e mostra esse dia) */
   let byStrip=false;
-  st.addEventListener('click',e=>{if(card.open&&!e.target.closest('.fcs-d')){e.stopImmediatePropagation();card.open=false;return}if(!card.open)byStrip=true},true);
+  st.addEventListener('click',e=>{if(w.closest('#bsBody'))return;if(card.open&&!e.target.closest('.fcs-d')){e.stopImmediatePropagation();card.open=false;return}if(!card.open)byStrip=true},true);
   /* deslizar devagar até ao mini gráfico, com ~2 mm de ar por cima dos dias */
   const glide=(sc,to,ms)=>{const win=!sc,from=win?scrollY:sc.scrollTop,d=to-from;if(Math.abs(d)<2)return;const t0=performance.now(),ez=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
     if(matchMedia('(prefers-reduced-motion:reduce)').matches){win?scrollTo(0,to):sc.scrollTop=to;return}
     const step=n=>{const k=Math.min(1,(n-t0)/ms),y=from+d*ez(k);win?scrollTo(0,y):sc.scrollTop=y;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)};
-  card.addEventListener('toggle',()=>{if(card.open&&byStrip){byStrip=false;setTimeout(()=>{try{const sc=w.closest('.bs-body'),air=16;
-      if(sc){const top=w.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-(parseFloat(getComputedStyle(w).scrollMarginTop)||0)-air+8;glide(sc,Math.max(0,top),750)}
-      else glide(null,Math.max(0,w.getBoundingClientRect().top+scrollY-air),750)}catch(_){}},60)}});
+  card.addEventListener('toggle',()=>{if(card.open&&byStrip){byStrip=false;setTimeout(()=>{try{glide(null,Math.max(0,w.getBoundingClientRect().top+scrollY-16),750)}catch(_){}},60)}});
   /* computador: o slogan passa para as Definições */
   const tg=$('tagline'),setD=$('settings'),hd=tg&&tg.parentNode,dq=matchMedia('(min-width:761px)');
   const tgPlace=()=>{if(!tg||!setD||tg.closest('#bsBody'))return;const si=setD.querySelector('.sheet-in')||setD;if(dq.matches){if(!tg.closest('#settings')){const h=si.querySelector('.sheet-head');const ref=h&&h.parentNode===si?h.nextSibling:si.firstChild;si.insertBefore(tg,ref)}}else if(tg.closest('#settings')&&hd)hd.appendChild(tg)};
