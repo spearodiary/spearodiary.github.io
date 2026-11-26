@@ -5522,7 +5522,7 @@ if(T.fr)Object.assign(T.fr,{bnMt:'Mer',bnMtT:'Mer et météo',bnTools:'Outils',b
   let dg=null,hz=false;const pg=()=>sh.hidden?$('appView'):body;const heavy=()=>!sh.hidden&&cur==='mt';
   addEventListener('touchmove',e=>{if(sx==null||!ok)return;const p=e.touches[0],dx=p.clientX-sx,dy=p.clientY-sy;
     if(!hz){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){ok=false;return}if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.4){if(sc.some(s=>dx<0?s.r:s.l)){ok=false;return}
-      hz=true;dg=heavy()?null:pg();if(dg){dg.style.transition='none';dg.style.willChange='transform'}try{document.activeElement&&document.activeElement.blur&&document.activeElement!==document.body&&document.activeElement.blur()}catch(_){}}else return}
+      hz=true;dg=null;if(dg){dg.style.transition='none';dg.style.willChange='transform'}try{document.activeElement&&document.activeElement.blur&&document.activeElement!==document.body&&document.activeElement.blur()}catch(_){}}else return}
     if(!dg)return;const o=order(),i=o.indexOf(sh.hidden?'home':cur),edge=(dx<0&&i===o.length-1)||(dx>0&&i===0);const v='translateX('+Math.round(dx*(edge?.15:.4))+'px)';if(!dg._raf)dg._raf=requestAnimationFrame(()=>{if(dg){dg.style.transform=dg._v;dg._raf=0}});dg._v=v},{passive:true});
   const undrag=()=>{hz=false;if(!dg)return;const d=dg;dg=null;if(d._raf){cancelAnimationFrame(d._raf);d._raf=0}d.style.transition='transform .18s ease-out';d.style.transform='';setTimeout(()=>{d.style.transition='';d.style.willChange=''},200)};
   addEventListener('touchcancel',()=>{sx=null;undrag()},{passive:true});
@@ -5530,7 +5530,7 @@ if(T.fr)Object.assign(T.fr,{bnMt:'Mer',bnMtT:'Mer et météo',bnTools:'Outils',b
     if(Date.now()-st0>800||Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;
     if(sc.some(s=>dx<0?s.r:s.l))return;
     const o=order(),i=o.indexOf(sh.hidden?'home':cur),j=i+(dx<0?1:-1);if(i<0||j<0||j>=o.length)return;
-    o[j]==='home'?close():open(o[j]);sh.classList.remove('sw-l','sw-r');void sh.offsetWidth;if(!sh.hidden&&cur!=='mt')sh.classList.add(dx<0?'sw-l':'sw-r')},{passive:true});
+    o[j]==='home'?close():open(o[j]);sh.classList.remove('sw-l','sw-r');void sh.offsetWidth;},{passive:true});
   /* janelas abertas a partir de «Mais» entram da direita e saem para a direita */
   const pc=HTMLDialogElement.prototype.close;
   const slide=d=>{if(d._ms)return;d._ms=1;
@@ -6176,7 +6176,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795735599';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795735798';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
