@@ -1552,6 +1552,7 @@ button.fwc{font:inherit;font-size:13px;cursor:pointer;margin:0;line-height:1.5}b
 .zst{font-weight:600}.zs-ban{color:#e5484d}.zs-cond{color:#f5a524}.zs-info{color:#3e9bff}
 .zmap-btn{font-weight:600}
 .zleg{position:absolute;left:8px;bottom:22px;z-index:1000;display:flex;flex-wrap:wrap;gap:4px 10px;padding:5px 9px;border-radius:8px;background:rgba(15,25,30,.78);color:#fff;font-size:12px;line-height:1.3;pointer-events:none;max-width:calc(100% - 90px)}.zleg span{display:inline-flex;align-items:center;gap:5px}.zleg i{width:11px;height:11px;border-radius:3px;display:inline-block;opacity:.9}
+.fc-pg .fc-isl{color:var(--accent);font-weight:800}
 </style>
 </head>
 <body>
@@ -2911,7 +2912,7 @@ $('fcRes').addEventListener('click',ev=>{const sv=ev.target.closest('button[data
 function fcPopClose(){$('fcPop').hidden=true;$('fcSpotBtn').setAttribute('aria-expanded','false')}
 $('fcSpotBtn').addEventListener('click',ev=>{ev.stopPropagation();const pop=$('fcPop');if(!pop.hidden){fcPopClose();return}const sel=$('fcSpot');
   const item=o=>'<button type="button" role="option" data-v="'+esc(o.value)+'"'+(o.value===sel.value?' class="on" aria-selected="true"':'')+(o.value==='__new'?' data-new="1"':'')+'>'+esc(o.textContent)+'</button>';
-  pop.innerHTML=[...sel.children].map(ch=>ch.tagName==='OPTGROUP'?'<div class="fc-pg">'+esc(ch.label)+'</div>'+[...ch.children].map(item).join(''):item(ch)).join('');
+  pop.innerHTML=[...sel.children].map(ch=>ch.tagName==='OPTGROUP'?'<div class="fc-pg">'+(l=>{const k=l.lastIndexOf(' · ');return k<0?esc(l):esc(l.slice(0,k+3))+'<b class="fc-isl">'+esc(l.slice(k+3))+'</b>'})(ch.label)+'</div>'+[...ch.children].map(item).join(''):item(ch)).join('');
   pop.hidden=false;$('fcSpotBtn').setAttribute('aria-expanded','true');const on=pop.querySelector('.on');if(on)on.scrollIntoView({block:'nearest'})});
 $('fcPop').addEventListener('click',ev=>{const b=ev.target.closest('button[data-v]');if(!b)return;fcPopClose();const sel=$('fcSpot');sel.value=b.dataset.v;sel.dispatchEvent(new Event('change'))});
 document.addEventListener('click',ev=>{if(!$('fcPop').hidden&&!ev.target.closest('.fc-ddw'))fcPopClose()});
