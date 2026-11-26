@@ -1657,7 +1657,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .fcw>.fcs .fcs-d{padding-right:0}
 #fcCard:not([open]){display:none}
 #fcCard>summary::before{display:none!important}#fcCard>summary{padding-left:0}
-.fc-now-out{margin-bottom:-10px}.fc-now-out .nowd>summary .nl{font-variant-numeric:tabular-nums;font-weight:600}.fc-now-out .nowd>summary{pointer-events:none;cursor:default}.fc-now-out .nowd>summary::before{display:none}.fc-now-out .nowd{margin-top:0}
+#fcNow.fc-now-out{margin:10px 0 -2px}@media (min-width:761px){#fcNow.fc-now-out{margin-top:-7px}}.fc-now-out .nowd>summary .nl{font-variant-numeric:tabular-nums;font-weight:600}.fc-now-out .nowd>summary{pointer-events:none;cursor:default}.fc-now-out .nowd>summary::before{display:none}.fc-now-out .nowd{margin-top:0}
 .fc-win:empty{display:none}
 .nowd{margin-top:4px}.nowd>.nowg{margin-top:8px}
 /* painel do telemóvel: cabeçalho com altura fixa (Amigos tem botões) */
@@ -6135,7 +6135,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795731710';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795731870';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
