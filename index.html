@@ -1479,7 +1479,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:max(0px,calc(env(sa
 /* folded forecast strip */
 .fcs{cursor:pointer;margin:2px 2px 4px;padding:2px 0 4px;--fcsw:1;-webkit-tap-highlight-color:transparent}
 .fcs-d{display:grid;margin-right:30px;text-align:center;line-height:1.15;margin-bottom:6px}
-.fcs-d span{display:flex;flex-direction:column;color:var(--muted);opacity:.75}.fcs-d span.on{color:var(--ink);opacity:1}
+.fcs-d span{display:flex;flex-direction:column;color:var(--muted);opacity:.75}.fcs-d span.on{color:var(--ink);opacity:1}.fcs-d span.fw{color:var(--good);opacity:1}
 .fcs-d b{font-size:11px;font-weight:700;letter-spacing:.04em}.fcs-d i{font-style:normal;font-size:14px;font-weight:600}
 .fcs-rows{position:relative;display:flex;flex-direction:column;gap:5px}
 .fcs-r{display:flex;align-items:center;gap:8px}.fcs-b{flex:1;height:12px;border-radius:6px}.fcs-i{flex:none;width:22px;color:var(--muted);display:grid;place-items:center}
@@ -1584,7 +1584,23 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .st-c.st-wind,.st-c.st-sun{border-left-color:#7DBCEB;background:color-mix(in srgb,#7DBCEB 13%,var(--surface))}
 .st-c.st-moon{border-left-color:#B9B3A0;background:color-mix(in srgb,#B9B3A0 15%,var(--surface))}
 .trio{display:contents}
+@media (max-width:760px){.trio{display:grid;grid-template-rows:34px auto;column-gap:22px;row-gap:6px;align-items:center;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.trio::-webkit-scrollbar{display:none}
+.trio>details{margin:0;min-width:0;grid-row:1}
+.trio>details:not([open])>summary{white-space:nowrap}
+.trio>details[open]{grid-row:2;grid-column:1/-1!important;justify-self:start;width:var(--tw,100%);box-sizing:border-box;position:sticky;left:0;align-self:start;padding-top:10px!important}
+.trio>details[open]>summary{position:absolute;top:-40px;left:calc(var(--cx,0px) - var(--sx,0px));width:var(--cw,auto);white-space:nowrap;box-sizing:border-box;min-height:32px}
+.trio.meas>details{grid-row:1!important;grid-column:auto!important;position:static!important;width:auto!important;padding:0 2px!important}
+.trio.meas>details>summary{position:static!important;width:max-content!important}.trio.meas>details>:not(summary){display:none!important}}
 .trio{display:contents}
+@media (max-width:760px){.trio{display:grid;grid-template-rows:34px auto;column-gap:22px;row-gap:6px;align-items:center;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.trio::-webkit-scrollbar{display:none}
+.trio>details{margin:0;min-width:0;grid-row:1}
+.trio>details:not([open])>summary{white-space:nowrap}
+.trio>details[open]{grid-row:2;grid-column:1/-1!important;justify-self:start;width:var(--tw,100%);box-sizing:border-box;position:sticky;left:0;align-self:start;padding-top:10px!important}
+.trio>details[open]>summary{position:absolute;top:-40px;left:calc(var(--cx,0px) - var(--sx,0px));width:var(--cw,auto);white-space:nowrap;box-sizing:border-box;min-height:32px}
+.trio.meas>details{grid-row:1!important;grid-column:auto!important;position:static!important;width:auto!important;padding:0 2px!important}
+.trio.meas>details>summary{position:static!important;width:max-content!important}.trio.meas>details>:not(summary){display:none!important}}
 @media (min-width:761px){.trio{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));grid-template-rows:34px auto;gap:6px 14px;align-items:center}
 .trio>details{margin:0;min-width:0;grid-row:1}
 .trio>details:not([open])>summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3130,7 +3146,10 @@ function fcStrip(){const el=$('fcStrip'),card=$('fcCard');if(!el||!card)return;c
   const NA='rgba(128,142,156,.45)';
   const grad=(m,sc)=>{const st=[];for(let t=t0;t<T1;t+=36e5){const c=fcsCol(sc,m.get(t))||NA,a=((t-t0)/span*100).toFixed(2),b=((t+36e5-t0)/span*100).toFixed(2);st.push(c+' '+a+'%',c+' '+b+'%')}return 'linear-gradient(90deg,'+st.join(',')+')'};
   const wd=new Intl.DateTimeFormat(locale(),{timeZone:TZ,weekday:'short'}),dn=new Intl.DateTimeFormat(locale(),{timeZone:TZ,day:'numeric'});
-  let days='';for(let d=0;d<nd;d++){const mid=new Date(t0+d*864e5+432e5);days+='<span class="'+(d<2?'on':'')+'"><b>'+esc(wd.format(mid).replace('.','').slice(0,3).toUpperCase())+'</b><i>'+esc(dn.format(mid))+'</i></span>'}
+  let fwD=new Set();try{const sp=fcSpot||FC_DEF,H=[...Array(nd*24)].map((_,i)=>t0+i*36e5),gw=(m,t)=>m.get(t),WP=ser(D.m,'wave_period');
+    fwWindows(H,H.map(t=>({wind_speed_10m:gw(W,t)})),H.map(t=>({wave_height:gw(V,t),wave_period:gw(WP,t)})),1,sp).filter(x=>x.e>nowMs).slice(0,6)
+      .forEach(x=>{for(let d=0;d<nd;d++){const a=t0+d*864e5;if(x.s<a+864e5&&Math.max(x.s,nowMs)<x.e&&x.e>a)fwD.add(d)}})}catch(_){}
+  let days='';for(let d=0;d<nd;d++){const mid=new Date(t0+d*864e5+432e5);days+='<span class="'+(d<2?'on':'')+(fwD.has(d)?' fw':'')+'"><b>'+esc(wd.format(mid).replace('.','').slice(0,3).toUpperCase())+'</b><i>'+esc(dn.format(mid))+'</i></span>'}
   const nowX=((nowMs-t0)/span*100);
   const IW='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/></svg>';
   const IV='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>';
@@ -5280,16 +5299,25 @@ document.addEventListener('click',ev=>{const tg=ev.target.closest&&ev.target.clo
 document.addEventListener('keydown',ev=>{if(ev.target&&ev.target.id==='gDayBtn')popKeys(ev);
   const f=ev.target&&ev.target.closest&&ev.target.closest('#gBox figure.dlc[data-k]');if(f&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();f.click()}});
 $('gCard').addEventListener('toggle',gDraw);
-/* desktop: Amigos + Análise + Gráficos numa linha (3 colunas); a aberta abre por baixo, o título fica na linha */
+/* Análise + Gráficos + Amigos numa linha acima de Mar e tempo; a aberta abre por baixo, o título fica na linha.
+   desktop: 3 colunas; telemóvel: uma linha que desliza na horizontal */
 (function(){const mq=matchMedia('(min-width:761px)'),f=$('feedCard'),tr=$('trio'),home=$('fcCard');if(!f||!tr||!home)return;
-  const cards=()=>[$('stCard'),$('gCard'),f],qf=$('quickForm');
-  const lay=()=>{const vis=cards().filter(e=>!e.hidden);
-    if(!mq.matches){cards().forEach(e=>{e.style.gridColumn='';e.style.removeProperty('--k')});return}
+  const cards=()=>[$('stCard'),$('gCard'),f];let busy=false,rev=true;
+  const lay=()=>{if(busy)return;busy=true;try{const vis=cards().filter(e=>!e.hidden);
+    vis.filter(e=>e.open).slice(1).forEach(e=>e.open=false);
     tr.style.setProperty('--n',vis.length||1);vis.forEach((e,i)=>{e.style.gridColumn=String(i+1);e.style.setProperty('--k',i)});
-    const op=vis.filter(e=>e.open);op.slice(1).forEach(e=>e.open=false)};
-  const place=()=>{if(mq.matches){if(tr.nextElementSibling!==home)home.parentNode.insertBefore(tr,home);if(tr.lastElementChild!==f)tr.appendChild(f)}
-    else{if(f.nextElementSibling!==home)home.parentNode.insertBefore(f,home);if(qf&&tr.nextElementSibling!==qf)qf.parentNode.insertBefore(tr,qf)}lay()};
-  cards().forEach(e=>e.addEventListener('toggle',()=>{if(mq.matches&&e.open)cards().forEach(o=>{if(o!==e&&o.open)o.open=false})}));
+    if(mq.matches){tr.style.gridTemplateColumns='';return}
+    tr.classList.add('meas');tr.style.gridTemplateColumns='repeat('+vis.length+',max-content)';
+    const w=vis.map(e=>Math.ceil(e.querySelector('summary').getBoundingClientRect().width)+4);tr.classList.remove('meas');
+    tr.style.gridTemplateColumns=w.map(x=>x+'px').join(' ');const gap=22;
+    vis.forEach((e,i)=>{e.style.setProperty('--cx',(w.slice(0,i).reduce((a,b)=>a+b+gap,0))+'px');e.style.setProperty('--cw',w[i]+'px')});
+    tr.style.setProperty('--tw',tr.clientWidth+'px');
+    if(rev){const k=vis.findIndex(e=>e.open);if(k>=0&&tr.clientWidth){rev=false;const x=w.slice(0,k).reduce((a,b)=>a+b+gap,0),v=tr.clientWidth;if(x<tr.scrollLeft||x+w[k]>tr.scrollLeft+v)tr.scrollLeft=Math.max(0,x+w[k]-v+8)}}
+    tr.style.setProperty('--sx',tr.scrollLeft+'px')}finally{busy=false}};
+  const place=()=>{if(tr.nextElementSibling!==home)home.parentNode.insertBefore(tr,home);if(tr.lastElementChild!==f)tr.appendChild(f);lay()};
+  cards().forEach(e=>e.addEventListener('toggle',()=>{if(e.open){cards().forEach(o=>{if(o!==e&&o.open)o.open=false});rev=true}lay()}));
+  tr.addEventListener('scroll',()=>tr.style.setProperty('--sx',tr.scrollLeft+'px'),{passive:true});
+  addEventListener('resize',lay);try{document.fonts.ready.then(lay)}catch(_){}
   new MutationObserver(lay).observe(f,{attributes:true,attributeFilter:['hidden']});
   place();try{mq.addEventListener('change',place)}catch(_){mq.addListener(place)}})();
 
@@ -5823,7 +5851,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795712463';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795712864';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
