@@ -1584,10 +1584,12 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .st-c.st-wind,.st-c.st-sun{border-left-color:#7DBCEB;background:color-mix(in srgb,#7DBCEB 13%,var(--surface))}
 .st-c.st-moon{border-left-color:#B9B3A0;background:color-mix(in srgb,#B9B3A0 15%,var(--surface))}
 .trio{display:contents}
-@media (min-width:761px){.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row dense;gap:6px 14px;align-items:start}
-.trio:not(:has(#feedCard:not([hidden]))){grid-template-columns:repeat(2,minmax(0,1fr))}
-.trio>details{margin:0;min-width:0}.trio>details[open]{grid-column:1/-1}
-.trio>details:not([open])>summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.trio{display:contents}
+@media (min-width:761px){.trio{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));grid-template-rows:34px auto;gap:6px 14px;align-items:center}
+.trio>details{margin:0;min-width:0;grid-row:1}
+.trio>details:not([open])>summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trio>details[open]{grid-row:2;grid-column:1/-1!important;position:relative;align-self:start;padding-top:10px!important}
+.trio>details[open]>summary{position:absolute;top:-40px;left:calc(var(--k,0) * (100% + 14px) / var(--n,3) + 1px);width:calc((100% - (var(--n,3) - 1) * 14px) / var(--n,3) - 4px);box-sizing:border-box;min-height:32px}}
 #gCard{padding:3px 12px}#gCard[open]{padding-bottom:12px}#gCard:not([open]){background:transparent;border-color:transparent;padding:0 2px}
 #gCard>summary{min-height:30px;color:var(--sea);font-weight:600}#gCard>summary .fc-ic{flex:none}
 #gBox{display:grid;gap:10px;padding:6px 0 4px}#gBox .nowh{margin:4px 0 0}#gBox .nowh small{text-transform:none;letter-spacing:0;font-weight:400}
@@ -5278,9 +5280,16 @@ document.addEventListener('click',ev=>{const tg=ev.target.closest&&ev.target.clo
 document.addEventListener('keydown',ev=>{if(ev.target&&ev.target.id==='gDayBtn')popKeys(ev);
   const f=ev.target&&ev.target.closest&&ev.target.closest('#gBox figure.dlc[data-k]');if(f&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();f.click()}});
 $('gCard').addEventListener('toggle',gDraw);
-/* desktop: Amigos + Análise + Gráficos numa linha (3 colunas) */
+/* desktop: Amigos + Análise + Gráficos numa linha (3 colunas); a aberta abre por baixo, o título fica na linha */
 (function(){const mq=matchMedia('(min-width:761px)'),f=$('feedCard'),tr=$('trio'),home=$('fcCard');if(!f||!tr||!home)return;
-  const place=()=>{if(mq.matches){if(f.parentNode!==tr)tr.insertBefore(f,tr.firstChild)}else if(f.nextElementSibling!==home)home.parentNode.insertBefore(f,home)};
+  const cards=()=>[f,$('stCard'),$('gCard')];
+  const lay=()=>{const vis=cards().filter(e=>!e.hidden);
+    if(!mq.matches){cards().forEach(e=>{e.style.gridColumn='';e.style.removeProperty('--k')});return}
+    tr.style.setProperty('--n',vis.length||1);vis.forEach((e,i)=>{e.style.gridColumn=String(i+1);e.style.setProperty('--k',i)});
+    const op=vis.filter(e=>e.open);op.slice(1).forEach(e=>e.open=false)};
+  const place=()=>{if(mq.matches){if(f.parentNode!==tr)tr.insertBefore(f,tr.firstChild)}else if(f.nextElementSibling!==home)home.parentNode.insertBefore(f,home);lay()};
+  cards().forEach(e=>e.addEventListener('toggle',()=>{if(mq.matches&&e.open)cards().forEach(o=>{if(o!==e&&o.open)o.open=false})}));
+  new MutationObserver(lay).observe(f,{attributes:true,attributeFilter:['hidden']});
   place();try{mq.addEventListener('change',place)}catch(_){mq.addListener(place)}})();
 
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
@@ -5813,7 +5822,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795711310';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795711661';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
