@@ -1648,10 +1648,14 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 #settings .sg-cf{--sgi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF7A2F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12c3.5-4.5 8.5-5.5 13-3l4-3v12l-4-3c-4.5 2.5-9.5 1.5-13-3z'/%3E%3Ccircle cx='7' cy='11' r='.6'/%3E%3C/svg%3E");--sgt:color-mix(in srgb,#FF7A2F 17%,transparent)}
 #settings .sg-dl{--sgi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E0B03C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4v16h18'/%3E%3Cpath d='M7 15l4-5 3 3 5-7'/%3E%3C/svg%3E");--sgt:color-mix(in srgb,#E0B03C 17%,transparent)}
 #settings .sg-data{--sgi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A9BA8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='12' cy='6' rx='7' ry='3'/%3E%3Cpath d='M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6'/%3E%3Cpath d='M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3'/%3E%3C/svg%3E");--sgt:color-mix(in srgb,#8A9BA8 17%,transparent)}
-/* Mar e tempo: o mini gráfico e o título formam um só bloco */
-.fcs:has(+#fcCard){margin-bottom:-12px}
-.fcs:has(+#fcCard[open]){background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;margin:0 0 -16px;padding:10px 12px 2px}
-.fcs+#fcCard[open]{border-top:0;border-radius:0 0 8px 8px}
+/* Mar e tempo: mini gráfico (abre a previsão), lâmpada por cima dos ícones, Agora sempre aberto */
+.fcw{position:relative}.fcw>.fcs{margin-bottom:0}
+.fcw>#fcPal{position:absolute;right:0;top:-2px;z-index:1}
+.fcw>.fcs .fcs-d{padding-right:0}
+#fcCard:not([open]){display:none}
+#fcCard>summary::before{display:none!important}#fcCard>summary{padding-left:0}
+.fc-now-out{margin-top:-8px}.fc-now-out .nowd>summary{pointer-events:none;cursor:default}.fc-now-out .nowd>summary::before{display:none}.fc-now-out .nowd{margin-top:0}
+.fc-win:empty{display:none}
 .nowd{margin-top:4px}.nowd>.nowg{margin-top:8px}
 /* painel do telemóvel: cabeçalho com altura fixa (Amigos tem botões) */
 #bsBody>details>summary{height:calc(52px + env(safe-area-inset-top,0px));min-height:0!important;overflow:visible}
@@ -3182,7 +3186,7 @@ $('fcSpot').addEventListener('change',()=>{if($('fcSpot').value==='__new'){$('fc
 /* opening the card shows what is already drawn; it is redrawn only when the data, language or 10 minutes have changed (a 14-day table is heavy on phones) */
 let fcDrawn=null;
 $('fcCard').addEventListener('toggle',()=>{try{localStorage.setItem('sn-fc',$('fcCard').open?'1':'0')}catch(e){}if(!$('fcCard').open){try{fcStrip()}catch(e){}return}
-  if(!fcData){fcLoad();return}if(fcDrawn&&fcDrawn.d===fcData&&fcDrawn.l===lang&&Date.now()-fcDrawn.t<6e5&&$('fcBox').childElementCount)return;drawForecast()});
+  if(!fcData){fcLoad();return}drawForecast()});
 try{if(localStorage.getItem('sn-fc')==='0')$('fcCard').open=false}catch(e){}
 setInterval(()=>{if($('fcCard').open)fcLoad()},36e5);
 function wxKind(c){return c==null?'':c===0?'sunny':c<=2?'partly':c===3?'cloudy':c===45||c===48?'fog':c>=51&&c<=57?'drizzle':c>=95?'storm':'rain'}
@@ -3306,7 +3310,7 @@ function fwWindows(hrs,wv,mv,ST,sp){const o=fwGet(),out=[],H=ST*18e5;let cur=nul
   return out.filter(x=>x.e-x.s>=o.h*36e5-1000)}
 function drawForecast(){
   try{fcStrip()}catch(e){}
-  const card=$('fcCard');if(!card||!card.open)return;fcDrawn={d:fcData,l:lang,t:Date.now()};
+  const card=$('fcCard');if(!card)return;fcDrawn={d:fcData,l:lang,t:Date.now()};
   const box=$('fcBox'),nowEl=$('fcNow'),nowMs=Date.now(),p=lisbonParts(nowMs),t0=nowMs-((p.hour*60+p.minute)*60+p.second)*1000-nowMs%1000;
   const lastW=fcData&&fcData.w&&fcData.w.time?fcData.w.time[fcData.w.time.length-1]*1000:t0+3*864e5,DAYS=Math.max(3,Math.min(14,Math.ceil((lastW-t0)/864e5))),ST=fcStep(),HALF=ST*18e5,NH=DAYS*24/ST,CW=32,W=NH*CW,cx=i=>i*CW+CW/2,XT=t=>(t-t0)/(36e5*ST)*CW+CW/2;
   const R=[['day',22],['hour',20],['win',20],['sun',22],['sky',34],['air',20],['g0',10],['wind',22],['windA',48],['g1',22],['wave',16],['waveA',48],['gc',10],['clar',30],['g2',10],['sst',16],['g3',8],['tide',60]];
@@ -3393,7 +3397,7 @@ function drawForecast(){
   const ni=(cls,lab,val,sub)=>val?'<span class="ni ni-'+cls+'"><span class="nl">'+esc(lab)+'</span><b>'+val+'</b>'+(sub?'<span class="ns">'+sub+'</span>':'')+'</span>':'';
   const narr=d=>d==null?'':' <svg class="narr" width="11" height="11" viewBox="-7 -7 14 14" aria-hidden="true"><path d="M0 -6.5L4 4 0 1.8-4 4Z" transform="rotate('+((d+180)%360)+')"/></svg>';
   const ccn=clarity(Math.round(nowMs/36e5)*36e5,wm,mm,near,farT);
-  nowEl.innerHTML='<details class="fwl nowd"'+((()=>{try{return localStorage.getItem('sn-nowopen')==='1'}catch(_){return false}})()?' open':'')+'><summary><span class="nl">'+esc(t('tideNowL'))+'</span></summary><div class="nowg">'+[
+  nowEl.innerHTML='<details class="fwl nowd" open><summary tabindex="-1"><span class="nl">'+esc(t('tideNowL'))+'</span></summary><div class="nowg">'+[
     cm.wave_height!=null?ni('wave',t('fcWavesT'),f1(cm.wave_height)+' m',f0(cm.wave_period)+' s · '+dir16(cm.wave_direction)+narr(cm.wave_direction)):'',
     cw.wind_speed_10m!=null?ni('wind',t('fcWindT'),f0(wc(cw.wind_speed_10m))+' '+WU[wUnit].l,esc(t('fcGust'))+' '+f0(wc(cw.wind_gusts_10m))+' · '+dir16(cw.wind_direction_10m)+narr(cw.wind_direction_10m)):'',
     farT?'':ni('tide',t('nTide'),esc(t('tideS_'+st)),nxt?esc(t(nxt.high?'nHigh':'nLow'))+' '+hhmm(nxt.t):''),
@@ -5420,7 +5424,7 @@ document.addEventListener('keydown',ev=>{if(ev.target&&ev.target.id==='gDayBtn')
 $('gCard').addEventListener('toggle',gDraw);
 /* Análise + Gráficos + Amigos numa linha acima de Mar e tempo; a aberta abre por baixo, o título fica na linha.
    desktop: 3 colunas; telemóvel: uma linha que desliza na horizontal */
-(function(){const mq=matchMedia('(min-width:761px)'),f=$('feedCard'),tr=$('trio'),home=$('fcStrip')||$('fcCard');if(!f||!tr||!home)return;
+(function(){const mq=matchMedia('(min-width:761px)'),f=$('feedCard'),tr=$('trio'),H=()=>{const s=$('fcStrip');return s?(s.parentNode.classList.contains('fcw')?s.parentNode:s):$('fcCard')};if(!f||!tr||!H())return;
   const cards=()=>[$('stCard'),$('gCard'),f];let busy=false,rev=true;
   const lay=()=>{if(busy)return;busy=true;try{const vis=cards().filter(e=>!e.hidden&&e.parentNode===tr);
     vis.filter(e=>e.open).slice(1).forEach(e=>e.open=false);
@@ -5433,7 +5437,7 @@ $('gCard').addEventListener('toggle',gDraw);
     tr.style.setProperty('--tw',tr.clientWidth+'px');
     if(rev){const k=vis.findIndex(e=>e.open);if(k>=0&&tr.clientWidth){rev=false;const x=w.slice(0,k).reduce((a,b)=>a+b+gap,0),v=tr.clientWidth;if(x<tr.scrollLeft||x+w[k]>tr.scrollLeft+v)tr.scrollLeft=Math.max(0,x+w[k]-v+8)}}
     tr.style.setProperty('--sx',tr.scrollLeft+'px')}finally{busy=false}};
-  const place=()=>{if(tr.nextElementSibling!==home)home.parentNode.insertBefore(tr,home);if(tr.lastElementChild!==f)tr.appendChild(f);lay()};
+  const place=()=>{const home=H();if(tr.nextElementSibling!==home)home.parentNode.insertBefore(tr,home);if(tr.lastElementChild!==f)tr.appendChild(f);lay()};
   cards().forEach(e=>e.addEventListener('toggle',()=>{if(e.parentNode!==tr)return;if(e.open){cards().forEach(o=>{if(o!==e&&o.open&&o.parentNode===tr)o.open=false});rev=true}lay()}));
   tr.addEventListener('scroll',()=>tr.style.setProperty('--sx',tr.scrollLeft+'px'),{passive:true});
   addEventListener('resize',lay);try{document.fonts.ready.then(lay)}catch(_){}
@@ -5576,6 +5580,21 @@ Object.assign(T.en,{qMore:'More ways to add',qClr:'Clear search'});Object.assign
   const g=document.createElement('div');g.className='sg-group';secs[0].parentNode.insertBefore(g,secs[0]);secs.forEach(s=>g.appendChild(s));
   const mark=()=>{const v=secs.filter(s=>!s.hidden);secs.forEach(s=>s.classList.remove('sg-first','sg-last'));if(v.length){v[0].classList.add('sg-first');v[v.length-1].classList.add('sg-last')}};
   const mo=new MutationObserver(mark);secs.forEach(s=>mo.observe(s,{attributes:true,attributeFilter:['hidden']}));mark()})();
+
+/* ---- Mar e tempo: mini gráfico em cima (abre a previsão), «Agora» sempre visível, título sem seta ---- */
+Object.assign(T.pt,{fwNext:'Próximas sessões',fwRow:'Sessão',fwMin:'Duração mínima da sessão',fwNone:'Nenhuma sessão possível com os seus limites nos próximos dias (as ondas só têm previsão para 8 dias).',fwHint:'A app marca como sessão possível o tempo entre o nascer e o pôr do sol oficial em que o vento e as ondas estão dentro destes limites, durante pelo menos a duração mínima. Aparece a verde no gráfico de Mar e tempo.'});
+Object.assign(T.en,{fwNext:'Next sessions',fwRow:'Session',fwMin:'Shortest session',fwNone:'No possible session within your limits in the coming days (wave forecasts reach 8 days).',fwHint:'The app marks as a possible session the time between official sunrise and sunset when wind and waves stay within these limits for at least the shortest session. It shows in green on the Sea & weather chart.'});
+Object.assign(T.es,{fwNext:'Próximas sesiones',fwRow:'Sesión',fwMin:'Sesión más corta',fwNone:'No hay sesiones posibles dentro de tus límites en los próximos días (la previsión de olas llega a 8 días).',fwHint:'La app marca como sesión posible el tiempo entre la salida y la puesta del sol oficiales en que el viento y las olas se mantienen dentro de estos límites durante al menos la sesión más corta. Aparece en verde en el gráfico de Mar y tiempo.'});
+if(T.it)Object.assign(T.it,{fwNext:'Prossime uscite',fwRow:'Uscita',fwMin:'Uscita più breve'});
+if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'Sortie la plus courte'});
+(function(){const st=$('fcStrip'),card=$('fcCard'),pal=$('fcPal'),now=$('fcNow');if(!st||!card||!now)return;
+  const w=document.createElement('div');w.className='fcw';st.parentNode.insertBefore(w,st);w.appendChild(st);if(pal)w.appendChild(pal);
+  const win=document.createElement('div');win.id='fcWin';win.className='fc-win';now.parentNode.insertBefore(win,now);
+  card.parentNode.insertBefore(now,card);now.classList.add('fc-now-out');
+  const split=()=>{const kids=[...now.childNodes].filter(n=>!(n.nodeType===1&&n.classList.contains('nowd')));win.textContent='';kids.forEach(n=>win.appendChild(n))};
+  const d0=drawForecast;drawForecast=function(){const r=d0.apply(this,arguments);try{split()}catch(_){}return r};
+  /* tocar no título fecha a previsão */
+  try{split()}catch(_){}})();
 
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
 const isSpecies=lat=>/^[A-Z][a-z]+ [a-z]+$/.test(lat||'')&&!/ spp$/.test(lat);
@@ -6107,7 +6126,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795730501';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795731178';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
