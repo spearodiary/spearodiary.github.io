@@ -2899,7 +2899,7 @@ async function fcSearch(){
   const r=await placeFind(q);if($('fcQ').value.trim()!==q)return;
   if(!r.length){res.innerHTML='<li class="hint">'+esc(t(SHORT_RE.test(q)?'fcShort':'libNone'))+'</li>';return}
   if(r[0].exact){one(r[0].lat,r[0].lng,r[0].name);return}
-  res.innerHTML=r.map(x=>'<li class="fc-row"><button type="button" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'">'+esc(x.name)+(x.sub?' <span class="hint">'+esc(x.sub)+'</span>':'')+'</button>'+see(x.lat,x.lng,x.name)+'</li>').join('')
+  res.innerHTML=r.map(x=>'<li class="fc-row"><button type="button" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'">'+esc(x.name)+(x.sub?' <span class="hint">'+esc(x.sub)+'</span>':'')+'</button>'+see(x.lat,x.lng,x.name)+'<button type="button" class="fc-add" data-lat="'+x.lat+'" data-lon="'+x.lng+'" data-name="'+esc(x.name)+'">'+esc(t('fcAdd'))+'</button></li>').join('')
 }
 $('fcGo').addEventListener('click',fcSearch);
 $('fcQ').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();fcSearch()}else if(ev.key==='Escape'){fcFindClose()}});
@@ -2927,7 +2927,7 @@ async function placeFind(q){const c=parseCoords(q);if(c)return [{name:'',lat:c.l
       const c2=parseCoords(all.replace(/[?&](?:ftid|lucs|g_st|entry)=[^&\s]*/g,''));if(/\d°/.test(nm)||parseCoords(nm))nm='';
       if(c2)return [{name:nm||txt,lat:c2.lat,lng:c2.lon,exact:1}]}catch(_){}
     q=nm||txt;if(!q)return []}
-  const out=[];try{await dlGLoad();const {Geocoder}=await google.maps.importLibrary('geocoding'),G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:'PT'}})}catch(_){}
+  const out=[];try{await dlGLoad();const {Geocoder}=await google.maps.importLibrary('geocoding'),G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:(typeof isES==='function'&&isES(REGP))?'ES':'PT'}})}catch(_){}
     if(!r||!r.results.length||r.results[0].types.includes('country')){try{r=await G.geocode({address:q,region:'pt'})}catch(_){r=null}}
     (r&&r.results||[]).slice(0,5).forEach(g=>out.push({name:(g.address_components[0]||{}).long_name||q,sub:g.formatted_address,lat:g.geometry.location.lat(),lng:g.geometry.location.lng()}))}catch(_){}
   if(!out.length){try{const j=await fcGet('https://geocoding-api.open-meteo.com/v1/search?count=5&format=json&language='+(lang==='en'?'en':lang)+'&name='+encodeURIComponent(q));(j.results||[]).forEach(x=>out.push({name:x.name,sub:[x.admin1,x.country].filter(Boolean).join(', '),lat:x.latitude,lng:x.longitude}))}catch(_){}}
@@ -5420,7 +5420,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795688532';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795689722';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
@@ -6480,7 +6480,7 @@ function spotFind(q,href,eid){try{const k=fcSpots().find(x=>norm(x.name)===norm(
   const info=o.querySelector('.dlmf-i');info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoLook'));info.hidden=false;
   const miss=()=>{if(!o.isConnected)return;if(eid&&store){o.remove();spotMapOpen(39.6,-8.4,q,eid,true);return}info.innerHTML='<b>'+esc(q)+'</b><br>'+esc(t('geoMiss'))};
   /* Portugal first (strict); only if nothing there, anywhere */
-  dlGLoad().then(()=>google.maps.importLibrary('geocoding')).then(async({Geocoder})=>{const G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:'PT'}})}catch(_){}
+  dlGLoad().then(()=>google.maps.importLibrary('geocoding')).then(async({Geocoder})=>{const G=new Geocoder();let r=null;try{r=await G.geocode({address:q,componentRestrictions:{country:(typeof isES==='function'&&isES(REGP))?'ES':'PT'}})}catch(_){}
     if(!r||!r.results||!r.results.length||r.results[0].types.includes('country')){try{r=await G.geocode({address:q,region:'pt'})}catch(_){r=null}}return r}).then(r=>{
     const g=r&&r.results&&r.results[0];if(!g){miss();return}const la=g.geometry.location.lat(),ln=g.geometry.location.lng();geoPut(q,[la,ln]);
     if(o.isConnected){o.remove();spotMapOpen(la,ln,q,eid)}}).catch(miss)}
