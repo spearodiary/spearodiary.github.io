@@ -1665,7 +1665,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 #bsBody>.bs-pane>details>summary button{max-height:36px}
 
 /* computador: slogan dentro das Definições; setas da linha alinhadas com a margem */
-#settings #tagline{display:block;position:relative;margin:0 0 14px;padding:12px 14px 12px 46px;border-radius:14px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);font-size:14px!important;font-weight:600;line-height:1.45;white-space:normal;text-align:left;width:auto;overflow:visible}
+#settings #tagline{display:block;position:relative;margin:6px 0 8px;padding:12px 14px 12px 46px;border-radius:14px;color:var(--accent);background:color-mix(in srgb,var(--accent) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);font-size:14px!important;font-weight:600;line-height:1.45;white-space:normal;text-align:left;width:auto;overflow:visible}
 #settings #tagline>*{display:inline!important}
 #settings #tagline::before{content:"";position:absolute;left:14px;top:12px;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") center/contain no-repeat}
 @media (min-width:761px){.trio>details>summary::before{margin-left:-3px}}
@@ -5618,7 +5618,13 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   /* mini gráfico: abre e fecha a previsão; tocar num dia só abre (e mostra esse dia) */
   let byStrip=false;
   st.addEventListener('click',e=>{if(card.open&&!e.target.closest('.fcs-d')){e.stopImmediatePropagation();card.open=false;return}if(!card.open)byStrip=true},true);
-  card.addEventListener('toggle',()=>{if(card.open&&byStrip){byStrip=false;setTimeout(()=>{try{w.scrollIntoView({behavior:'smooth',block:'start'})}catch(_){}},60)}});
+  /* deslizar devagar até ao mini gráfico, com ~2 mm de ar por cima dos dias */
+  const glide=(sc,to,ms)=>{const win=!sc,from=win?scrollY:sc.scrollTop,d=to-from;if(Math.abs(d)<2)return;const t0=performance.now(),ez=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches){win?scrollTo(0,to):sc.scrollTop=to;return}
+    const step=n=>{const k=Math.min(1,(n-t0)/ms),y=from+d*ez(k);win?scrollTo(0,y):sc.scrollTop=y;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)};
+  card.addEventListener('toggle',()=>{if(card.open&&byStrip){byStrip=false;setTimeout(()=>{try{const sc=w.closest('.bs-body'),air=16;
+      if(sc){const top=w.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-(parseFloat(getComputedStyle(w).scrollMarginTop)||0)-air+8;glide(sc,Math.max(0,top),750)}
+      else glide(null,Math.max(0,w.getBoundingClientRect().top+scrollY-air),750)}catch(_){}},60)}});
   /* computador: o slogan passa para as Definições */
   const tg=$('tagline'),setD=$('settings'),hd=tg&&tg.parentNode,dq=matchMedia('(min-width:761px)');
   const tgPlace=()=>{if(!tg||!setD||tg.closest('#bsBody'))return;const si=setD.querySelector('.sheet-in')||setD;if(dq.matches){if(!tg.closest('#settings')){const h=si.querySelector('.sheet-head');const ref=h&&h.parentNode===si?h.nextSibling:si.firstChild;si.insertBefore(tg,ref)}}else if(tg.closest('#settings')&&hd)hd.appendChild(tg)};
