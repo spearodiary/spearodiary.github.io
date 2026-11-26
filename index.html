@@ -4898,8 +4898,10 @@ ES_LX.forEach(r=>{if(r[13])ES_DESC[r[0]]=r[13]});
 
 /* ===== Fishing regions: Portugal (Continente / Madeira / Açores) and Spain (comunidades autónomas) ===== */
 const PT_LAW=JSON.parse(JSON.stringify(LAW)),PT_LEGAL=JSON.parse(JSON.stringify(LEGAL)),PT_CK=JSON.parse(JSON.stringify(CK_BASE));
-const isES=r=>!!ES_REG[r],regOk=r=>!!(PT_REG[r]||ES_REG[r]);
-const PT_LANGS=['pt','en','es'],PT_T={};for(const l of PT_LANGS)PT_T[l]={spBanned:T[l].spBanned,spLegalNote:T[l].spLegalNote,libLawNote:T[l].libLawNote,quickPh:T[l].quickPh};
+/* more countries can be plugged in (preview builds): EU_X={CODE:{reg,def,name,law(r),qn(r),ck,rules(),sizes(),src,spot(r)}} */
+const XC=typeof EU_X!=='undefined'?EU_X:{},xcOf=r=>Object.keys(XC).find(c=>XC[c].reg[r]);
+const isES=r=>!!ES_REG[r],regOk=r=>!!(PT_REG[r]||ES_REG[r]||xcOf(r));
+const PT_LANGS=['pt','en','es','it','fr','el'].filter(l=>T[l]),PT_T={};for(const l of PT_LANGS)PT_T[l]={spBanned:T[l].spBanned,spLegalNote:T[l].spLegalNote,libLawNote:T[l].libLawNote,quickPh:T[l].quickPh};
 const RG_UI={h:{pt:'Região de pesca',en:'Fishing region',es:'Región de pesca'},
  l:{pt:'Região',en:'Region',es:'Región'},
  c:{pt:'País',en:'Country',es:'País'},
@@ -4908,36 +4910,40 @@ const RG_UI={h:{pt:'Região de pesca',en:'Fishing region',es:'Región de pesca'}
  banned:{pt:n=>'Proibido para a caça submarina: '+n+'.',en:n=>'Not allowed for spearfishing: '+n+'.',es:n=>'No se puede pescar en apnea: '+n+'.'},
  note:{pt:n=>n+'. Ver Tamanhos para mais detalhes.',en:n=>n+'. See Sizes for details.',es:n=>n+'. Ver Tallas y vedas para más detalles.'},
  lib:{pt:(n,s)=>'Tamanhos mínimos para '+n+': '+s+'.',en:(n,s)=>'Minimum sizes for '+n+': '+s+'.',es:(n,s)=>'Tallas mínimas para '+n+': '+s+'.'}};
-Object.assign(T.pt,{ptRegH:RG_UI.h.pt,ptRegHint:RG_UI.hint.pt});Object.assign(T.en,{ptRegH:RG_UI.h.en,ptRegHint:RG_UI.hint.en});Object.assign(T.es,{ptRegH:RG_UI.h.es,ptRegHint:RG_UI.hint.es});
+if(typeof EU_RG_UI!=='undefined')for(const k in EU_RG_UI)Object.assign(RG_UI[k],EU_RG_UI[k]);
+for(const l of PT_LANGS)if(RG_UI.h[l])Object.assign(T[l],{ptRegH:RG_UI.h[l],ptRegHint:RG_UI.hint[l]});
+if(0)Object.assign(T.pt,{ptRegH:RG_UI.h.pt,ptRegHint:RG_UI.hint.pt});Object.assign(T.en,{ptRegH:RG_UI.h.en,ptRegHint:RG_UI.hint.en});Object.assign(T.es,{ptRegH:RG_UI.h.es,ptRegHint:RG_UI.hint.es});
 let REGP='CON';try{const r=localStorage.getItem('sn-ptreg');if(regOk(r))REGP=r}catch(e){}
-const rgName=r=>isES(r)?ES_REG[r].n:(RG_UI.n[r]||RG_UI.n.CON)[PT_LANGS.includes(lang)?lang:'en'];
-const ctryOf=r=>isES(r)?'ES':'PT',CTRY_REG={PT:PT_REG,ES:ES_REG},CTRY_DEF={PT:'CON',ES:'ANA'};
+const rgL=()=>PT_LANGS.includes(lang)&&RG_UI.c[lang]?lang:'en';
+const rgName=r=>isES(r)?ES_REG[r].n:xcOf(r)?(v=>typeof v==='string'?v:v[lang]||v.en)(XC[xcOf(r)].reg[r].n):(RG_UI.n[r]||RG_UI.n.CON)[PT_LANGS.includes(lang)?lang:'en'];
+const ctryOf=r=>isES(r)?'ES':xcOf(r)||'PT',CTRY_REG={PT:PT_REG,ES:ES_REG},CTRY_DEF={PT:'CON',ES:'ANA'};for(const c in XC){CTRY_REG[c]=XC[c].reg;CTRY_DEF[c]=XC[c].def}
 const lastReg=c=>{try{const r=localStorage.getItem('sn-reg-'+c);if(CTRY_REG[c][r])return r}catch(e){}return CTRY_DEF[c]};
 /* region options of the current country only */
 const regOpts=()=>{const c=ctryOf(REGP);return Object.keys(CTRY_REG[c]).map(k=>'<option value="'+k+'"'+(k===REGP?' selected':'')+'>'+esc(rgName(k))+'</option>').join('')};
-const ctrySeg=()=>{const L=PT_LANGS.includes(lang)?lang:'en',c=ctryOf(REGP);return '<div class="lang ctry-seg" role="group" aria-label="'+esc(RG_UI.c[L])+'">'+[['PT','Portugal'],['ES','España']].map(([k,n])=>'<button type="button" data-ctry="'+k+'" aria-pressed="'+(k===c)+'">'+n+'</button>').join('')+'</div>'};
+const ctrySeg=()=>{const L=PT_LANGS.includes(lang)?lang:'en',c=ctryOf(REGP);return '<div class="lang ctry-seg" role="group" aria-label="'+esc(RG_UI.c[L])+'">'+[['PT','Portugal'],['ES','España'],...Object.keys(XC).map(c=>[c,XC[c].name])].map(([k,n])=>'<button type="button" data-ctry="'+k+'" aria-pressed="'+(k===c)+'">'+n+'</button>').join('')+'</div>'};
 /* regions of the chosen country as chips (no native select menu) */
 /* region of the chosen country: our own dropdown (no native select menu) */
 const regSeg=()=>{const L=PT_LANGS.includes(lang)?lang:'en',c=ctryOf(REGP);return '<div class="reg-dd"><button type="button" class="reg-dd-b" aria-haspopup="listbox" aria-expanded="false" aria-label="'+esc(RG_UI.l[L])+'"><span>'+esc(rgName(REGP))+'</span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="reg-dd-l" role="listbox" hidden>'+Object.keys(CTRY_REG[c]).map(k=>'<button type="button" role="option" data-reg="'+k+'" aria-selected="'+(k===REGP)+'" aria-pressed="'+(k===REGP)+'">'+esc(rgName(k))+'</button>').join('')+'</div></div>'};
 function regSelect(id){return '<div class="reg-pick" id="'+id+'">'+ctrySeg()+regSeg()+'</div><!--/reg-->'}
-function applyPtReg(){try{LIB=null}catch(e){}const mad=REGP==='MAD',az=REGP==='AZO',es=isES(REGP),isl=mad||az||es;
-  const L=mad?madLaw():az?azLaw():es?esLaw(REGP):PT_LAW,qn=mad?MAD_QN:az?AZ_QN:es?Object.fromEntries(Object.entries((ES_X[REGP]||{}).qn||{}).map(([k,v])=>[k,{pt:v,en:v,es:v}])):{};
+function applyPtReg(){try{LIB=null}catch(e){}const mad=REGP==='MAD',az=REGP==='AZO',es=isES(REGP),xc=xcOf(REGP),X=xc?XC[xc]:null,isl=mad||az||es||!!X;
+  const all=v=>Object.fromEntries(PT_LANGS.map(l=>[l,v]));
+  const L=mad?madLaw():az?azLaw():es?esLaw(REGP):X?X.law(REGP):PT_LAW,qn=mad?MAD_QN:az?AZ_QN:es?Object.fromEntries(Object.entries((ES_X[REGP]||{}).qn||{}).map(([k,v])=>[k,all(v)])):X?Object.fromEntries(Object.entries(X.qn(REGP)||{}).map(([k,v])=>[k,typeof v==='string'?all(v):v])):{};
   const G=isl?{min:{},banned:{},defeso:[],note:JSON.parse(JSON.stringify(qn))}:PT_LEGAL;
   for(const k of Object.keys(LAW))delete LAW[k];Object.assign(LAW,JSON.parse(JSON.stringify(L)));
   for(const k of Object.keys(LEGAL))delete LEGAL[k];Object.assign(LEGAL,JSON.parse(JSON.stringify(G)));
-  for(const k of Object.keys(CK_BASE))delete CK_BASE[k];Object.assign(CK_BASE,JSON.parse(JSON.stringify(es?ES_CK:PT_CK)));
-  for(const l of PT_LANGS){Object.assign(T[l],PT_T[l]);if(isl){const n=es?'España · '+ES_REG[REGP].n:'Portugal · '+RG_UI.n[REGP][l];
-    T[l].quickPh=PT_T[l].quickPh.replace('@Sesimbra',az?'@Caloura':es?'@'+((FC_DEF_R[REGP]||{}).name||'Tarifa'):'@Paul do Mar');
-    T[l].spBanned=RG_UI.banned[l](n);T[l].spLegalNote=RG_UI.note[l](n);T[l].libLawNote=RG_UI.lib[l](n,az?'Portaria 89/2026':es?'RD 560/1995, Reg. (UE) 2019/1241':'Portaria 484/2016')}}
-  document.querySelectorAll('a.tl[href*="beachcam.meo.pt"]').forEach(a=>a.hidden=es);
+  for(const k of Object.keys(CK_BASE))delete CK_BASE[k];Object.assign(CK_BASE,JSON.parse(JSON.stringify(es?ES_CK:X?X.ck:PT_CK)));
+  for(const l of PT_LANGS){Object.assign(T[l],PT_T[l]);if(isl){const U=k=>RG_UI[k][l]||RG_UI[k].en,n=es?'España · '+ES_REG[REGP].n:X?X.name+' · '+rgName(REGP):'Portugal · '+(RG_UI.n[REGP][l]||RG_UI.n[REGP].en);
+    T[l].quickPh=(PT_T[l].quickPh||'').replace('@Sesimbra',az?'@Caloura':(es||X)?'@'+((FC_DEF_R[REGP]||{}).name||'Tarifa'):'@Paul do Mar');
+    T[l].spBanned=U('banned')(n);T[l].spLegalNote=U('note')(n);T[l].libLawNote=U('lib')(n,az?'Portaria 89/2026':es?'RD 560/1995, Reg. (UE) 2019/1241':X?X.src:'Portaria 484/2016')}}
+  document.querySelectorAll('a.tl[href*="beachcam.meo.pt"]').forEach(a=>a.hidden=es||!!X);
   const s=$('ptRegSet');if(s){s.innerHTML=regOpts();s.value=REGP;const lab=s.closest('.pt-reg');if(lab){lab.hidden=true;let w=$('ptRegPick');if(!w){w=document.createElement('div');w.id='ptRegPick';w.className='reg-pick';lab.before(w)}w.innerHTML=ctrySeg()+regSeg()}}}
 function setPtReg(r){if(!regOk(r))return;const ch=r!==REGP;REGP=r;try{localStorage.setItem('sn-ptreg',r);localStorage.setItem('sn-reg-'+ctryOf(r),r)}catch(e){}
   if(ch&&typeof FC_DEF_R!=='undefined'){FC_DEF=FC_DEF_R[r];try{localStorage.setItem('sn-fc-spot',norm(FC_DEF.name))}catch(e){}try{seaFirst=true;fcData=null;fcSpot=null;$('fcFind').hidden=true;fcFillSelect();fcLoad()}catch(e){}}applyPtReg();applyLang();render(false);try{defBanner()}catch(e){}
   const rb=$('rulesBody');if(rb&&$('rules').open)rb.innerHTML=ptRulesHtml();const sb=$('sizesBody');if(sb&&$('sizes').open)sb.innerHTML=ptSizesHtml()}
 const ZBTN={pt:'Ver zonas proibidas e condicionadas no mapa',en:'See closed and restricted zones on the map',es:'Ver zonas prohibidas y restringidas en el mapa'};
-const zBtn=()=>'<p><button type="button" class="link zmap-btn" data-zmap="1">'+ICON_ZMAP+esc(ZBTN[PT_LANGS.includes(lang)?lang:'en'])+'</button></p>';
-function ptRulesHtml(){return isES(REGP)?esRulesHtml():REGP==='MAD'?madRulesHtml().replace('<!--/reg-->','<!--/reg-->'+zBtn()):REGP==='AZO'?azRulesHtml().replace('<!--/reg-->','<!--/reg-->'+zBtn()):regSelect('ptRegRules')+zBtn()+LX(RULES)}
-function ptSizesHtml(){return isES(REGP)?esSizesHtml():REGP==='MAD'?madSizesHtml():REGP==='AZO'?azSizesHtml():regSelect('ptRegSizes')+LX(SIZES)}
+const zBtn=()=>'<p><button type="button" class="link zmap-btn" data-zmap="1">'+ICON_ZMAP+esc(ZBTN[lang]||ZBTN.en)+'</button></p>';
+function ptRulesHtml(){return xcOf(REGP)?XC[xcOf(REGP)].rules():isES(REGP)?esRulesHtml():REGP==='MAD'?madRulesHtml().replace('<!--/reg-->','<!--/reg-->'+zBtn()):REGP==='AZO'?azRulesHtml().replace('<!--/reg-->','<!--/reg-->'+zBtn()):regSelect('ptRegRules')+zBtn()+LX(RULES)}
+function ptSizesHtml(){return xcOf(REGP)?XC[xcOf(REGP)].sizes():isES(REGP)?esSizesHtml():REGP==='MAD'?madSizesHtml():REGP==='AZO'?azSizesHtml():regSelect('ptRegSizes')+LX(SIZES)}
 document.addEventListener('change',ev=>{const s=ev.target;if(s&&/^(pt|eu)Reg/.test(s.id||''))setPtReg(s.value)});
 /* country switch: Portugal / España, back to the last region used in that country */
 const regDdClose=()=>document.querySelectorAll('.reg-dd-l:not([hidden])').forEach(l=>{l.hidden=true;l.previousElementSibling.setAttribute('aria-expanded','false')});
@@ -4948,14 +4954,14 @@ applyPtReg();
 
 /* checklist items made from a base list keep the language they were made in: show them in the current language */
 const CK_TX=(()=>{const m={};const flat=a=>a.flatMap(x=>Array.isArray(x)?[x[0],...flat(x[1])]:[x]);
-  for(const B of [PT_CK,ES_CK]){const F={};for(const l of Object.keys(B))F[l]=flat(B[l]);const n=F.pt.length;
+  for(const B of [PT_CK,ES_CK,...Object.values(XC).map(x=>x.ck)]){const F={};for(const l of Object.keys(B))F[l]=flat(B[l]);const n=F.pt.length;
     for(let i=0;i<n;i++){const row={};for(const l of Object.keys(F))row[l]=F[l][i];for(const l of Object.keys(F))if(row[l]&&!m[row[l]])m[row[l]]=row}}
   return m})();
 function ckTx(s){const r=CK_TX[s];return r&&r[lang]||s}
 /* tagline under the title */
-Object.assign(T.en,{tagline:'Your spots stay yours. 100% private, your coordinates never leak.'});
-Object.assign(T.pt,{tagline:'Os seus pontos são só seus. Privacidade a 100%, sem fuga de coordenadas.'});
-Object.assign(T.es,{tagline:'Tus puntos son solo tuyos. Privacidad al 100 %, sin filtrar coordenadas.'});
+Object.assign(T.en,{tagline:'Your GPS spots stay yours. 100% private, your coordinates never leak.'});
+Object.assign(T.pt,{tagline:'Os seus pontos GPS são só seus. Privacidade a 100%, sem fuga de coordenadas.'});
+Object.assign(T.es,{tagline:'Tus puntos GPS son solo tuyos. Privacidad al 100 %, sin filtrar coordenadas.'});
 /* the tagline stays on one line: the font shrinks to fit narrow screens */
 function tagFit(){const el=document.querySelector('header .tagline'),h1=document.querySelector('header h1');if(!el)return;const tx=t('tagline'),mob=matchMedia('(max-width:560px)').matches;
   /* phone: three lines (first sentence, then the second split at its comma), the block exactly as wide as "Spearo Diary" */
@@ -5796,7 +5802,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795700450';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795702054';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!document.querySelector('dialog[open]')||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
