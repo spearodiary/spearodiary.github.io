@@ -1690,9 +1690,10 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .capture.qx.qs #quickMood,.capture.qx.qs #qSr,.capture.qx.qs #preview,.capture.qx.qs .preview{display:none!important}
 .capture.qx.qs{grid-template-areas:"in in" "mood btn"!important}
 .capture.qx.qs .q-left{grid-area:mood;display:flex;align-items:center;gap:4px;justify-self:start}
-.capture.qx.qs .q-left>button{display:grid;place-items:center;width:42px;height:42px;margin:0!important;padding:0!important;border:0!important;border-radius:10px;background:transparent!important;color:var(--sea);cursor:pointer;box-shadow:none;min-height:0}
-.capture.qx.qs .q-left>button:hover{background:color-mix(in srgb,var(--sea) 12%,transparent)!important}
-.capture.qx.qs .q-left svg{width:24px;height:24px}.capture.qx.qs .q-left .ex-btn>span,.capture.qx.qs .q-left .q-ml{display:none!important}
+.capture.qx.qs .q-left{gap:6px}
+.capture.qx.qs .q-left>button{display:grid;place-items:center;width:42px;height:42px;margin:0!important;padding:0!important;border:1px solid var(--line)!important;border-radius:6px;background:transparent!important;color:var(--ink);cursor:pointer;box-shadow:none;min-height:42px;line-height:0}
+.capture.qx.qs .q-left>button:hover{border-color:var(--sea)!important;color:var(--sea)}
+.capture.qx.qs .q-left svg{width:18px;height:18px;stroke-width:2.2}.capture.qx.qs .q-left .ex-btn>span,.capture.qx.qs .q-left .q-ml{display:none!important}
 .capture.qx.qs .q-in #quick{padding-right:44px}
 .capture.qx.qs .q-x{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:38px;height:38px;display:grid;place-items:center;margin:0;padding:0;border:0;background:transparent;color:var(--muted);cursor:pointer;min-height:0}
 .capture.qx.qs .q-x[hidden]{display:none}
@@ -5678,7 +5679,7 @@ Object.assign(T.en,{qMore:'More ways to add',qClr:'Clear search'});Object.assign
   const w=document.createElement('div');w.className='q-in';q.parentNode.insertBefore(w,q);w.appendChild(q);
   const ic=document.createElement('div');ic.className='q-ic';w.appendChild(ic);
   mo.removeAttribute('data-i');mo.setAttribute('data-t','details');mo.className='q-more';
-  mo.innerHTML=S('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>')+'<span class="sr-only" data-i="details"></span>';
+  mo.innerHTML=S('<path d="M12 5v14M5 12h14"/>')+'<span class="sr-only" data-i="details"></span>';
   ex.classList.add('q-photo');ic.remove();
   const act=document.createElement('div');act.className='q-act';sub.parentNode.insertBefore(act,sub);
   act.insertAdjacentHTML('beforeend','<button type="button" class="q-sr" id="qSr" data-t="searchPh" aria-expanded="false">'+S('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>')+'<span class="sr-only" data-i="searchPh"></span><i class="q-dot" aria-hidden="true"></i></button>');
@@ -6313,7 +6314,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795765196';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795765515';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
