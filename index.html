@@ -1712,6 +1712,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bnav button.drag{position:relative;z-index:2;background:color-mix(in srgb,var(--accent) 16%,var(--surface))!important;color:var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.35)}
 #settings .sg-bn{--sgi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF7A2F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='14' width='18' height='7' rx='2'/%3E%3Cpath d='M7 17.5h.01M12 17.5h.01M17 17.5h.01M8 4l4 4 4-4M12 8V3'/%3E%3C/svg%3E");--sgt:color-mix(in srgb,#FF7A2F 17%,transparent)}
 dialog[tabindex="-1"]:focus{outline:none}
+#checklist #ckForm{padding-top:0}
 #settings .sg-bn-sel{display:grid;gap:8px;margin-top:10px}
 #settings .bn-dd{border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--sea) 4%,transparent);overflow:hidden;transition:border-color .15s}
 #settings .bn-dd.on{border-color:color-mix(in srgb,var(--sea) 60%,transparent)}
@@ -6344,7 +6345,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795765742';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795766149';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
