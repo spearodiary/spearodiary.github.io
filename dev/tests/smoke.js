@@ -31,8 +31,9 @@ const init = () => { localStorage.setItem('mdb', JSON.stringify({ entries: [] })
       await p.addInitScript(init);
       await p.goto('file://' + path.join(TMP, page)); await p.waitForTimeout(3000);
       ok(await p.$('#quickMore'), 'page loads');
-      if (await p.$('#qMenuBtn')) { await p.click('#qMenuBtn'); await p.waitForTimeout(200); }
-      await p.click('#quickMore'); await p.waitForTimeout(400);
+      if (await p.isVisible('#quickMore')) { if (await p.$('#qMenuBtn')) { await p.click('#qMenuBtn'); await p.waitForTimeout(200); } await p.click('#quickMore'); }
+      else { await p.fill('#quick', ''); await p.click('#quickForm button[type=submit]'); }
+      await p.waitForTimeout(400);
       ok(await p.evaluate(() => document.getElementById('dlg').open), 'new entry form opens');
       for (const f of ['test.uddf', 'test.xml', 'test.fit']) {
         await p.setInputFiles('#eImportF', path.join(DATA, f)); await p.waitForTimeout(700);
