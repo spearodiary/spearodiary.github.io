@@ -1711,6 +1711,7 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .bnav.edit button:not(.drag){animation:bnWig .25s ease-in-out infinite}
 .bnav button.drag{position:relative;z-index:2;background:color-mix(in srgb,var(--accent) 16%,var(--surface))!important;color:var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.35)}
 #settings .sg-bn{--sgi:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF7A2F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='14' width='18' height='7' rx='2'/%3E%3Cpath d='M7 17.5h.01M12 17.5h.01M17 17.5h.01M8 4l4 4 4-4M12 8V3'/%3E%3C/svg%3E");--sgt:color-mix(in srgb,#FF7A2F 17%,transparent)}
+dialog[tabindex="-1"]:focus{outline:none}
 #settings .sg-bn-sel{display:grid;gap:8px;margin-top:10px}
 #settings .bn-dd{border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--sea) 4%,transparent);overflow:hidden;transition:border-color .15s}
 #settings .bn-dd.on{border-color:color-mix(in srgb,var(--sea) 60%,transparent)}
@@ -5534,6 +5535,10 @@ $('gCard').addEventListener('toggle',gDraw);
   const b=dlHidSet;dlHidSet=function(){const r=b.apply(this,arguments);re();return r};
   const c=dlOrdSave;dlOrdSave=function(){const r=c.apply(this,arguments);re();return r}})();
 
+/* telemóvel: ao abrir uma janela não saltar para o campo de texto (teclado) */
+(function(){if(!matchMedia('(pointer:coarse)').matches)return;const P=HTMLDialogElement.prototype;
+  const nf=d=>{const a=document.activeElement;if(a&&a!==d&&d.contains(a)&&a.matches('input,textarea,select,[contenteditable]')){a.blur();if(!d.hasAttribute('tabindex'))d.setAttribute('tabindex','-1');try{d.focus({preventScroll:true})}catch(_){}}};
+  ['show','showModal'].forEach(k=>{const o=P[k];P[k]=function(){const r=o.apply(this,arguments);nf(this);return r}})})();
 Object.assign(T.pt,{bnS_st:'Análise',bnS_g:'Gráficos',bnS_feed:'Amigos',bnS_ck:'Checklist',bnS_sz:'Tamanhos',bnS_lib:'Biblioteca',bnS_rl:'Regras',bnT_ck:'Checklist de material',bnT_sz:'Tamanhos e defeso',bnT_lib:'Biblioteca',bnT_rl:'Regras e segurança',bnSetH:'Barra de navegação',bnSetHint:'Escolha as 3 páginas do meio da barra de baixo. Para mudar a ordem, mantenha o dedo num separador e arraste-o.'});
 Object.assign(T.en,{bnS_st:'Analysis',bnS_g:'Charts',bnS_feed:'Friends',bnS_ck:'Checklist',bnS_sz:'Sizes',bnS_lib:'Library',bnS_rl:'Rules',bnT_ck:'Gear checklist',bnT_sz:'Sizes and closed seasons',bnT_lib:'Library',bnT_rl:'Rules and safety',bnSetH:'Navigation bar',bnSetHint:'Choose the 3 pages in the middle of the bottom bar. To change the order, hold a tab and drag it.'});
 Object.assign(T.es,{bnS_st:'Análisis',bnS_g:'Gráficos',bnS_feed:'Amigos',bnS_ck:'Checklist',bnS_sz:'Tallas',bnS_lib:'Biblioteca',bnS_rl:'Normas',bnT_ck:'Checklist de material',bnT_sz:'Tallas y vedas',bnT_lib:'Biblioteca',bnT_rl:'Normas y seguridad',bnSetH:'Barra de navegación',bnSetHint:'Elige las 3 páginas del centro de la barra inferior. Para cambiar el orden, mantén pulsada una pestaña y arrástrala.'});
