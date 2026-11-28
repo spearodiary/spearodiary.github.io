@@ -6094,7 +6094,7 @@ html.apnea:not(.ap-light){--bg:#0D0F0C;--surface:#191D17;--ink:#F2F6EE;--muted:#
 html.apnea.ap-light{--bg:#F1F4EE;--surface:#FFFFFF;--ink:#121411;--muted:#566150;--line:#D3DCCB;--accent:#6FAF1A;--on-accent:#0D0F0C;--sea:#4F8A12;--sea-soft:#E4F1D2;--uw:#4F8A12;color-scheme:light}
 html.apnea:not(.bs-on) #appView{min-height:100lvh;display:flex;flex-direction:column}
 html.apnea:not(.bs-on) #appView>.site-foot{margin-top:auto}
-html.apnea #bsheet .bs-hd{display:none!important}html.apnea #bsheet .bs-body{padding-top:0!important}.ap-hdw{display:none}html.apnea #bsheet>.ap-hdw{display:block;min-height:0!important;padding-bottom:0!important}
+html.apnea #bsheet .bs-hd{display:none!important}html.apnea #bsheet .bs-body{padding-top:22px!important}html.apnea #bsheet .ap-safe2{margin-top:0!important}html.apnea.ap-fr #apView{margin-top:6px!important}.ap-hdw{display:none}html.apnea #bsheet>.ap-hdw{display:block;min-height:0!important;padding-bottom:0!important}
 @media (max-width:760px){html.apnea.ap-fr .ap-sw,html.apnea.ap-fr #apView .ap-safe{display:none!important}}
 header h1 svg.diver,header h1 svg.fdiver{display:none!important}header h1{padding-top:.35em!important}
 .ap-th{all:unset;cursor:pointer;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:var(--muted);margin-left:6px}.ap-th:hover{color:var(--ink)}
@@ -6933,7 +6933,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795833717';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795853354';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
