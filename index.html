@@ -5890,7 +5890,7 @@ function scBgPhoto(x,W,H,im){const c=scCur(),iw=im.naturalWidth,ih=im.naturalHei
   x.drawImage(im,c.cx-w/2,c.cy-h/2,w,h)}
 /* photo cropped into a box (cover), used by B and C */
 function scPhotoBox(x,im,X,Y,w,h,r){const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;x.save();scRR(x,X,Y,w,h,r);x.clip();x.drawImage(im,X+(w-iw)/2,Y+(h-ih)/2,iw,ih);x.restore()}
-function scLogoAt(x,X,Y,tw){/* plain wordmark, like the FREE share card */const fs=Math.round(tw*.142);x.save();x.textAlign='left';x.font='700 '+fs+'px Unbounded,"Arial Black",sans-serif';x.fillStyle='#F2F6F7';x.fillText('Spearo',X,Y+fs);const sw=x.measureText('Spearo ').width;x.fillStyle=SCK.sea;x.fillText('Diary',X+sw,Y+fs);x.restore();return fs*1.25}
+function scLogoAt(x,X,Y,tw){/* same wordmark, size and place in every template, like the FREE card */const fs=54,X0=80,Y0=86;x.save();x.textAlign='left';x.font='700 '+fs+'px Unbounded,"Arial Black",sans-serif';x.fillStyle='#F2F6F7';x.fillText('Spearo',X0,Y0+fs);const sw=x.measureText('Spearo ').width;x.fillStyle=SCK.sea;x.fillText('Diary',X0+sw,Y0+fs);x.restore();return Math.max(0,Y0+fs*1.25-Y)}
 function scFishLine(c){const o=SC.o,d=[];if(o.w&&c.weight!=null)d.push(scKg(c.weight)+' kg');if(o.l&&c.len!=null)d.push(fmt(c.len)+' cm');return d.join(' · ')}
 function scName(c){return catchLabel(c)+((c.count||1)>1?' ×'+c.count:'')}
 function scDateTxt(e){return e.monthOnly?new Date(e.date+'T12:00').toLocaleDateString(locale(),{month:'long',year:'numeric'}):fmtDate(e.date)}
@@ -6931,7 +6931,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795832705';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795832947';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);

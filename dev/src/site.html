@@ -5890,7 +5890,7 @@ function scBgPhoto(x,W,H,im){const c=scCur(),iw=im.naturalWidth,ih=im.naturalHei
   x.drawImage(im,c.cx-w/2,c.cy-h/2,w,h)}
 /* photo cropped into a box (cover), used by B and C */
 function scPhotoBox(x,im,X,Y,w,h,r){const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;x.save();scRR(x,X,Y,w,h,r);x.clip();x.drawImage(im,X+(w-iw)/2,Y+(h-ih)/2,iw,ih);x.restore()}
-function scLogoAt(x,X,Y,tw){/* plain wordmark, like the FREE share card */const fs=Math.round(tw*.142);x.save();x.textAlign='left';x.font='700 '+fs+'px Unbounded,"Arial Black",sans-serif';x.fillStyle='#F2F6F7';x.fillText('Spearo',X,Y+fs);const sw=x.measureText('Spearo ').width;x.fillStyle=SCK.sea;x.fillText('Diary',X+sw,Y+fs);x.restore();return fs*1.25}
+function scLogoAt(x,X,Y,tw){/* same wordmark, size and place in every template, like the FREE card */const fs=54,X0=80,Y0=86;x.save();x.textAlign='left';x.font='700 '+fs+'px Unbounded,"Arial Black",sans-serif';x.fillStyle='#F2F6F7';x.fillText('Spearo',X0,Y0+fs);const sw=x.measureText('Spearo ').width;x.fillStyle=SCK.sea;x.fillText('Diary',X0+sw,Y0+fs);x.restore();return Math.max(0,Y0+fs*1.25-Y)}
 function scFishLine(c){const o=SC.o,d=[];if(o.w&&c.weight!=null)d.push(scKg(c.weight)+' kg');if(o.l&&c.len!=null)d.push(fmt(c.len)+' cm');return d.join(' · ')}
 function scName(c){return catchLabel(c)+((c.count||1)>1?' ×'+c.count:'')}
 function scDateTxt(e){return e.monthOnly?new Date(e.date+'T12:00').toLocaleDateString(locale(),{month:'long',year:'numeric'}):fmtDate(e.date)}
