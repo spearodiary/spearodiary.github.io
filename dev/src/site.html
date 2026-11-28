@@ -1696,6 +1696,8 @@ header .tagline{margin:2px 0 0;width:100%;max-width:100%;box-sizing:border-box;t
 .capture.qx.qs .q-left>button:hover{border-color:var(--sea)!important;color:var(--sea)}
 .capture.qx.qs .q-left svg{width:18px;height:18px;stroke-width:2.2}.capture.qx.qs .q-left .q-ml{display:none!important}
 .capture.qx.qs #quickMore{display:none!important}
+.capture.qx.qs .q-caret.open svg{transform:none!important}
+.capture.qx.qs .q-caret.open{filter:brightness(.86)}
 .capture.qx.qs .q-left>#exBtn{position:relative;overflow:visible}
 .capture.qx.qs .q-left>#exBtn>span{display:none!important}
 .capture.qx.qs .q-left>#exBtn svg{width:21px;height:21px;stroke-width:1.9;color:var(--sea)}
@@ -5759,7 +5761,7 @@ if(T.it)Object.assign(T.it,{qSearchPh:'Cerca: pesce, luogo, note…',qFilt:'Altr
   if(!f||!q||!sq||!ex||!mo||!sr||!mb||!act)return;
   f.classList.add('qs');
   q.setAttribute('data-ph','qSearchPh');q.setAttribute('data-al','qSearchPh');q.placeholder=t('qSearchPh');q.setAttribute('enterkeyhint','search');q.setAttribute('autocomplete','off');
-  mb.setAttribute('data-t','qFilt');mb.setAttribute('aria-haspopup','false');mb.title=t('qFilt');const ml=mb.querySelector('.sr-only');if(ml)ml.setAttribute('data-i','qFilt');
+  {const sv=mb.querySelector('svg');if(sv)sv.innerHTML='<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>'}mb.setAttribute('data-t','qFilt');mb.setAttribute('aria-haspopup','false');mb.title=t('qFilt');const ml=mb.querySelector('.sr-only');if(ml)ml.setAttribute('data-i','qFilt');
   const left=document.createElement('div');left.className='q-left';act.parentNode.insertBefore(left,act);left.append(ex,mo);ex.removeAttribute('role');mo.removeAttribute('role');if(mn)mn.hidden=true;
   /* escrever = pesquisar */
   const push=()=>{if(sq.value!==q.value){sq.value=q.value;sq.dispatchEvent(new Event('input',{bubbles:true}))}cx.hidden=!q.value};
