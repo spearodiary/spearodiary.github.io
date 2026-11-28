@@ -2904,7 +2904,7 @@ function dbStore(db,uid){
     backup(id,d,del){const n=Date.now();return hist.doc(id+'-'+n).set({entryId:id,savedAt:n,deleted:!!del,data:d})},
     async history(){const q=await hist.orderBy('savedAt','desc').limit(1000).get();return q.docs.map(x=>x.data())}};
 }
-function onData(list,meta){setTimeout(()=>{try{stDraw()}catch(e){}try{gDraw()}catch(e){}},0);setTimeout(()=>{try{shSoon()}catch(e){}},0);checkDoc=list.find(e=>e.id==='checklist')||null;entries=list.filter(e=>e.id!=='checklist'&&e.type!=='checklist');if($('checklist').open&&!ckEditing&&!ckAddTo&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('#checklist input')))ckDraw();if(!meta||!meta.fromCache){loaded=true;clearTimeout(loadTimer)}render(true);if(loaded)restoreDraft();try{fcFillSelect()}catch(e){}}
+function onData(list,meta){setTimeout(()=>{try{stDraw()}catch(e){}try{gDraw()}catch(e){}},0);setTimeout(()=>{try{shSoon()}catch(e){}},0);checkDoc=list.find(e=>e.id==='checklist')||null;apDocs=list.filter(e=>e.type==='apnea');entries=list.filter(e=>e.id!=='checklist'&&e.type!=='checklist'&&e.type!=='apnea');apOnData();if($('checklist').open&&!ckEditing&&!ckAddTo&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('#checklist input')))ckDraw();if(!meta||!meta.fromCache){loaded=true;clearTimeout(loadTimer)}render(true);if(loaded)restoreDraft();try{fcFillSelect()}catch(e){}}
 function showMode(k){modeKey=k;$('modeNotice').textContent=k?t(k):'';$('modeNotice').hidden=!k}
 /* Supabase: accounts, entries, history and photos. Every row belongs to one user (row level security). */
 const CFG=window.NOTEBOOK_CONFIG||{};
@@ -4147,7 +4147,7 @@ $('backupBtn').addEventListener('click',async()=>{
   let history=[];try{history=store?await store.history():[]}catch(e){}
   const files={};
   if(assets&&assets.download){for(const e of entries)for(const id of(e.photos||[]).concat((e.shots||[]).map(x=>x.id))){if(files[id])continue;try{const b=await assets.download(id);files[id]=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}catch(err){}}}
-  const data=JSON.stringify({app:'spearfishers-notebook',version:2,savedAt:new Date().toISOString(),entries:entries.concat(checkDoc?[checkDoc]:[]).map(e=>({id:e.id,...bodyOf(e)})),history,files},null,1);
+  const data=JSON.stringify({app:'spearfishers-notebook',version:2,savedAt:new Date().toISOString(),entries:entries.concat(checkDoc?[checkDoc]:[],apDocs).map(e=>({id:e.id,...bodyOf(e)})),history,files},null,1);
   try{await downloads.save({filename:'spearo-diary-'+today()+'.json',data});toast(t('fileSaved'))}
   catch(e){if(!e||e.code!=='declined')toast(t('errFile'))}
 });
@@ -6021,6 +6021,148 @@ setTimeout(function(){if(!SC.tpl)SC.tpl='a';const fmtEl=$('scFmt');if(!fmtEl)ret
   const st=document.createElement('style');st.textContent='#scD .sc-tpl{margin-bottom:8px}#scD .sc-tpl button.on{background:var(--accent);color:#1b0d03}#scD #scChk{display:flex;flex-wrap:wrap;gap:8px}#scD #scChk label.chk{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);user-select:none}#scD #scChk label.chk[hidden]{display:none}#scD #scChk label.chk input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}#scD #scChk label.chk:has(input:checked){border-color:var(--sea);background:color-mix(in srgb,var(--sea) 16%,transparent);color:var(--ink)}#scD #scChk label.chk:has(input:focus-visible){outline:2px solid var(--sea);outline-offset:2px}#scD #scChk .ic,#scD #scChk svg{width:16px;height:16px}';
   document.head.appendChild(st)},0);
 
+/* ===== Apnea mode (freediving training log). Each session is its own entry of type 'apnea' in the same store as the dives
+   (cloud when signed in); the hunting views never see them (filtered in onData). ===== */
+var apDocs=[];
+function apOnData(){try{if(window.__apDraw)window.__apDraw()}catch(_){}}
+setTimeout(function(){
+const AK='sn-apnea-sessions',AM='sn-apnea-mode';
+const LSg=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?d:v}catch(_){return d}},LSs=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
+Object.assign(T.pt,{apHunt:'Caça',apApnea:'Apneia',apNew:'Nova sessão',apEdit:'Editar sessão',apDiary:'Diário',apRec:'Recordes',apDisc:'Disciplina',apWhere:'Onde',apWho:'Com quem',apDate:'Data',apTries:'Tentativas',apAdd:'+ tentativa',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contrações, compensação, sensações…',apSave:'Guardar',apDel:'Apagar',apDelQ:'Apagar?',apCancel:'Cancelar',apEmpty:'Ainda sem sessões de apneia. Registe a primeira: piscina, mar ou em seco.',apBest:'melhor',apPb:'recorde',apNoRec:'Os recordes aparecem depois da primeira sessão.',apSafe:'Nunca treine na água sozinho. Um parceiro a vigiar cada mergulho.',apLocal:'Pré-visualização: as sessões de apneia ficam só neste dispositivo.',apResT:'tempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sessão':n+' sessões',apPlacePh:'Piscina, praia…',apWhoPh:'Nome do parceiro'});
+Object.assign(T.en,{apHunt:'Spearfishing',apApnea:'Apnea',apNew:'New session',apEdit:'Edit session',apDiary:'Diary',apRec:'Records',apDisc:'Discipline',apWhere:'Where',apWho:'With',apDate:'Date',apTries:'Attempts',apAdd:'+ attempt',apRest:'rest',apNotes:'Notes',apNotesPh:'Contractions, equalising, how it felt…',apSave:'Save',apDel:'Delete',apDelQ:'Delete?',apCancel:'Cancel',apEmpty:'No apnea sessions yet. Log the first one: pool, sea or dry.',apBest:'best',apPb:'record',apNoRec:'Records appear after the first session.',apSafe:'Never train in the water alone. A buddy watching every dive.',apLocal:'Preview: apnea sessions are kept on this device only.',apResT:'time m:ss',apResM:'metres',apSince:'since',apSessions:n=>n===1?'1 session':n+' sessions',apPlacePh:'Pool, beach…',apWhoPh:'Buddy name'});
+Object.assign(T.es,{apHunt:'Pesca',apApnea:'Apnea',apNew:'Nueva sesión',apEdit:'Editar sesión',apDiary:'Diario',apRec:'Récords',apDisc:'Disciplina',apWhere:'Dónde',apWho:'Con quién',apDate:'Fecha',apTries:'Intentos',apAdd:'+ intento',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contracciones, compensación, sensaciones…',apSave:'Guardar',apDel:'Borrar',apDelQ:'¿Borrar?',apCancel:'Cancelar',apEmpty:'Aún no hay sesiones de apnea. Registra la primera: piscina, mar o en seco.',apBest:'mejor',apPb:'récord',apNoRec:'Los récords aparecen tras la primera sesión.',apSafe:'Nunca entrenes en el agua solo. Un compañero vigilando cada inmersión.',apLocal:'Vista previa: las sesiones de apnea se guardan solo en este dispositivo.',apResT:'tiempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sesión':n+' sesiones',apPlacePh:'Piscina, playa…',apWhoPh:'Nombre del compañero'});
+/* discipline: code, label, unit (t = seconds, m = metres) */
+const DISC=[['STA','STA','t'],['DYN','DYN','m'],['DNF','DNF','m'],['CWT','CWT','m'],['CNF','CNF','m'],['FIM','FIM','m'],['DRY','STA seco','t']];
+const dOf=k=>DISC.find(d=>d[0]===k)||DISC[0];
+const fmtT=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const fmtV=(k,v)=>v==null?'—':dOf(k)[2]==='t'?fmtT(v):(Math.round(v*10)/10).toString().replace('.',lang==='en'?'.':',')+' m';
+const parseV=(k,s)=>{s=String(s||'').trim().replace(',','.');if(!s)return null;if(dOf(k)[2]==='t'){const m=s.match(/^(\d+)\s*[:'.m\s]\s*(\d{1,2})/);if(m)return +m[1]*60+ +m[2];const n=+s;return isFinite(n)?(n<15?n*60:n):null}const n=parseFloat(s);return isFinite(n)?n:null};
+const all=()=>apDocs.map(d=>({...d}));
+const body=x=>{const o={...x};delete o.id;o.type='apnea';return o};
+async function apPut(x){if(!store){toast(t('errSave'));return false}const id=x.id||(store.newId?store.newId():'ap'+Date.now().toString(36));const d=body(x);if(!d.createdAt)d.createdAt=Date.now();
+  const i=apDocs.findIndex(e=>e.id===id);const row={...d,id};if(i>=0)apDocs[i]=row;else apDocs.push(row);
+  try{await store.save(id,d);return id}catch(e){writeError(e);return false}}
+async function apDel(id){apDocs=apDocs.filter(e=>e.id!==id);try{if(store&&store.remove)await store.remove(id)}catch(e){writeError(e)}}
+/* sessions kept locally by an earlier build move into the store once */
+function apMigrate(){const old=LSg(AK,null);if(!old||!old.length||!store||!loaded)return;LSs(AK,[]);old.forEach(x=>{const y={...x};delete y.id;apPut(y)})}
+const best=s=>{const v=(s.att||[]).map(a=>a.v).filter(v=>v!=null);return v.length?Math.max(...v):null};
+let mode=LSg(AM,'hunt'),view='diary',editing=null;
+
+/* ---------- styles ---------- */
+const st=document.createElement('style');st.textContent=`
+html.apnea{--bg:#EEEDF8;--surface:#FBFAFF;--ink:#1C1B3A;--muted:#5E5C86;--line:#D3D1EA;--accent:#D9620F;--on-accent:#fff;--sea:#5B4FD0;--sea-soft:#E3E0FA;--uw:#5B4FD0}
+@media (prefers-color-scheme:dark){html.apnea:not([data-theme="light"]){--bg:#12132B;--surface:#1B1D3D;--ink:#ECEBFF;--muted:#A3A1CF;--line:#33356A;--accent:#FF9A4D;--on-accent:#1A0E00;--sea:#A59BFF;--sea-soft:#2A2B5A;--uw:#A59BFF}}
+html.apnea[data-theme="dark"]{--bg:#12132B;--surface:#1B1D3D;--ink:#ECEBFF;--muted:#A3A1CF;--line:#33356A;--accent:#FF9A4D;--on-accent:#1A0E00;--sea:#A59BFF;--sea-soft:#2A2B5A;--uw:#A59BFF}
+html.apnea #trio,html.apnea #quickForm,html.apnea #srCard,html.apnea #exampleNotice,html.apnea #appView>.count-row,html.apnea #list{display:none!important}
+html:not(.apnea) #apView{display:none!important}
+.ap-sw{display:flex;gap:3px;background:var(--sea-soft);border-radius:12px;padding:3px;margin:6px auto 14px;max-width:320px}
+.ap-sw button{all:unset;box-sizing:border-box;flex:1;text-align:center;padding:9px 8px;border-radius:9px;font-weight:700;font-size:15px;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ap-sw button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+html.apnea header h1 span{color:var(--sea)}
+#apView{display:flex;flex-direction:column;gap:12px;margin:4px 0 18px}
+.ap-top{display:flex;align-items:center;gap:10px}
+.ap-tabs{display:flex;gap:3px;background:var(--sea-soft);border-radius:10px;padding:3px;flex:1;max-width:280px}
+.ap-tabs button{all:unset;box-sizing:border-box;flex:1;text-align:center;padding:7px 6px;border-radius:8px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer}
+.ap-tabs button.on{background:var(--surface);color:var(--ink)}
+.ap-new{margin-left:auto;min-height:42px;padding:0 16px;border:0;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:15px;cursor:pointer}
+.ap-pb{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.ap-pb div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.ap-pb b{display:block;font-size:20px;font-weight:700;color:var(--ink)}.ap-pb div:first-child b{color:var(--accent)}
+.ap-pb small{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.04em}
+.ap-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.ap-card h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+.ap-tag{margin-left:auto;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--sea-soft);color:var(--sea)}
+.ap-meta{color:var(--muted);font-size:13px;margin-top:2px}
+.ap-att{margin-top:6px;font-size:15px;font-variant-numeric:tabular-nums}.ap-att b{color:var(--accent)}
+.ap-note{margin-top:6px;color:var(--muted);font-size:13px;white-space:pre-wrap}
+.ap-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--muted)}
+.ap-safe{display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--accent) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--ink)}
+.ap-safe svg{flex:none;color:var(--accent)}
+.ap-hint{color:var(--muted);font-size:12px;text-align:center}
+.ap-rec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.ap-rec-h{display:flex;align-items:baseline;gap:8px}.ap-rec-h b{margin-left:auto;font-size:22px;color:var(--accent)}
+.ap-rec svg.sp{width:100%;height:46px;margin-top:6px;display:block}
+.ap-form{background:var(--surface);border:1px solid var(--sea);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ap-form h3{margin:0;font-size:17px}
+.ap-lab{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.ap-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ap-chips button{all:unset;box-sizing:border-box;padding:7px 13px;border-radius:999px;border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--muted);cursor:pointer}
+.ap-chips button.on{background:var(--sea);border-color:var(--sea);color:var(--surface)}
+.ap-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ap-form input,.ap-form textarea{width:100%;box-sizing:border-box;min-height:42px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);padding:8px 10px;font:inherit;font-size:16px}
+.ap-form textarea{min-height:70px;resize:vertical}
+.ap-tr{display:grid;grid-template-columns:22px 1fr 1fr 34px;gap:8px;align-items:center}
+.ap-tr>span{color:var(--muted);font-weight:700;text-align:center}
+.ap-tr>button{all:unset;cursor:pointer;color:var(--muted);text-align:center;font-size:20px;line-height:1}
+.ap-addt{all:unset;cursor:pointer;color:var(--sea);font-weight:700;align-self:flex-start;padding:4px 0}
+.ap-btns{display:flex;gap:8px;align-items:center}
+.ap-btns button{min-height:42px;padding:0 16px;border-radius:10px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
+.ap-btns .ap-ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.ap-btns .ap-del{margin-left:auto;color:var(--danger);border-color:color-mix(in srgb,var(--danger) 50%,transparent)}
+@media (max-width:560px){.ap-row2{grid-template-columns:1fr}}
+`;document.head.appendChild(st);
+
+/* ---------- switch + view containers ---------- */
+const av=$('appView'),hd=av&&av.querySelector('header');if(!av||!hd)return;
+const sw=document.createElement('div');sw.className='ap-sw';sw.innerHTML='<button type="button" data-m="hunt"></button><button type="button" data-m="apnea"></button>';hd.after(sw);
+const view0=document.createElement('section');view0.id='apView';const anchor=$('quickForm');av.insertBefore(view0,anchor);
+const h1s=hd.querySelector('h1 span');
+const setMode=m=>{mode=m;LSs(AM,m);document.documentElement.classList.toggle('apnea',m==='apnea');if(h1s)h1s.textContent=m==='apnea'?'Apnea':'Diary';
+  document.title=m==='apnea'?'Spearo Apnea':'Spearo Diary';sw.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()};
+sw.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
+if(h1s){h1s.style.cursor='pointer';h1s.title='Diary ⇄ Apnea';h1s.addEventListener('click',()=>setMode(mode==='apnea'?'hunt':'apnea'))}
+/* on the phone the diary pane holds #appView; keep the switch visible there too */
+
+const ICS='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 20a5 5 0 0 1 6-4.8"/></svg>';
+function spark(pts){if(pts.length<2)return'';const xs=pts.map((p,i)=>i),ys=pts.map(p=>p),mn=Math.min(...ys),mx=Math.max(...ys),W=300,H=46,pad=4;
+  const P=pts.map((v,i)=>[pad+(W-2*pad)*i/(pts.length-1),H-pad-(mx===mn?.5:(v-mn)/(mx-mn))*(H-2*pad)]);
+  return '<svg class="sp" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true"><polyline points="'+P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+'" fill="none" stroke="var(--sea)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="'+P[P.length-1][0]+'" cy="'+P[P.length-1][1]+'" r="3.5" fill="var(--accent)"/></svg>'}
+function pbs(){const a=all(),r={};a.forEach(s=>{const b=best(s);if(b==null)return;if(r[s.disc]==null||b>r[s.disc].v)r[s.disc]={v:b,date:s.date}});return r}
+function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
+  const a=all().slice().sort((x,y)=>(y.date||'').localeCompare(x.date||'')||(y.createdAt||y.ts||0)-(x.createdAt||x.ts||0)),P=pbs();
+  let h='<div class="ap-top"><div class="ap-tabs"><button type="button" data-v="diary" class="'+(view==='diary'?'on':'')+'">'+esc(t('apDiary'))+'</button><button type="button" data-v="rec" class="'+(view==='rec'?'on':'')+'">'+esc(t('apRec'))+'</button></div>'+(editing?'':'<button type="button" class="ap-new">'+esc(t('apNew'))+'</button>')+'</div>';
+  if(editing)h+=formHtml();
+  if(view==='diary'){
+    const keys=DISC.map(d=>d[0]).filter(k=>P[k]);if(keys.length)h+='<div class="ap-pb">'+keys.slice(0,4).map(k=>'<div><b>'+esc(fmtV(k,P[k].v))+'</b><small>'+esc(dOf(k)[1])+'</small></div>').join('')+'</div>';
+    h+=a.length?a.map(s=>{const b=best(s),pb=P[s.disc]&&b!=null&&b===P[s.disc].v;
+      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||dOf(s.disc)[1])+'<span class="ap-tag">'+esc(dOf(s.disc)[1])+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(s.who?' · '+esc(t('apWho').toLowerCase())+' '+esc(s.who):'')+'</div>'
+        +'<div class="ap-att">'+(s.att||[]).filter(x=>x.v!=null).map(x=>x.v===b?'<b>'+esc(fmtV(s.disc,x.v))+'</b>':esc(fmtV(s.disc,x.v))).join(' · ')+(pb?' <span class="ap-tag" style="margin-left:6px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)">'+esc(t('apPb'))+'</span>':'')+'</div>'
+        +(s.notes?'<div class="ap-note">'+esc(s.notes)+'</div>':'')+'</article>'}).join(''):'<div class="ap-empty">'+esc(t('apEmpty'))+'</div>'}
+  else{const keys=DISC.map(d=>d[0]).filter(k=>P[k]);
+    h+=keys.length?keys.map(k=>{const ss=a.filter(s=>s.disc===k&&best(s)!=null).sort((x,y)=>(x.date||'').localeCompare(y.date||''));let m=-Infinity;const line=ss.map(s=>m=Math.max(m,best(s)));const first=ss[0];
+      return '<div class="ap-rec"><div class="ap-rec-h"><strong>'+esc(dOf(k)[1])+'</strong><span class="ap-meta">'+esc(t('apSessions')(ss.length))+'</span><b>'+esc(fmtV(k,P[k].v))+'</b></div>'+spark(line)+'<div class="ap-meta">'+(first?esc(t('apSince'))+' '+esc(fmtDate(first.date))+(line.length>1&&line[0]!==line[line.length-1]?' · +'+esc(fmtV(k,line[line.length-1]-line[0])):''):'')+'</div></div>'}).join(''):'<div class="ap-empty">'+esc(t('apNoRec'))+'</div>'}
+  h+='<div class="ap-safe">'+ICS+'<span>'+esc(t('apSafe'))+'</span></div>';
+  view0.innerHTML=h;
+  if(editing){const f=view0.querySelector('.ap-form');if(f)wire(f)}}
+function formHtml(){const s=editing,u=dOf(s.disc)[2];
+  return '<div class="ap-form"><h3>'+esc(t(s.id?'apEdit':'apNew'))+'</h3>'
+    +'<span class="ap-lab">'+esc(t('apDisc'))+'</span><div class="ap-chips">'+DISC.map(d=>'<button type="button" data-d="'+d[0]+'" class="'+(d[0]===s.disc?'on':'')+'">'+esc(d[1])+'</button>').join('')+'</div>'
+    +'<div class="ap-row2"><label><span class="ap-lab">'+esc(t('apDate'))+'</span><input type="date" name="date" value="'+esc(s.date||'')+'"></label><label><span class="ap-lab">'+esc(t('apWhere'))+'</span><input name="place" value="'+esc(s.place||'')+'" placeholder="'+esc(t('apPlacePh'))+'"></label></div>'
+    +'<label><span class="ap-lab">'+esc(t('apWho'))+'</span><input name="who" value="'+esc(s.who||'')+'" placeholder="'+esc(t('apWhoPh'))+'"></label>'
+    +'<span class="ap-lab">'+esc(t('apTries'))+'</span><div class="ap-trs">'+(s.att.length?s.att:[{}]).map((x,i)=>'<div class="ap-tr"><span>'+(i+1)+'</span><input name="v" inputmode="'+(u==='t'?'numeric':'decimal')+'" placeholder="'+esc(t(u==='t'?'apResT':'apResM'))+'" value="'+esc(x.v==null?'':u==='t'?fmtT(x.v):String(x.v).replace('.',lang==='en'?'.':','))+'"><input name="r" inputmode="numeric" placeholder="'+esc(t('apRest'))+' m:ss" value="'+esc(x.r==null?'':fmtT(x.r))+'"><button type="button" class="ap-rm" aria-label="×">×</button></div>').join('')+'</div>'
+    +'<button type="button" class="ap-addt">'+esc(t('apAdd'))+'</button>'
+    +'<label><span class="ap-lab">'+esc(t('apNotes'))+'</span><textarea name="notes" placeholder="'+esc(t('apNotesPh'))+'">'+esc(s.notes||'')+'</textarea></label>'
+    +'<div class="ap-btns"><button type="button" class="ap-ok">'+esc(t('apSave'))+'</button><button type="button" class="ap-x">'+esc(t('apCancel'))+'</button>'+(s.id?'<button type="button" class="ap-del">'+esc(t('apDel'))+'</button>':'')+'</div></div>'}
+function readForm(f){const s=editing,g=n=>f.querySelector('[name="'+n+'"]');s.date=g('date').value;s.place=g('place').value.trim();s.who=g('who').value.trim();s.notes=g('notes').value.trim();
+  s.att=[...f.querySelectorAll('.ap-tr')].map(r=>({v:parseV(s.disc,r.querySelector('[name="v"]').value),r:parseV('STA',r.querySelector('[name="r"]').value)})).filter(x=>x.v!=null||x.r!=null)}
+function wire(f){let delArm=false,delT=0;
+  f.addEventListener('click',e=>{const d=e.target.closest('[data-d]');
+    if(d){readForm(f);editing.disc=d.dataset.d;draw();return}
+    if(e.target.closest('.ap-addt')){readForm(f);editing.att.push({});if(!editing.att.length)editing.att=[{},{}];draw();const ins=view0.querySelectorAll('.ap-tr [name="v"]');if(ins.length)ins[ins.length-1].focus();return}
+    const rm=e.target.closest('.ap-rm');if(rm){readForm(f);const i=[...f.querySelectorAll('.ap-tr')].indexOf(rm.closest('.ap-tr'));const raw=[...f.querySelectorAll('.ap-tr')];editing.att=raw.map(r=>({v:parseV(editing.disc,r.querySelector('[name="v"]').value),r:parseV('STA',r.querySelector('[name="r"]').value)}));editing.att.splice(i,1);draw();return}
+    if(e.target.closest('.ap-x')){editing=null;draw();return}
+    if(e.target.closest('.ap-ok')){readForm(f);const s={...editing};if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>draw());draw();return}
+    const del=e.target.closest('.ap-del');if(del){if(!delArm){delArm=true;del.textContent=t('apDelQ');clearTimeout(delT);delT=setTimeout(()=>{delArm=false;del.textContent=t('apDel')},4000);return}
+      const id=editing.id;editing=null;apDel(id).then(()=>draw());draw()}})}
+view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]');if(tb){view=tb.dataset.v;draw();return}
+  if(e.target.closest('.ap-new')){editing={disc:'STA',date:today(),place:'',who:'',att:[{}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
+  const c=e.target.closest('.ap-card');if(c&&!editing){const s=all().find(x=>x.id===c.dataset.id);if(s){editing=JSON.parse(JSON.stringify(s));if(!editing.att.length)editing.att=[{}];draw();view0.scrollIntoView({block:'start',behavior:'smooth'})}}});
+const relang=()=>{sw.querySelector('[data-m="hunt"]').textContent=t('apHunt');sw.querySelector('[data-m="apnea"]').textContent=t('apApnea');if(!editing)draw()};
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#langEn,#langPt,#langEs,#langIt,#langFr'))setTimeout(relang,30)});
+window.__apDraw=()=>{apMigrate();if(!editing)draw()};
+relang();setMode(mode);
+},0);
+
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
 const isSpecies=lat=>/^[A-Z][a-z]+ [a-z]+$/.test(lat||'')&&!/ spp$/.test(lat);
 const genusOf=lat=>(lat||'').split(' ')[0];
@@ -6551,7 +6693,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795826773';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795827569';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
