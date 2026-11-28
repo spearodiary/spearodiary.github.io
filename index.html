@@ -6029,9 +6029,9 @@ function apOnData(){try{if(window.__apDraw)window.__apDraw()}catch(_){}}
 setTimeout(function(){
 const AK='sn-apnea-sessions',AM='sn-apnea-mode';
 const LSg=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?d:v}catch(_){return d}},LSs=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
-Object.assign(T.pt,{apHunt:'Caça',apApnea:'Apneia',apNew:'Nova sessão',apEdit:'Editar sessão',apDiary:'Diário',apRec:'Recordes',apDisc:'Disciplina',apWhere:'Onde',apWho:'Com quem',apDate:'Data',apTries:'Tentativas',apAdd:'+ tentativa',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contrações, compensação, sensações…',apSave:'Guardar',apDel:'Apagar',apDelQ:'Apagar?',apCancel:'Cancelar',apEmpty:'Ainda sem sessões de apneia. Registe a primeira: piscina, mar ou em seco.',apBest:'melhor',apPb:'recorde',apNoRec:'Os recordes aparecem depois da primeira sessão.',apSafe:'Nunca treine na água sozinho. Um parceiro a vigiar cada mergulho.',apLocal:'Pré-visualização: as sessões de apneia ficam só neste dispositivo.',apResT:'tempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sessão':n+' sessões',apPlacePh:'Piscina, praia…',apAddD:'+ disciplina',apRmD:'Remover disciplina',apWhoPh:'Nome do parceiro'});
-Object.assign(T.en,{apHunt:'Spearfishing',apApnea:'Apnea',apNew:'New session',apEdit:'Edit session',apDiary:'Diary',apRec:'Records',apDisc:'Discipline',apWhere:'Where',apWho:'With',apDate:'Date',apTries:'Attempts',apAdd:'+ attempt',apRest:'rest',apNotes:'Notes',apNotesPh:'Contractions, equalising, how it felt…',apSave:'Save',apDel:'Delete',apDelQ:'Delete?',apCancel:'Cancel',apEmpty:'No apnea sessions yet. Log the first one: pool, sea or dry.',apBest:'best',apPb:'record',apNoRec:'Records appear after the first session.',apSafe:'Never train in the water alone. A buddy watching every dive.',apLocal:'Preview: apnea sessions are kept on this device only.',apResT:'time m:ss',apResM:'metres',apSince:'since',apSessions:n=>n===1?'1 session':n+' sessions',apPlacePh:'Pool, beach…',apAddD:'+ discipline',apRmD:'Remove discipline',apWhoPh:'Buddy name'});
-Object.assign(T.es,{apHunt:'Pesca',apApnea:'Apnea',apNew:'Nueva sesión',apEdit:'Editar sesión',apDiary:'Diario',apRec:'Récords',apDisc:'Disciplina',apWhere:'Dónde',apWho:'Con quién',apDate:'Fecha',apTries:'Intentos',apAdd:'+ intento',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contracciones, compensación, sensaciones…',apSave:'Guardar',apDel:'Borrar',apDelQ:'¿Borrar?',apCancel:'Cancelar',apEmpty:'Aún no hay sesiones de apnea. Registra la primera: piscina, mar o en seco.',apBest:'mejor',apPb:'récord',apNoRec:'Los récords aparecen tras la primera sesión.',apSafe:'Nunca entrenes en el agua solo. Un compañero vigilando cada inmersión.',apLocal:'Vista previa: las sesiones de apnea se guardan solo en este dispositivo.',apResT:'tiempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sesión':n+' sesiones',apPlacePh:'Piscina, playa…',apAddD:'+ disciplina',apRmD:'Quitar disciplina',apWhoPh:'Nombre del compañero'});
+Object.assign(T.pt,{apHunt:'Caça',apApnea:'Apneia',apNew:'Nova sessão',apEdit:'Editar sessão',apDiary:'Diário',apRec:'Recordes',apDisc:'Disciplina',apWhere:'Onde',apWho:'Com quem',apDate:'Data',apTries:'Tentativas',apAdd:'+ tentativa',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contrações, compensação, sensações…',apSave:'Guardar',apDel:'Apagar',apDelQ:'Apagar?',apCancel:'Cancelar',apEmpty:'Ainda sem sessões de apneia. Registe a primeira: piscina, mar ou em seco.',apBest:'melhor',apPb:'recorde',apNoRec:'Os recordes aparecem depois da primeira sessão.',apSafe:'Treinos na água sempre com parceiro de segurança.',apLocal:'Pré-visualização: as sessões de apneia ficam só neste dispositivo.',apResT:'tempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sessão':n+' sessões',apPlacePh:'Piscina, praia…',apCoach:'Treinador',apCoachPh:'Nome do treinador',apCoachAdd:'Adicionar',apOther:'Outro local…',apPool:'Piscina',apAddD:'+ disciplina',apRmD:'Remover disciplina',apWhoPh:'Nome do parceiro'});
+Object.assign(T.en,{apHunt:'Spearfishing',apApnea:'Apnea',apNew:'New session',apEdit:'Edit session',apDiary:'Diary',apRec:'Records',apDisc:'Discipline',apWhere:'Where',apWho:'With',apDate:'Date',apTries:'Attempts',apAdd:'+ attempt',apRest:'rest',apNotes:'Notes',apNotesPh:'Contractions, equalising, how it felt…',apSave:'Save',apDel:'Delete',apDelQ:'Delete?',apCancel:'Cancel',apEmpty:'No apnea sessions yet. Log the first one: pool, sea or dry.',apBest:'best',apPb:'record',apNoRec:'Records appear after the first session.',apSafe:'Water training always with a safety buddy.',apLocal:'Preview: apnea sessions are kept on this device only.',apResT:'time m:ss',apResM:'metres',apSince:'since',apSessions:n=>n===1?'1 session':n+' sessions',apPlacePh:'Pool, beach…',apCoach:'Coach',apCoachPh:'Coach name',apCoachAdd:'Add',apOther:'Other place…',apPool:'Pool',apAddD:'+ discipline',apRmD:'Remove discipline',apWhoPh:'Buddy name'});
+Object.assign(T.es,{apHunt:'Pesca',apApnea:'Apnea',apNew:'Nueva sesión',apEdit:'Editar sesión',apDiary:'Diario',apRec:'Récords',apDisc:'Disciplina',apWhere:'Dónde',apWho:'Con quién',apDate:'Fecha',apTries:'Intentos',apAdd:'+ intento',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contracciones, compensación, sensaciones…',apSave:'Guardar',apDel:'Borrar',apDelQ:'¿Borrar?',apCancel:'Cancelar',apEmpty:'Aún no hay sesiones de apnea. Registra la primera: piscina, mar o en seco.',apBest:'mejor',apPb:'récord',apNoRec:'Los récords aparecen tras la primera sesión.',apSafe:'Entrenamientos en el agua siempre con compañero de seguridad.',apLocal:'Vista previa: las sesiones de apnea se guardan solo en este dispositivo.',apResT:'tiempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sesión':n+' sesiones',apPlacePh:'Piscina, playa…',apCoach:'Entrenador',apCoachPh:'Nombre del entrenador',apCoachAdd:'Añadir',apOther:'Otro lugar…',apPool:'Piscina',apAddD:'+ disciplina',apRmD:'Quitar disciplina',apWhoPh:'Nombre del compañero'});
 /* discipline: code, label, unit (t = seconds, m = metres) */
 const DISC=[['STA','STA','t'],['DYN','DYN','m'],['DYNB','DYNB','m'],['DNF','DNF','m'],['CWT','CWT','m'],['CWTB','CWTB','m'],['CNF','CNF','m'],['FIM','FIM','m'],['DRY','STA seco','t']];
 const dOf=k=>DISC.find(d=>d[0]===k)||DISC[0];
@@ -6047,6 +6047,7 @@ async function apDel(id){apDocs=apDocs.filter(e=>e.id!==id);try{if(store&&store.
 /* sessions kept locally by an earlier build move into the store once */
 function apMigrate(){const old=LSg(AK,null);if(!old||!old.length||!store||!loaded)return;LSs(AK,[]);old.forEach(x=>{const y={...x};delete y.id;apPut(y)})}
 /* a session holds one or more discipline blocks; old sessions (disc + att) read as one block */
+const coachesOf=s=>Array.isArray(s.coaches)?s.coaches:(s.who?[s.who]:[]);
 const blocksOf=s=>Array.isArray(s.blocks)&&s.blocks.length?s.blocks:[{disc:s.disc||'STA',att:s.att||[]}];
 const bestAtt=att=>{const v=(att||[]).map(a=>a.v).filter(v=>v!=null);return v.length?Math.max(...v):null};
 const bestIn=(s,k)=>{let m=null;blocksOf(s).forEach(b=>{if(b.disc!==k)return;const v=bestAtt(b.att);if(v!=null&&(m==null||v>m))m=v});return m};
@@ -6056,9 +6057,9 @@ let mode=LSg(AM,'hunt'),view='diary',editing=null;
 const st=document.createElement('style');st.textContent=`
 html.apnea:not(.ap-light){--bg:#0D0F0C;--surface:#191D17;--ink:#F2F6EE;--muted:#A9B3A2;--line:#2F3829;--accent:#8DCB2F;--on-accent:#0D0F0C;--sea:#8DCB2F;--sea-soft:#22301A;--uw:#8DCB2F;color-scheme:dark}
 html.apnea.ap-light{--bg:#F1F4EE;--surface:#FFFFFF;--ink:#121411;--muted:#566150;--line:#D3DCCB;--accent:#6FAF1A;--on-accent:#0D0F0C;--sea:#4F8A12;--sea-soft:#E4F1D2;--uw:#4F8A12;color-scheme:light}
-html.apnea #appView{min-height:100lvh;align-content:start}
+html.apnea:not(.bs-on) #appView{min-height:100lvh;align-content:start}
 header h1 svg.diver,header h1 svg.fdiver{display:none!important}header h1{padding-top:.35em!important}
-.ap-th{all:unset;cursor:pointer;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:var(--muted);margin-left:6px}.ap-th:hover{color:var(--ink)}html:not(.apnea) .ap-th{display:none}
+.ap-th{all:unset;cursor:pointer;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:var(--muted);margin-left:6px}.ap-th:hover{color:var(--ink)}
 html.apnea #trio,html.apnea #quickForm,html.apnea #srCard,html.apnea #exampleNotice,html.apnea #appView>.count-row,html.apnea #list{display:none!important}
 html:not(.apnea) #apView{display:none!important}
 .ap-sw{display:flex;justify-content:center;align-items:center;gap:4px;margin:-2px auto 12px}
@@ -6120,6 +6121,10 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-tr{display:grid;grid-template-columns:22px 1fr 1fr 34px;gap:8px;align-items:center}
 .ap-tr>span{color:var(--muted);font-weight:700;text-align:center}
 .ap-tr>button{all:unset;cursor:pointer;color:var(--muted);text-align:center;font-size:20px;line-height:1}
+.ap-pl{margin:6px 0 8px}.ap-plin{margin-top:0}
+.ap-cos{margin:6px 0}.ap-co{display:inline-flex;align-items:center;gap:6px;padding:5px 6px 5px 12px;border-radius:999px;background:var(--sea-soft);color:var(--ink);font-weight:600;font-size:14px}
+.ap-co button{all:unset;cursor:pointer;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;color:var(--muted);font-size:16px}
+.ap-coadd{display:flex;gap:8px;margin-top:6px}.ap-coadd input{flex:1;min-width:0}.ap-coa{min-height:42px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--sea);font-weight:700;cursor:pointer}
 .ap-blk{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--sea) 5%,transparent)}
 .ap-blk-h{display:flex;align-items:center;justify-content:space-between}
 .ap-rmb{all:unset;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:0 4px}
@@ -6139,15 +6144,19 @@ html.apnea header h1 span{color:var(--sea)}
 const av=$('appView'),hd=av&&av.querySelector('header');if(!av||!hd)return;
 const sw=document.createElement('div');sw.className='ap-sw';sw.innerHTML='<button type="button" data-m="hunt"></button><i aria-hidden="true"></i><button type="button" data-m="apnea"></button><span class="ap-th" role="button" tabindex="0" title="Claro / escuro" aria-label="Claro / escuro"></span>';
 {const th=sw.querySelector('.ap-th'),SUN='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',MOON='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
-  const ap=v=>{document.documentElement.classList.toggle('ap-light',v);th.innerHTML=v?MOON:SUN;LSs('sn-apnea-light',v)};ap(!!LSg('sn-apnea-light',false));
-  const go=e=>{e.stopPropagation();ap(!document.documentElement.classList.contains('ap-light'))};th.addEventListener('click',go);th.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(e)}})}hd.after(sw);
+  const R=document.documentElement,huntLight=()=>{const d=R.dataset.theme;return d?d==='light':!matchMedia('(prefers-color-scheme: dark)').matches};
+  {const sv=LSg('sn-theme',null);if(sv==='light'||sv==='dark')R.dataset.theme=sv}
+  R.classList.toggle('ap-light',!!LSg('sn-apnea-light',false));
+  const ico=()=>{const light=R.classList.contains('apnea')?R.classList.contains('ap-light'):huntLight();th.innerHTML=light?SUN:MOON};window.__apIco=ico;ico();
+  try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',ico)}catch(_){}
+  const go=e=>{e.stopPropagation();if(R.classList.contains('apnea')){const v=!R.classList.contains('ap-light');R.classList.toggle('ap-light',v);LSs('sn-apnea-light',v)}else{const v=huntLight()?'dark':'light';R.dataset.theme=v;LSs('sn-theme',v)}ico()};th.addEventListener('click',go);th.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(e)}})}hd.after(sw);
 const view0=document.createElement('section');view0.id='apView';const anchor=$('quickForm');av.insertBefore(view0,anchor);
 const h1s=hd.querySelector('h1 span');
 /* «Spearo» stays put when the second word changes: the word box is as wide as the wider of Diary / FREE */
 const h1w=()=>{if(!h1s)return;const cs=getComputedStyle(h1s),c=document.createElement('canvas').getContext('2d');c.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
   const w=Math.ceil(Math.max(c.measureText('Diary').width,c.measureText('FREE').width)+parseFloat(cs.letterSpacing||0)*5);if(w>0){h1s.style.display='inline-block';h1s.style.textAlign='left';h1s.style.minWidth=w+'px'}};
 addEventListener('resize',()=>setTimeout(h1w,60));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(h1w);
-const setMode=m=>{mode=m;LSs(AM,m);document.documentElement.classList.toggle('apnea',m==='apnea');if(h1s)h1s.textContent=m==='apnea'?'FREE':'Diary';h1w();setTimeout(fdDraw,30);
+const setMode=m=>{mode=m;LSs(AM,m);document.documentElement.classList.toggle('apnea',m==='apnea');if(h1s)h1s.textContent=m==='apnea'?'FREE':'Diary';h1w();if(window.__apIco)window.__apIco();setTimeout(fdDraw,30);
   document.title=m==='apnea'?'Spearo FREE':'Spearo Diary';{const lh=document.querySelector('.sg-lang summary [data-i]');if(lh)lh.textContent=t(m==='apnea'?'setLang':'sgLangH')}{const tc=document.querySelector('meta[name="theme-color"]');if(tc){if(!tc.dataset.hunt)tc.dataset.hunt=tc.content;tc.content=m==='apnea'?'#0D0F0C':tc.dataset.hunt}}
   /* leaving a hunting page that is hidden in FREE */if(m==='apnea'){const sh=$('bsheet');try{if(sh&&!sh.hidden&&typeof window.__bnShow==='function')window.__bnShow('home')}catch(_){}}sw.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()};
 sw.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
@@ -6209,7 +6218,7 @@ function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
   if(view==='diary'){
     const keys=DISC.map(d=>d[0]).filter(k=>P[k]);if(keys.length)h+='<div class="ap-pb">'+keys.slice(0,4).map(k=>'<div><b>'+esc(fmtV(k,P[k].v))+'</b><small>'+esc(dOf(k)[1])+'</small></div>').join('')+'</div>';
     h+=a.length?a.map(s=>{const bl=blocksOf(s),many=bl.length>1,tags=[...new Set(bl.map(b=>dOf(b.disc)[1]))];
-      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||tags.join(' + '))+'<span class="ap-tags">'+tags.map(x=>'<span class="ap-tag">'+esc(x)+'</span>').join('')+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(s.who?' · '+esc(t('apWho').toLowerCase())+' '+esc(s.who):'')+'</div>'
+      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||tags.join(' + '))+'<span class="ap-tags">'+tags.map(x=>'<span class="ap-tag">'+esc(x)+'</span>').join('')+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(coachesOf(s).length?' · '+esc(t('apCoach').toLowerCase())+' '+esc(coachesOf(s).join(', ')):'')+'</div>'
         +bl.map(b=>{const v=bestAtt(b.att),pb=P[b.disc]&&v!=null&&v===P[b.disc].v;const vals=(b.att||[]).filter(x=>x.v!=null);if(!vals.length)return'';
           return '<div class="ap-att">'+(many?'<span class="ap-bl">'+esc(dOf(b.disc)[1])+'</span>':'')+vals.map(x=>x.v===v?'<b>'+esc(fmtV(b.disc,x.v))+'</b>':esc(fmtV(b.disc,x.v))).join(' · ')+(pb?' <span class="ap-tag ap-pbt">'+esc(t('apPb'))+'</span>':'')+'</div>'}).join('')
         +(s.notes?'<div class="ap-note">'+esc(s.notes)+'</div>':'')+'</article>'}).join(''):'<div class="ap-empty">'+esc(t('apEmpty'))+'</div>'}
@@ -6218,6 +6227,7 @@ function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
       return '<div class="ap-rec"><div class="ap-rec-h"><strong>'+esc(dOf(k)[1])+'</strong><span class="ap-meta">'+esc(t('apSessions')(ss.length))+'</span><b>'+esc(fmtV(k,P[k].v))+'</b></div>'+spark(line)+'<div class="ap-meta">'+(first?esc(t('apSince'))+' '+esc(fmtDate(first.date))+(line.length>1&&line[0]!==line[line.length-1]?' · +'+esc(fmtV(k,line[line.length-1]-line[0])):''):'')+'</div></div>'}).join(''):'<div class="ap-empty">'+esc(t('apNoRec'))+'</div>'}
   view0.innerHTML=h;
   if(editing){const f=view0.querySelector('.ap-form');if(f)wire(f)}}
+const POOLS=()=>[t('apPool')+' 50 m',t('apPool')+' 25 m'];
 const valTxt=(k,v)=>v==null?'':dOf(k)[2]==='t'?fmtT(v):String(v).replace('.',lang==='en'?'.':',');
 function blockHtml(b,bi,n){const u=dOf(b.disc)[2];
   return '<div class="ap-blk" data-b="'+bi+'">'+(n>1?'<div class="ap-blk-h"><span class="ap-lab">'+esc(t('apDisc'))+' '+(bi+1)+'</span><button type="button" class="ap-rmb" aria-label="'+esc(t('apRmD'))+'" title="'+esc(t('apRmD'))+'">×</button></div>':'<span class="ap-lab">'+esc(t('apDisc'))+'</span>')
@@ -6226,17 +6236,24 @@ function blockHtml(b,bi,n){const u=dOf(b.disc)[2];
     +'<button type="button" class="ap-addt">'+esc(t('apAdd'))+'</button></div>'}
 function formHtml(){const s=editing;
   return '<div class="ap-form"><h3>'+esc(t(s.id?'apEdit':'apNew'))+'</h3>'
-    +'<div class="ap-row2"><label><span class="ap-lab">'+esc(t('apDate'))+'</span><input type="date" name="date" value="'+esc(s.date||'')+'"></label><label><span class="ap-lab">'+esc(t('apWhere'))+'</span><input name="place" value="'+esc(s.place||'')+'" placeholder="'+esc(t('apPlacePh'))+'"></label></div>'
-    +'<label><span class="ap-lab">'+esc(t('apWho'))+'</span><input name="who" value="'+esc(s.who||'')+'" placeholder="'+esc(t('apWhoPh'))+'"></label>'
+    +'<div class="ap-row2"><label><span class="ap-lab">'+esc(t('apDate'))+'</span><input type="date" name="date" value="'+esc(s.date||'')+'"></label></div>'
+    +'<div><span class="ap-lab">'+esc(t('apWhere'))+'</span><div class="ap-chips ap-pl">'+POOLS().map(p=>'<button type="button" data-pl="'+esc(p)+'" class="'+(s.place===p?'on':'')+'">'+esc(p)+'</button>').join('')+'</div><input name="place" class="ap-plin" value="'+esc(POOLS().includes(s.place)?'':(s.place||''))+'" placeholder="'+esc(t('apOther'))+'"></div>'
+    +'<div><span class="ap-lab">'+esc(t('apCoach'))+'</span>'+(s.coaches.length?'<div class="ap-chips ap-cos">'+s.coaches.map((c,i)=>'<span class="ap-co">'+esc(c)+'<button type="button" data-ci="'+i+'" aria-label="×">×</button></span>').join('')+'</div>':'')+'<div class="ap-coadd"><input name="coach" placeholder="'+esc(t('apCoachPh'))+'" enterkeyhint="done"><button type="button" class="ap-coa">'+esc(t('apCoachAdd'))+'</button></div></div>'
     +s.blocks.map((b,i)=>blockHtml(b,i,s.blocks.length)).join('')
     +'<button type="button" class="ap-addb">'+esc(t('apAddD'))+'</button>'
     +'<label><span class="ap-lab">'+esc(t('apNotes'))+'</span><textarea name="notes" placeholder="'+esc(t('apNotesPh'))+'">'+esc(s.notes||'')+'</textarea></label>'
     +'<div class="ap-btns"><button type="button" class="ap-ok">'+esc(t('apSave'))+'</button><button type="button" class="ap-x">'+esc(t('apCancel'))+'</button>'+(s.id?'<button type="button" class="ap-del">'+esc(t('apDel'))+'</button>':'')+'</div></div>'}
 /* read everything typed (keeps empty rows so the layout does not jump while editing) */
-function readForm(f){const s=editing,g=n=>f.querySelector('[name="'+n+'"]');s.date=g('date').value;s.place=g('place').value.trim();s.who=g('who').value.trim();s.notes=g('notes').value.trim();
+function readForm(f){const s=editing,g=n=>f.querySelector('[name="'+n+'"]');s.date=g('date').value;{const v=g('place').value.trim();if(v)s.place=v;else if(!POOLS().includes(s.place))s.place=''}{const c=g('coach').value.trim();if(c&&!s.coaches.includes(c))s.coaches.push(c)}delete s.who;s.notes=g('notes').value.trim();
   s.blocks=[...f.querySelectorAll('.ap-blk')].map((el,bi)=>{const d=s.blocks[bi].disc;return{disc:d,att:[...el.querySelectorAll('.ap-tr')].map(r=>({v:parseV(d,r.querySelector('[name="v"]').value),r:parseV('STA',r.querySelector('[name="r"]').value)}))}})}
 const clean=s=>{const o={...s};o.blocks=o.blocks.map(b=>({disc:b.disc,att:b.att.filter(x=>x.v!=null||x.r!=null)})).filter((b,i,arr)=>b.att.length||arr.length===1);delete o.disc;delete o.att;return o};
 function wire(f){let delArm=false,delT=0;
+  f.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.name==='coach'){e.preventDefault();readForm(f);draw();const i=view0.querySelector('[name="coach"]');if(i)i.focus()}});
+  f.addEventListener('input',e=>{if(e.target.name==='place'&&e.target.value.trim())f.querySelectorAll('[data-pl]').forEach(b=>b.classList.remove('on'))});
+  f.addEventListener('click',e=>{const pl=e.target.closest('[data-pl]');if(pl){readForm(f);editing.place=editing.place===pl.dataset.pl?'':pl.dataset.pl;draw();return}
+    const ci=e.target.closest('[data-ci]');if(ci){readForm(f);editing.coaches.splice(+ci.dataset.ci,1);draw();return}
+    if(e.target.closest('.ap-coa')){readForm(f);draw();const i=view0.querySelector('[name="coach"]');if(i)i.focus();return}
+  });
   f.addEventListener('click',e=>{const bl=e.target.closest('.ap-blk'),bi=bl?+bl.dataset.b:-1;const d=e.target.closest('[data-d]');
     if(d&&bi>=0){readForm(f);editing.blocks[bi].disc=d.dataset.d;draw();return}
     if(e.target.closest('.ap-addt')&&bi>=0){readForm(f);editing.blocks[bi].att.push({});draw();const ins=view0.querySelectorAll('.ap-blk[data-b="'+bi+'"] .ap-tr [name="v"]');if(ins.length)ins[ins.length-1].focus();return}
@@ -6248,8 +6265,8 @@ function wire(f){let delArm=false,delT=0;
     const del=e.target.closest('.ap-del');if(del){if(!delArm){delArm=true;del.textContent=t('apDelQ');clearTimeout(delT);delT=setTimeout(()=>{delArm=false;del.textContent=t('apDel')},4000);return}
       const id=editing.id;editing=null;apDel(id).then(()=>draw());draw()}})}
 view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]');if(tb){view=tb.dataset.v;draw();return}
-  if(e.target.closest('.ap-new')){editing={date:today(),place:'',who:'',blocks:[{disc:'STA',att:[{}]}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
-  const c=e.target.closest('.ap-card');if(c&&!editing){const s=all().find(x=>x.id===c.dataset.id);if(s){editing=JSON.parse(JSON.stringify(s));editing.blocks=JSON.parse(JSON.stringify(blocksOf(s))).map(b=>({disc:b.disc,att:b.att&&b.att.length?b.att:[{}]}));draw();view0.scrollIntoView({block:'start',behavior:'smooth'})}}});
+  if(e.target.closest('.ap-new')){editing={date:today(),place:'',coaches:[],blocks:[{disc:'STA',att:[{}]}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
+  const c=e.target.closest('.ap-card');if(c&&!editing){const s=all().find(x=>x.id===c.dataset.id);if(s){editing=JSON.parse(JSON.stringify(s));editing.coaches=coachesOf(s).slice();editing.blocks=JSON.parse(JSON.stringify(blocksOf(s))).map(b=>({disc:b.disc,att:b.att&&b.att.length?b.att:[{}]}));draw();view0.scrollIntoView({block:'start',behavior:'smooth'})}}});
 const relang=()=>{{const tg=$('tagline');if(tg)tg.dataset.ap=t('apSafe');const lh=document.querySelector('.sg-lang summary [data-i]');if(lh)lh.textContent=t(mode==='apnea'?'setLang':'sgLangH')}sw.querySelector('[data-m="hunt"]').textContent=t('apHunt');sw.querySelector('[data-m="apnea"]').textContent=t('apApnea');if(!editing)draw()};
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#langEn,#langPt,#langEs,#langIt,#langFr'))setTimeout(relang,30)});
 window.__apDraw=()=>{apMigrate();if(!editing)draw()};
@@ -6786,7 +6803,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795829890';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795830501';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
