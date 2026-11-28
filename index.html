@@ -6028,11 +6028,11 @@ function apOnData(){try{if(window.__apDraw)window.__apDraw()}catch(_){}}
 setTimeout(function(){
 const AK='sn-apnea-sessions',AM='sn-apnea-mode';
 const LSg=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?d:v}catch(_){return d}},LSs=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
-Object.assign(T.pt,{apHunt:'Caça',apApnea:'Apneia',apNew:'Nova sessão',apEdit:'Editar sessão',apDiary:'Diário',apRec:'Recordes',apDisc:'Disciplina',apWhere:'Onde',apWho:'Com quem',apDate:'Data',apTries:'Tentativas',apAdd:'+ tentativa',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contrações, compensação, sensações…',apSave:'Guardar',apDel:'Apagar',apDelQ:'Apagar?',apCancel:'Cancelar',apEmpty:'Ainda sem sessões de apneia. Registe a primeira: piscina, mar ou em seco.',apBest:'melhor',apPb:'recorde',apNoRec:'Os recordes aparecem depois da primeira sessão.',apSafe:'Nunca treine na água sozinho. Um parceiro a vigiar cada mergulho.',apLocal:'Pré-visualização: as sessões de apneia ficam só neste dispositivo.',apResT:'tempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sessão':n+' sessões',apPlacePh:'Piscina, praia…',apWhoPh:'Nome do parceiro'});
-Object.assign(T.en,{apHunt:'Spearfishing',apApnea:'Apnea',apNew:'New session',apEdit:'Edit session',apDiary:'Diary',apRec:'Records',apDisc:'Discipline',apWhere:'Where',apWho:'With',apDate:'Date',apTries:'Attempts',apAdd:'+ attempt',apRest:'rest',apNotes:'Notes',apNotesPh:'Contractions, equalising, how it felt…',apSave:'Save',apDel:'Delete',apDelQ:'Delete?',apCancel:'Cancel',apEmpty:'No apnea sessions yet. Log the first one: pool, sea or dry.',apBest:'best',apPb:'record',apNoRec:'Records appear after the first session.',apSafe:'Never train in the water alone. A buddy watching every dive.',apLocal:'Preview: apnea sessions are kept on this device only.',apResT:'time m:ss',apResM:'metres',apSince:'since',apSessions:n=>n===1?'1 session':n+' sessions',apPlacePh:'Pool, beach…',apWhoPh:'Buddy name'});
-Object.assign(T.es,{apHunt:'Pesca',apApnea:'Apnea',apNew:'Nueva sesión',apEdit:'Editar sesión',apDiary:'Diario',apRec:'Récords',apDisc:'Disciplina',apWhere:'Dónde',apWho:'Con quién',apDate:'Fecha',apTries:'Intentos',apAdd:'+ intento',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contracciones, compensación, sensaciones…',apSave:'Guardar',apDel:'Borrar',apDelQ:'¿Borrar?',apCancel:'Cancelar',apEmpty:'Aún no hay sesiones de apnea. Registra la primera: piscina, mar o en seco.',apBest:'mejor',apPb:'récord',apNoRec:'Los récords aparecen tras la primera sesión.',apSafe:'Nunca entrenes en el agua solo. Un compañero vigilando cada inmersión.',apLocal:'Vista previa: las sesiones de apnea se guardan solo en este dispositivo.',apResT:'tiempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sesión':n+' sesiones',apPlacePh:'Piscina, playa…',apWhoPh:'Nombre del compañero'});
+Object.assign(T.pt,{apHunt:'Caça',apApnea:'Apneia',apNew:'Nova sessão',apEdit:'Editar sessão',apDiary:'Diário',apRec:'Recordes',apDisc:'Disciplina',apWhere:'Onde',apWho:'Com quem',apDate:'Data',apTries:'Tentativas',apAdd:'+ tentativa',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contrações, compensação, sensações…',apSave:'Guardar',apDel:'Apagar',apDelQ:'Apagar?',apCancel:'Cancelar',apEmpty:'Ainda sem sessões de apneia. Registe a primeira: piscina, mar ou em seco.',apBest:'melhor',apPb:'recorde',apNoRec:'Os recordes aparecem depois da primeira sessão.',apSafe:'Nunca treine na água sozinho. Um parceiro a vigiar cada mergulho.',apLocal:'Pré-visualização: as sessões de apneia ficam só neste dispositivo.',apResT:'tempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sessão':n+' sessões',apPlacePh:'Piscina, praia…',apAddD:'+ disciplina',apRmD:'Remover disciplina',apWhoPh:'Nome do parceiro'});
+Object.assign(T.en,{apHunt:'Spearfishing',apApnea:'Apnea',apNew:'New session',apEdit:'Edit session',apDiary:'Diary',apRec:'Records',apDisc:'Discipline',apWhere:'Where',apWho:'With',apDate:'Date',apTries:'Attempts',apAdd:'+ attempt',apRest:'rest',apNotes:'Notes',apNotesPh:'Contractions, equalising, how it felt…',apSave:'Save',apDel:'Delete',apDelQ:'Delete?',apCancel:'Cancel',apEmpty:'No apnea sessions yet. Log the first one: pool, sea or dry.',apBest:'best',apPb:'record',apNoRec:'Records appear after the first session.',apSafe:'Never train in the water alone. A buddy watching every dive.',apLocal:'Preview: apnea sessions are kept on this device only.',apResT:'time m:ss',apResM:'metres',apSince:'since',apSessions:n=>n===1?'1 session':n+' sessions',apPlacePh:'Pool, beach…',apAddD:'+ discipline',apRmD:'Remove discipline',apWhoPh:'Buddy name'});
+Object.assign(T.es,{apHunt:'Pesca',apApnea:'Apnea',apNew:'Nueva sesión',apEdit:'Editar sesión',apDiary:'Diario',apRec:'Récords',apDisc:'Disciplina',apWhere:'Dónde',apWho:'Con quién',apDate:'Fecha',apTries:'Intentos',apAdd:'+ intento',apRest:'recup.',apNotes:'Notas',apNotesPh:'Contracciones, compensación, sensaciones…',apSave:'Guardar',apDel:'Borrar',apDelQ:'¿Borrar?',apCancel:'Cancelar',apEmpty:'Aún no hay sesiones de apnea. Registra la primera: piscina, mar o en seco.',apBest:'mejor',apPb:'récord',apNoRec:'Los récords aparecen tras la primera sesión.',apSafe:'Nunca entrenes en el agua solo. Un compañero vigilando cada inmersión.',apLocal:'Vista previa: las sesiones de apnea se guardan solo en este dispositivo.',apResT:'tiempo m:ss',apResM:'metros',apSince:'desde',apSessions:n=>n===1?'1 sesión':n+' sesiones',apPlacePh:'Piscina, playa…',apAddD:'+ disciplina',apRmD:'Quitar disciplina',apWhoPh:'Nombre del compañero'});
 /* discipline: code, label, unit (t = seconds, m = metres) */
-const DISC=[['STA','STA','t'],['DYN','DYN','m'],['DNF','DNF','m'],['CWT','CWT','m'],['CNF','CNF','m'],['FIM','FIM','m'],['DRY','STA seco','t']];
+const DISC=[['STA','STA','t'],['DYN','DYN','m'],['DYNB','DYNB','m'],['DNF','DNF','m'],['CWT','CWT','m'],['CWTB','CWTB','m'],['CNF','CNF','m'],['FIM','FIM','m'],['DRY','STA seco','t']];
 const dOf=k=>DISC.find(d=>d[0]===k)||DISC[0];
 const fmtT=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const fmtV=(k,v)=>v==null?'—':dOf(k)[2]==='t'?fmtT(v):(Math.round(v*10)/10).toString().replace('.',lang==='en'?'.':',')+' m';
@@ -6045,7 +6045,10 @@ async function apPut(x){if(!store){toast(t('errSave'));return false}const id=x.i
 async function apDel(id){apDocs=apDocs.filter(e=>e.id!==id);try{if(store&&store.remove)await store.remove(id)}catch(e){writeError(e)}}
 /* sessions kept locally by an earlier build move into the store once */
 function apMigrate(){const old=LSg(AK,null);if(!old||!old.length||!store||!loaded)return;LSs(AK,[]);old.forEach(x=>{const y={...x};delete y.id;apPut(y)})}
-const best=s=>{const v=(s.att||[]).map(a=>a.v).filter(v=>v!=null);return v.length?Math.max(...v):null};
+/* a session holds one or more discipline blocks; old sessions (disc + att) read as one block */
+const blocksOf=s=>Array.isArray(s.blocks)&&s.blocks.length?s.blocks:[{disc:s.disc||'STA',att:s.att||[]}];
+const bestAtt=att=>{const v=(att||[]).map(a=>a.v).filter(v=>v!=null);return v.length?Math.max(...v):null};
+const bestIn=(s,k)=>{let m=null;blocksOf(s).forEach(b=>{if(b.disc!==k)return;const v=bestAtt(b.att);if(v!=null&&(m==null||v>m))m=v});return m};
 let mode=LSg(AM,'hunt'),view='diary',editing=null;
 
 /* ---------- styles ---------- */
@@ -6104,6 +6107,13 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-tr{display:grid;grid-template-columns:22px 1fr 1fr 34px;gap:8px;align-items:center}
 .ap-tr>span{color:var(--muted);font-weight:700;text-align:center}
 .ap-tr>button{all:unset;cursor:pointer;color:var(--muted);text-align:center;font-size:20px;line-height:1}
+.ap-blk{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--sea) 5%,transparent)}
+.ap-blk-h{display:flex;align-items:center;justify-content:space-between}
+.ap-rmb{all:unset;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:0 4px}
+.ap-addb{all:unset;cursor:pointer;align-self:stretch;text-align:center;padding:10px;border:1px dashed var(--sea);border-radius:12px;color:var(--sea);font-weight:700}
+.ap-tags{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.ap-tags .ap-tag{margin-left:0}
+.ap-bl{display:inline-block;min-width:44px;margin-right:6px;font-size:12px;font-weight:700;color:var(--sea)}
+.ap-pbt{margin-left:6px!important;background:color-mix(in srgb,var(--accent) 18%,transparent)!important;color:var(--accent)!important}
 .ap-addt{all:unset;cursor:pointer;color:var(--sea);font-weight:700;align-self:flex-start;padding:4px 0}
 .ap-btns{display:flex;gap:8px;align-items:center}
 .ap-btns button{min-height:42px;padding:0 16px;border-radius:10px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
@@ -6131,26 +6141,35 @@ function fdDraw(){const h1=hd.querySelector('h1');if(!h1)return;const old=h1.que
   const S=ch[0],F=ch.find(x=>x.c==='F'),last=ch[ch.length-1];if(!S||!F)return;
   const m=document.createElement('canvas').getContext('2d');m.font=cs.fontWeight+' '+f+'px '+cs.fontFamily;const fm=m.measureText('S'),asc=fm.fontBoundingBoxAscent,des=fm.fontBoundingBoxDescent;
   const base=S.top+((S.bot-S.top)-(asc+des))/2+asc,xh=m.measureText('e').actualBoundingBoxAscent,cap=m.measureText('F').actualBoundingBoxAscent,u=f/100,U=u*1.45,g=Math.max(1.5,f*.035);
-  /* body line: hands just past the end of FREE, the body lying along the tops of the letters */
-  const k=f/100,L=f*2.7,B=[last.x1+10*k,base-cap-g],A0x=B[0]-L,ci=ch.filter(x=>x.x1<A0x+L*.5),yA=(ci.length&&ci[ci.length-1].c===ci[ci.length-1].c.toLowerCase())?base-xh-g:base-cap-g,A=[A0x,yA];
-  const ang=Math.atan2(B[1]-A[1],B[0]-A[0])*180/Math.PI,X=v=>(v*L).toFixed(1);
-  const th=15*k,hr0=14*k,yb=-th*.95,ank=.2,knee=.36,hip=.5,sh=.69,neck=.735,head=.79;
-  const W=hr.width,H=hr.height,pad=Math.ceil(f*1.4);
-  let g2='<g transform="translate('+A[0].toFixed(1)+' '+A[1].toFixed(1)+') rotate('+ang.toFixed(2)+')">';
-  /* bifins, slightly open, tips raised */
-  const fin=(dy,op)=>'<path class="fd" '+(op?'opacity="'+op+'" ':'')+'d="M'+X(ank+.02)+' '+(yb-5*k+dy).toFixed(1)+'Q'+X(ank*.5)+' '+(yb-9*k+dy).toFixed(1)+' '+X(0)+' '+(yb-16*k+dy).toFixed(1)+'L'+X(.01)+' '+(yb-4*k+dy).toFixed(1)+'Q'+X(ank*.5)+' '+(yb+2*k+dy).toFixed(1)+' '+X(ank+.02)+' '+(yb+6*k+dy).toFixed(1)+'Z"/>';
-  g2+=fin(-4*k,.5)+fin(2*k);
-  g2+='<path class="fd-s" stroke-width="'+(13*k).toFixed(1)+'" d="M'+X(knee)+' '+(yb+1*k).toFixed(1)+'L'+X(ank)+' '+(yb+1*k).toFixed(1)+'"/>';
-  g2+='<path class="fd-s" stroke-width="'+(20*k).toFixed(1)+'" d="M'+X(hip)+' '+yb.toFixed(1)+'L'+X(knee)+' '+(yb+1*k).toFixed(1)+'"/>';
-  g2+='<ellipse class="fd" cx="'+X((hip+sh)/2+.01)+'" cy="'+(yb-1*k).toFixed(1)+'" rx="'+((sh-hip)*L/2+12*k).toFixed(1)+'" ry="'+th.toFixed(1)+'"/>';
-  g2+='<circle class="fd" cx="'+X(head)+'" cy="'+(yb+1*k).toFixed(1)+'" r="'+hr0.toFixed(1)+'"/>';
-  /* arms stretched forward above the head, hands together */
-  g2+='<path class="fd-s" stroke-width="'+(9*k).toFixed(1)+'" d="M'+X(sh)+' '+(yb-th*.6).toFixed(1)+'Q'+X(head)+' '+(yb-hr0-6*k).toFixed(1)+' '+X(.975)+' '+(yb-6*k).toFixed(1)+'"/>';
-  g2+='<ellipse class="fd" cx="'+X(.985)+'" cy="'+(yb-6*k).toFixed(1)+'" rx="'+(8*k).toFixed(1)+'" ry="'+(5*k).toFixed(1)+'" transform="rotate(8 '+X(.985)+' '+(yb-6*k).toFixed(1)+')"/>';
-  /* mask on the face, weight around the neck */
-  g2+='<rect class="fd-mask" x="'+(head*L+hr0*.1).toFixed(1)+'" y="'+(yb+1*k-hr0*.05).toFixed(1)+'" width="'+(hr0*1.05).toFixed(1)+'" height="'+(hr0*.72).toFixed(1)+'" rx="'+(hr0*.22).toFixed(1)+'"/>';
-  g2+='<rect class="fd-w" x="'+(neck*L-5*k).toFixed(1)+'" y="'+(yb-6*k).toFixed(1)+'" width="'+(10*k).toFixed(1)+'" height="'+(22*k).toFixed(1)+'" rx="'+(4*k).toFixed(1)+'"/>';
-  g2+='<circle class="fd-bub" cx="'+X(head+.01)+'" cy="'+(yb-hr0*2.4).toFixed(1)+'" r="'+(2.4*k).toFixed(1)+'"/><circle class="fd-bub" cx="'+X(head+.035)+'" cy="'+(yb-hr0*3.3).toFixed(1)+'" r="'+(1.6*k).toFixed(1)+'"/>';
+  /* same build as the spearfisher in Diary mode (fins, legs, torso), but streamlined: arms pressed to the ears, palms together like an arrow, weight on the neck */
+  const cr=(pts,closed)=>{const P=closed?[pts[pts.length-1],...pts,pts[0],pts[1]]:[pts[0],...pts,pts[pts.length-1]];let d='M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
+    for(let i=1;i<P.length-2;i++){const p0=P[i-1],p1=P[i],p2=P[i+1],p3=P[i+2];const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6],c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+      d+='C'+c1[0].toFixed(1)+' '+c1[1].toFixed(1)+' '+c2[0].toFixed(1)+' '+c2[1].toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)}return d+(closed?'Z':'')};
+  const hr0=12*U;
+  /* local frame: y=0 is the line the body glides along, x grows towards the hands */
+  const hc=[0,-14*U],sh=[hc[0]-18*U,-22*U],hip=[sh[0]-88*u,-12*U],knee=[hip[0]-58*u,-7*U],ank=[knee[0]-50*u,-6*U];
+  const torso=cr([[hc[0]-4*U,-6*U],[sh[0]+6*U,-.5*U],[sh[0]-24*u,0],[hip[0]+14*u,0],[hip[0]-3*u,-6*U],[hip[0]-2*u,-16*U],[hip[0]+10*u,-21*U],[hip[0]+32*u,-19.5*U],[sh[0]-36*u,-23*U],[sh[0]-8*u,-28*U],[sh[0]+9*U,-27*U],[hc[0]-7*U,hc[1]+hr0*.6]],true);
+  const leg=(a,b,w1,w2)=>{const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;
+    return cr([[a[0]+nx*w1,a[1]+ny*w1],[(a[0]+b[0])/2+nx*(w1+w2)/1.8,(a[1]+b[1])/2+ny*(w1+w2)/1.8],[b[0]+nx*w2,b[1]+ny*w2],[b[0]-dx/L*w2*.9,b[1]-dy/L*w2*.9],[b[0]-nx*w2,b[1]-ny*w2],[(a[0]+b[0])/2-nx*(w1+w2)/2.2,(a[1]+b[1])/2-ny*(w1+w2)/2.2],[a[0]-nx*w1,a[1]-ny*w1]],true)};
+  const fl=58*u,tip=[ank[0]-fl,ank[1]-14*u];
+  const fin=(dy,op,rot)=>'<path class="fd" d="'+cr([[ank[0]+5*U,ank[1]-4*U+dy],[ank[0]-12*u,ank[1]-4.5*U+dy],[tip[0],tip[1]-1.2*U+dy],[tip[0]-2*u,tip[1]+.8*U+dy],[ank[0]-16*u,ank[1]+2.4*U+dy],[ank[0]+4*U,ank[1]+3.6*U+dy]],true)+'"'+(op?' opacity="'+op+'"':'')+(rot?' transform="rotate('+rot+' '+ank[0].toFixed(1)+' '+ank[1].toFixed(1)+')"':'')+'/>';
+  /* arm: from the shoulder up along the head (over the ear), then straight forward; palms together form a point */
+  const ay=hc[1]-hr0*.45,hx=hc[0]+hr0+40*u,arm=(dy)=>cr([[sh[0]+2*U,-19*U+dy],[hc[0]-hr0*.6,ay+dy],[hc[0]+hr0*.9,ay-.6*U+dy],[hx,ay-1.2*U+dy]],false);
+  const tipX=hx+24*u,ty=ay-1.2*U;
+  const hand='<path class="fd" d="M'+(hx-6*u).toFixed(1)+' '+(ty-3.4*U).toFixed(1)+'L'+tipX.toFixed(1)+' '+ty.toFixed(1)+'L'+(hx-6*u).toFixed(1)+' '+(ty+3.2*U).toFixed(1)+'Z"/>';
+  const minX=tip[0]-4*u,maxX=tipX;
+  /* place: hands just past the end of the word, fins over the lowercase letters, a clear gap above the glyphs */
+  const lift=f*.1+4*U,B=[last.x1+6*u,base-cap-lift],span=maxX-minX,leftX=B[0]-span,lc=ch.filter(x=>x.x0<=leftX+span*.3&&x.x1>=leftX),low=lc.length&&lc.every(x=>x.c===x.c.toLowerCase()),A=[leftX,(low?base-xh:base-cap)-lift];
+  const ang=Math.atan2(B[1]-A[1],B[0]-A[0])*180/Math.PI;
+  const W=hr.width,H=hr.height,pad=Math.ceil(f*1.6);
+  let g2='<g transform="translate('+B[0].toFixed(1)+' '+B[1].toFixed(1)+') rotate('+ang.toFixed(2)+') translate('+(-maxX).toFixed(1)+' 0)">';
+  g2+='<path class="fd-s" stroke-width="'+(7*U).toFixed(1)+'" opacity=".45" d="'+arm(-2.2*U)+'"/>';
+  g2+=fin(4*u,.55)+fin(0,0,14)+'<path class="fd" d="'+leg(hip,knee,11*U,7.5*U)+'"/><path class="fd" d="'+leg(knee,ank,7*U,4*U)+'"/><circle class="fd" cx="'+knee[0].toFixed(1)+'" cy="'+knee[1].toFixed(1)+'" r="'+(7*U).toFixed(1)+'"/>';
+  g2+='<path class="fd" d="'+torso+'"/><circle class="fd" cx="'+hc[0].toFixed(1)+'" cy="'+hc[1].toFixed(1)+'" r="'+hr0.toFixed(1)+'"/>';
+  g2+='<rect class="fd-mask" x="'+(hc[0]+hr0*.05).toFixed(1)+'" y="'+(hc[1]-hr0*.25).toFixed(1)+'" width="'+(hr0*1.05).toFixed(1)+'" height="'+(hr0*.7).toFixed(1)+'" rx="'+(hr0*.22).toFixed(1)+'"/>';
+  g2+='<rect class="fd-w" x="'+(hc[0]-hr0*1.35).toFixed(1)+'" y="'+(hc[1]-hr0*.2).toFixed(1)+'" width="'+(4.6*U).toFixed(1)+'" height="'+(hr0*1.25).toFixed(1)+'" rx="'+(2*U).toFixed(1)+'" transform="rotate(-12 '+(hc[0]-hr0*1.1).toFixed(1)+' '+hc[1].toFixed(1)+')"/>';
+  g2+='<path class="fd-s" stroke-width="'+(7*U).toFixed(1)+'" d="'+arm(0)+'"/>'+hand;
+  g2+='<circle class="fd-bub" cx="'+(hc[0]+hr0*.4).toFixed(1)+'" cy="'+(hc[1]-hr0*2.4).toFixed(1)+'" r="'+(1.8*u).toFixed(1)+'"/><circle class="fd-bub" cx="'+(hc[0]+hr0*1).toFixed(1)+'" cy="'+(hc[1]-hr0*3.2).toFixed(1)+'" r="'+(1.2*u).toFixed(1)+'"/>';
   g2+='</g>';
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','fdiver');svg.setAttribute('aria-hidden','true');
   svg.setAttribute('viewBox',(-pad)+' '+(-pad)+' '+(W+pad*2)+' '+(H+pad*2));svg.style.cssText='position:absolute;left:'+(-pad)+'px;top:'+(-pad)+'px;width:'+(W+pad*2)+'px;height:'+(H+pad*2)+'px;overflow:visible;pointer-events:none';
@@ -6161,46 +6180,56 @@ const ICS='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="c
 function spark(pts){if(pts.length<2)return'';const xs=pts.map((p,i)=>i),ys=pts.map(p=>p),mn=Math.min(...ys),mx=Math.max(...ys),W=300,H=46,pad=4;
   const P=pts.map((v,i)=>[pad+(W-2*pad)*i/(pts.length-1),H-pad-(mx===mn?.5:(v-mn)/(mx-mn))*(H-2*pad)]);
   return '<svg class="sp" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true"><polyline points="'+P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+'" fill="none" stroke="var(--sea)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="'+P[P.length-1][0]+'" cy="'+P[P.length-1][1]+'" r="3.5" fill="var(--accent)"/></svg>'}
-function pbs(){const a=all(),r={};a.forEach(s=>{const b=best(s);if(b==null)return;if(r[s.disc]==null||b>r[s.disc].v)r[s.disc]={v:b,date:s.date}});return r}
+function pbs(){const r={};all().forEach(s=>blocksOf(s).forEach(b=>{const v=bestAtt(b.att);if(v==null)return;if(r[b.disc]==null||v>r[b.disc].v)r[b.disc]={v,date:s.date}}));return r}
 function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
   const a=all().slice().sort((x,y)=>(y.date||'').localeCompare(x.date||'')||(y.createdAt||y.ts||0)-(x.createdAt||x.ts||0)),P=pbs();
   let h='<div class="ap-top"><div class="ap-tabs"><button type="button" data-v="diary" class="'+(view==='diary'?'on':'')+'">'+esc(t('apDiary'))+'</button><button type="button" data-v="rec" class="'+(view==='rec'?'on':'')+'">'+esc(t('apRec'))+'</button></div>'+(editing?'':'<button type="button" class="ap-new">'+esc(t('apNew'))+'</button>')+'</div>';
   if(editing)h+=formHtml();
   if(view==='diary'){
     const keys=DISC.map(d=>d[0]).filter(k=>P[k]);if(keys.length)h+='<div class="ap-pb">'+keys.slice(0,4).map(k=>'<div><b>'+esc(fmtV(k,P[k].v))+'</b><small>'+esc(dOf(k)[1])+'</small></div>').join('')+'</div>';
-    h+=a.length?a.map(s=>{const b=best(s),pb=P[s.disc]&&b!=null&&b===P[s.disc].v;
-      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||dOf(s.disc)[1])+'<span class="ap-tag">'+esc(dOf(s.disc)[1])+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(s.who?' · '+esc(t('apWho').toLowerCase())+' '+esc(s.who):'')+'</div>'
-        +'<div class="ap-att">'+(s.att||[]).filter(x=>x.v!=null).map(x=>x.v===b?'<b>'+esc(fmtV(s.disc,x.v))+'</b>':esc(fmtV(s.disc,x.v))).join(' · ')+(pb?' <span class="ap-tag" style="margin-left:6px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)">'+esc(t('apPb'))+'</span>':'')+'</div>'
+    h+=a.length?a.map(s=>{const bl=blocksOf(s),many=bl.length>1,tags=[...new Set(bl.map(b=>dOf(b.disc)[1]))];
+      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||tags.join(' + '))+'<span class="ap-tags">'+tags.map(x=>'<span class="ap-tag">'+esc(x)+'</span>').join('')+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(s.who?' · '+esc(t('apWho').toLowerCase())+' '+esc(s.who):'')+'</div>'
+        +bl.map(b=>{const v=bestAtt(b.att),pb=P[b.disc]&&v!=null&&v===P[b.disc].v;const vals=(b.att||[]).filter(x=>x.v!=null);if(!vals.length)return'';
+          return '<div class="ap-att">'+(many?'<span class="ap-bl">'+esc(dOf(b.disc)[1])+'</span>':'')+vals.map(x=>x.v===v?'<b>'+esc(fmtV(b.disc,x.v))+'</b>':esc(fmtV(b.disc,x.v))).join(' · ')+(pb?' <span class="ap-tag ap-pbt">'+esc(t('apPb'))+'</span>':'')+'</div>'}).join('')
         +(s.notes?'<div class="ap-note">'+esc(s.notes)+'</div>':'')+'</article>'}).join(''):'<div class="ap-empty">'+esc(t('apEmpty'))+'</div>'}
   else{const keys=DISC.map(d=>d[0]).filter(k=>P[k]);
-    h+=keys.length?keys.map(k=>{const ss=a.filter(s=>s.disc===k&&best(s)!=null).sort((x,y)=>(x.date||'').localeCompare(y.date||''));let m=-Infinity;const line=ss.map(s=>m=Math.max(m,best(s)));const first=ss[0];
+    h+=keys.length?keys.map(k=>{const ss=a.filter(s=>bestIn(s,k)!=null).sort((x,y)=>(x.date||'').localeCompare(y.date||''));let m=-Infinity;const line=ss.map(s=>m=Math.max(m,bestIn(s,k)));const first=ss[0];
       return '<div class="ap-rec"><div class="ap-rec-h"><strong>'+esc(dOf(k)[1])+'</strong><span class="ap-meta">'+esc(t('apSessions')(ss.length))+'</span><b>'+esc(fmtV(k,P[k].v))+'</b></div>'+spark(line)+'<div class="ap-meta">'+(first?esc(t('apSince'))+' '+esc(fmtDate(first.date))+(line.length>1&&line[0]!==line[line.length-1]?' · +'+esc(fmtV(k,line[line.length-1]-line[0])):''):'')+'</div></div>'}).join(''):'<div class="ap-empty">'+esc(t('apNoRec'))+'</div>'}
   h+='<div class="ap-safe">'+ICS+'<span>'+esc(t('apSafe'))+'</span></div>';
   view0.innerHTML=h;
   if(editing){const f=view0.querySelector('.ap-form');if(f)wire(f)}}
-function formHtml(){const s=editing,u=dOf(s.disc)[2];
+const valTxt=(k,v)=>v==null?'':dOf(k)[2]==='t'?fmtT(v):String(v).replace('.',lang==='en'?'.':',');
+function blockHtml(b,bi,n){const u=dOf(b.disc)[2];
+  return '<div class="ap-blk" data-b="'+bi+'">'+(n>1?'<div class="ap-blk-h"><span class="ap-lab">'+esc(t('apDisc'))+' '+(bi+1)+'</span><button type="button" class="ap-rmb" aria-label="'+esc(t('apRmD'))+'" title="'+esc(t('apRmD'))+'">×</button></div>':'<span class="ap-lab">'+esc(t('apDisc'))+'</span>')
+    +'<div class="ap-chips">'+DISC.map(d=>'<button type="button" data-d="'+d[0]+'" class="'+(d[0]===b.disc?'on':'')+'">'+esc(d[1])+'</button>').join('')+'</div>'
+    +'<span class="ap-lab">'+esc(t('apTries'))+'</span><div class="ap-trs">'+(b.att.length?b.att:[{}]).map((x,i)=>'<div class="ap-tr"><span>'+(i+1)+'</span><input name="v" inputmode="'+(u==='t'?'numeric':'decimal')+'" placeholder="'+esc(t(u==='t'?'apResT':'apResM'))+'" value="'+esc(valTxt(b.disc,x.v))+'"><input name="r" inputmode="numeric" placeholder="'+esc(t('apRest'))+' m:ss" value="'+esc(x.r==null?'':fmtT(x.r))+'"><button type="button" class="ap-rm" aria-label="×">×</button></div>').join('')+'</div>'
+    +'<button type="button" class="ap-addt">'+esc(t('apAdd'))+'</button></div>'}
+function formHtml(){const s=editing;
   return '<div class="ap-form"><h3>'+esc(t(s.id?'apEdit':'apNew'))+'</h3>'
-    +'<span class="ap-lab">'+esc(t('apDisc'))+'</span><div class="ap-chips">'+DISC.map(d=>'<button type="button" data-d="'+d[0]+'" class="'+(d[0]===s.disc?'on':'')+'">'+esc(d[1])+'</button>').join('')+'</div>'
     +'<div class="ap-row2"><label><span class="ap-lab">'+esc(t('apDate'))+'</span><input type="date" name="date" value="'+esc(s.date||'')+'"></label><label><span class="ap-lab">'+esc(t('apWhere'))+'</span><input name="place" value="'+esc(s.place||'')+'" placeholder="'+esc(t('apPlacePh'))+'"></label></div>'
     +'<label><span class="ap-lab">'+esc(t('apWho'))+'</span><input name="who" value="'+esc(s.who||'')+'" placeholder="'+esc(t('apWhoPh'))+'"></label>'
-    +'<span class="ap-lab">'+esc(t('apTries'))+'</span><div class="ap-trs">'+(s.att.length?s.att:[{}]).map((x,i)=>'<div class="ap-tr"><span>'+(i+1)+'</span><input name="v" inputmode="'+(u==='t'?'numeric':'decimal')+'" placeholder="'+esc(t(u==='t'?'apResT':'apResM'))+'" value="'+esc(x.v==null?'':u==='t'?fmtT(x.v):String(x.v).replace('.',lang==='en'?'.':','))+'"><input name="r" inputmode="numeric" placeholder="'+esc(t('apRest'))+' m:ss" value="'+esc(x.r==null?'':fmtT(x.r))+'"><button type="button" class="ap-rm" aria-label="×">×</button></div>').join('')+'</div>'
-    +'<button type="button" class="ap-addt">'+esc(t('apAdd'))+'</button>'
+    +s.blocks.map((b,i)=>blockHtml(b,i,s.blocks.length)).join('')
+    +'<button type="button" class="ap-addb">'+esc(t('apAddD'))+'</button>'
     +'<label><span class="ap-lab">'+esc(t('apNotes'))+'</span><textarea name="notes" placeholder="'+esc(t('apNotesPh'))+'">'+esc(s.notes||'')+'</textarea></label>'
     +'<div class="ap-btns"><button type="button" class="ap-ok">'+esc(t('apSave'))+'</button><button type="button" class="ap-x">'+esc(t('apCancel'))+'</button>'+(s.id?'<button type="button" class="ap-del">'+esc(t('apDel'))+'</button>':'')+'</div></div>'}
+/* read everything typed (keeps empty rows so the layout does not jump while editing) */
 function readForm(f){const s=editing,g=n=>f.querySelector('[name="'+n+'"]');s.date=g('date').value;s.place=g('place').value.trim();s.who=g('who').value.trim();s.notes=g('notes').value.trim();
-  s.att=[...f.querySelectorAll('.ap-tr')].map(r=>({v:parseV(s.disc,r.querySelector('[name="v"]').value),r:parseV('STA',r.querySelector('[name="r"]').value)})).filter(x=>x.v!=null||x.r!=null)}
+  s.blocks=[...f.querySelectorAll('.ap-blk')].map((el,bi)=>{const d=s.blocks[bi].disc;return{disc:d,att:[...el.querySelectorAll('.ap-tr')].map(r=>({v:parseV(d,r.querySelector('[name="v"]').value),r:parseV('STA',r.querySelector('[name="r"]').value)}))}})}
+const clean=s=>{const o={...s};o.blocks=o.blocks.map(b=>({disc:b.disc,att:b.att.filter(x=>x.v!=null||x.r!=null)})).filter((b,i,arr)=>b.att.length||arr.length===1);delete o.disc;delete o.att;return o};
 function wire(f){let delArm=false,delT=0;
-  f.addEventListener('click',e=>{const d=e.target.closest('[data-d]');
-    if(d){readForm(f);editing.disc=d.dataset.d;draw();return}
-    if(e.target.closest('.ap-addt')){readForm(f);editing.att.push({});if(!editing.att.length)editing.att=[{},{}];draw();const ins=view0.querySelectorAll('.ap-tr [name="v"]');if(ins.length)ins[ins.length-1].focus();return}
-    const rm=e.target.closest('.ap-rm');if(rm){readForm(f);const i=[...f.querySelectorAll('.ap-tr')].indexOf(rm.closest('.ap-tr'));const raw=[...f.querySelectorAll('.ap-tr')];editing.att=raw.map(r=>({v:parseV(editing.disc,r.querySelector('[name="v"]').value),r:parseV('STA',r.querySelector('[name="r"]').value)}));editing.att.splice(i,1);draw();return}
+  f.addEventListener('click',e=>{const bl=e.target.closest('.ap-blk'),bi=bl?+bl.dataset.b:-1;const d=e.target.closest('[data-d]');
+    if(d&&bi>=0){readForm(f);editing.blocks[bi].disc=d.dataset.d;draw();return}
+    if(e.target.closest('.ap-addt')&&bi>=0){readForm(f);editing.blocks[bi].att.push({});draw();const ins=view0.querySelectorAll('.ap-blk[data-b="'+bi+'"] .ap-tr [name="v"]');if(ins.length)ins[ins.length-1].focus();return}
+    const rm=e.target.closest('.ap-rm');if(rm&&bi>=0){readForm(f);const i=[...bl.querySelectorAll('.ap-tr')].indexOf(rm.closest('.ap-tr'));editing.blocks[bi].att.splice(i,1);if(!editing.blocks[bi].att.length)editing.blocks[bi].att=[{}];draw();return}
+    if(e.target.closest('.ap-rmb')&&bi>=0){readForm(f);editing.blocks.splice(bi,1);draw();return}
+    if(e.target.closest('.ap-addb')){readForm(f);const lastD=editing.blocks[editing.blocks.length-1].disc;editing.blocks.push({disc:lastD==='STA'?'DYN':'STA',att:[{}]});draw();const bs=view0.querySelectorAll('.ap-blk');if(bs.length)bs[bs.length-1].scrollIntoView({block:'nearest',behavior:'smooth'});return}
     if(e.target.closest('.ap-x')){editing=null;draw();return}
-    if(e.target.closest('.ap-ok')){readForm(f);const s={...editing};if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>draw());draw();return}
+    if(e.target.closest('.ap-ok')){readForm(f);const s=clean(editing);if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>draw());draw();return}
     const del=e.target.closest('.ap-del');if(del){if(!delArm){delArm=true;del.textContent=t('apDelQ');clearTimeout(delT);delT=setTimeout(()=>{delArm=false;del.textContent=t('apDel')},4000);return}
       const id=editing.id;editing=null;apDel(id).then(()=>draw());draw()}})}
 view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]');if(tb){view=tb.dataset.v;draw();return}
-  if(e.target.closest('.ap-new')){editing={disc:'STA',date:today(),place:'',who:'',att:[{}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
-  const c=e.target.closest('.ap-card');if(c&&!editing){const s=all().find(x=>x.id===c.dataset.id);if(s){editing=JSON.parse(JSON.stringify(s));if(!editing.att.length)editing.att=[{}];draw();view0.scrollIntoView({block:'start',behavior:'smooth'})}}});
+  if(e.target.closest('.ap-new')){editing={date:today(),place:'',who:'',blocks:[{disc:'STA',att:[{}]}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
+  const c=e.target.closest('.ap-card');if(c&&!editing){const s=all().find(x=>x.id===c.dataset.id);if(s){editing=JSON.parse(JSON.stringify(s));editing.blocks=JSON.parse(JSON.stringify(blocksOf(s))).map(b=>({disc:b.disc,att:b.att&&b.att.length?b.att:[{}]}));draw();view0.scrollIntoView({block:'start',behavior:'smooth'})}}});
 const relang=()=>{sw.querySelector('[data-m="hunt"]').textContent=t('apHunt');sw.querySelector('[data-m="apnea"]').textContent=t('apApnea');if(!editing)draw()};
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#langEn,#langPt,#langEs,#langIt,#langFr'))setTimeout(relang,30)});
 window.__apDraw=()=>{apMigrate();if(!editing)draw()};
@@ -6737,7 +6766,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795828321';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795828829';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
