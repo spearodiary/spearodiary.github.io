@@ -1003,7 +1003,7 @@ details .inner{display:grid;gap:12px;padding-top:12px}
 .edit-photos img{width:72px;height:72px;object-fit:cover;border-radius:4px;display:block}
 .edit-photos button{position:absolute;top:2px;right:2px;padding:0 6px;background:var(--surface)}
 #viewer{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:#04090c;display:none}
-#viewer[open]{display:grid;grid-template-rows:minmax(0,1fr) auto;place-items:center;height:100dvh;max-height:100dvh}#viewer[open]>.vtrack{min-height:0;align-self:stretch}.vtrack>div{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr)}.nocatch{display:inline-block;padding:2px 12px;border-radius:999px;border:1px solid var(--danger);background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger);font-size:13px;font-weight:600;line-height:1.5}.entry:has(.nocatch){border-color:color-mix(in srgb,var(--danger) 75%,transparent)!important;background-image:linear-gradient(color-mix(in srgb,var(--danger) 9%,transparent),color-mix(in srgb,var(--danger) 9%,transparent))}.cond[data-b=catch]:has(>.nocatch){display:flex;justify-content:center;margin-top:8px;margin-bottom:13px}
+#viewer[open]{display:grid;grid-template-rows:minmax(0,1fr) auto;place-items:center;height:100dvh;max-height:100dvh}#viewer[open]>.vtrack{min-height:0;align-self:stretch}.vtrack>div{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr)}.nocatch{display:block;flex:1;margin:0 -8px;padding:16px 8px;border-radius:6px;background:color-mix(in srgb,#E3F0EF 5%,transparent);color:var(--danger);font-size:15px;font-weight:600;text-align:center;line-height:1.5}.entry:has(.nocatch){border-color:color-mix(in srgb,var(--danger) 75%,transparent)!important;background-image:linear-gradient(color-mix(in srgb,var(--danger) 9%,transparent),color-mix(in srgb,var(--danger) 9%,transparent))}.cond[data-b=catch]:has(>.nocatch){display:flex;justify-content:center;margin-top:8px;margin-bottom:13px}
 #viewer::backdrop{background:rgba(4,14,18,.94)}
 #viewer{overscroll-behavior:contain;touch-action:none}
 /* the viewer covers the whole screen, under the status bar and the home bar too; the photo keeps clear of the status bar */
@@ -6544,7 +6544,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795824619';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795824751';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
