@@ -6379,10 +6379,10 @@ function wire(f){let delArm=false,delT=0;
     if(e.target.closest('.ap-rmb')&&bi>=0){readForm(f);editing.blocks.splice(bi,1);draw();return}
     if(e.target.closest('.ap-addb')){readForm(f);const lastD=editing.blocks[editing.blocks.length-1].disc;editing.blocks.push({disc:lastD==='STA'?'DYN':'STA',att:[{}]});draw();const bs=view0.querySelectorAll('.ap-blk');if(bs.length)bs[bs.length-1].scrollIntoView({block:'nearest',behavior:'smooth'});return}
     if(e.target.closest('.ap-imp')){const fi=f.querySelector('.ap-impf');if(fi){fi.value='';fi.click()}return}
-    if(e.target.closest('.ap-x')){editing=null;draw();return}
-    if(e.target.closest('.ap-ok')){readForm(f);const s=clean(editing);if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>{draw();apShareSoon()});draw();return}
+    if(e.target.closest('.ap-x')){editing=null;draw();scrollTo({top:0,behavior:'smooth'});return}
+    if(e.target.closest('.ap-ok')){readForm(f);const s=clean(editing);if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>{draw();apShareSoon()});draw();scrollTo({top:0,behavior:'smooth'});return}
     const del=e.target.closest('.ap-del');if(del){if(!delArm){delArm=true;del.dataset.ic=del.innerHTML;del.innerHTML='<span class="ap-q">?</span>';clearTimeout(delT);delT=setTimeout(()=>{delArm=false;del.innerHTML=del.dataset.ic},4000);return}
-      const id=editing.id;editing=null;apDel(id).then(()=>{draw();apShareSoon()});draw()}})}
+      const id=editing.id;editing=null;apDel(id).then(()=>{draw();apShareSoon()});draw();scrollTo({top:0,behavior:'smooth'})}})}
 view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]');if(tb){view=tb.dataset.v;draw();return}
   if(e.target.closest('.ap-new')){editing={date:today(),place:'',coaches:[],blocks:[{disc:'STA',att:[{}]}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
   const shb=e.target.closest('[data-sh]');if(shb){const ss=all().find(x=>x.id===shb.dataset.sh);if(ss)apShOpen(ss);return}
