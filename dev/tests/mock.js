@@ -8,7 +8,7 @@ const canSee=o=>o===me()||!(prof(o)||{}).paused&&(T('follows').some(f=>f.followe
 const vis=(n,r)=>n==='shared_catches'?(canSee(r.user_id)||((r.data||{}).with||[]).includes(me())):(n==='likes'||n==='comments')?canSee(r.owner):r.user_id===me();
 const own=(n,r)=>n==='comments'?(r.user_id===me()||r.owner===me()):r.user_id===me();
 const q=n=>{let op='select',filt=[],val=null,one=null,lim=1e9,onc=null,ord=[],rng=null,sel=false;
- const run=()=>{let all=T(n);const m=r=>filt.every(([k,f,v])=>k==='eq'?r[f]===v:k==='neq'?r[f]!==v:k==='cs'?JSON.parse(v).every(z=>((r.data||{}).with||[]).includes(z)):v.includes(r[f]));
+ const run=()=>{let all=T(n);const m=r=>filt.every(([k,f,v])=>{const G=x=>{const m=/^(\w+)->>(\w+)$/.exec(x);return m?((r[m[1]]||{})[m[2]]):r[x]};return k==='eq'?G(f)===v:k==='neq'?G(f)!==v:k==='cs'?JSON.parse(v).every(z=>((r.data||{}).with||[]).includes(z)):v.includes(r[f])});
   if(op==='select'){let rows=all.filter(r=>vis(n,r)&&m(r));if(n==='shared_catches')rows=rows.map(r=>Object.assign({caught:r.data&&r.data.date},r));ord.slice().reverse().forEach(([f,asc])=>rows.sort((a,b)=>(String(a[f]??'')<String(b[f]??'')?-1:String(a[f]??'')>String(b[f]??'')?1:0)*(asc?1:-1)));
    if(rng)rows=rows.slice(rng[0],rng[1]+1);rows=rows.slice(0,lim);if(one)return {data:rows[0]||null,error:one==='single'&&!rows[0]?{message:'none'}:null};return{data:rows,error:null}}
   if(op==='delete'){ST(n,all.filter(r=>!(own(n,r)&&m(r))));return{error:null}}
