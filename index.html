@@ -5859,6 +5859,161 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
 
   try{split()}catch(_){}})();
 
+/* ===== Share: three templates — A Troféu (photo + panel), B Cartão (card with tiles), C Resumo (whole session) ===== */
+Object.assign(T.pt,{scTplA:'Troféu',scTplB:'Cartão',scTplC:'Resumo',sxTW:'Peso',sxTL:'Comprimento',sxTD:'Fundo',sxTA:'Apneia',sxTF:'peixes',sxTK:'kg',sxTM:'m máx.',sxWave:'Ondas',sxWindW:'Vento',sxWater:'Água',sxFishN:n=>n===1?'1 peixe':n+' peixes'});
+Object.assign(T.en,{scTplA:'Trophy',scTplB:'Card',scTplC:'Summary',sxTW:'Weight',sxTL:'Length',sxTD:'Depth',sxTA:'Breath-hold',sxTF:'fish',sxTK:'kg',sxTM:'m max',sxWave:'Waves',sxWindW:'Wind',sxWater:'Water',sxFishN:n=>n===1?'1 fish':n+' fish'});
+Object.assign(T.es,{scTplA:'Trofeo',scTplB:'Tarjeta',scTplC:'Resumen',sxTW:'Peso',sxTL:'Longitud',sxTD:'Fondo',sxTA:'Apnea',sxTF:'peces',sxTK:'kg',sxTM:'m máx.',sxWave:'Olas',sxWindW:'Viento',sxWater:'Agua',sxFishN:n=>n===1?'1 pez':n+' peces'});
+if(T.it)Object.assign(T.it,{scTplA:'Trofeo',scTplB:'Scheda',scTplC:'Riepilogo',sxTW:'Peso',sxTL:'Lunghezza',sxTD:'Fondo',sxTA:'Apnea',sxTF:'pesci',sxTK:'kg',sxTM:'m max',sxWave:'Onde',sxWindW:'Vento',sxWater:'Acqua',sxFishN:n=>n===1?'1 pesce':n+' pesci'});
+if(T.fr)Object.assign(T.fr,{scTplA:'Trophée',scTplB:'Fiche',scTplC:'Résumé',sxTW:'Poids',sxTL:'Longueur',sxTD:'Fond',sxTA:'Apnée',sxTF:'poissons',sxTK:'kg',sxTM:'m max',sxWave:'Vagues',sxWindW:'Vent',sxWater:'Eau',sxFishN:n=>n===1?'1 poisson':n+' poissons'});
+{const sv=scSave;scSave=function(){sv();try{const v=JSON.parse(localStorage.getItem('sn-sc')||'{}');v.tpl=SC.tpl;localStorage.setItem('sn-sc',JSON.stringify(v))}catch(_){}}}
+
+const SCK={bg0:'#0D3440',bg1:'#061A21',ink:'#EEF6F7',mut:'#93B8BF',acc:'#FF8A3D',warm:'#FFD9BF',tile:'rgba(255,255,255,.07)',line:'rgba(255,255,255,.12)',sea:'#57C4D1'};
+const scFI=c=>scFish.get((fishSvg(c.name,c.sub).match(/#f-([^"]+)/)||[])[1]);
+const scKg=v=>(+v).toLocaleString(locale(),{maximumFractionDigits:v>=10?1:2});
+const scRR=(x,X,Y,w,h,r)=>{x.beginPath();if(x.roundRect)x.roundRect(X,Y,w,h,r);else x.rect(X,Y,w,h)};
+function scBgFlat(x,W,H){if(SC.bg){x.fillStyle=SC.bg}else{const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,SCK.bg0);g.addColorStop(1,SCK.bg1);x.fillStyle=g}x.fillRect(0,0,W,H)}
+/* photo with the user's crop, same rules as before (fills the frame, blurred backdrop when it doesn't) */
+function scBgPhoto(x,W,H,im){const c=scCur(),iw=im.naturalWidth,ih=im.naturalHeight,f0=Math.min(W/iw,H/ih),c0=Math.max(W/iw,H/ih);c.z=Math.max(1,Math.min(c.z,6*c0/f0));
+  const s=f0*c.z,w=iw*s,h=ih*s;
+  c.cx=w>=W?Math.min(w/2,Math.max(W-w/2,c.cx)):Math.min(W-w/2,Math.max(w/2,c.cx));c.cy=h>=H?Math.min(h/2,Math.max(H-h/2,c.cy)):Math.min(H-h/2,Math.max(h/2,c.cy));
+  if(w<W-1||h<H-1){if(SC.bg){x.fillStyle=SC.bg;x.fillRect(0,0,W,H)}else if(im._blur){const b=im._blur,bs=Math.max(W/b.width,H/b.height)*1.15;x.drawImage(b,(W-b.width*bs)/2,(H-b.height*bs)/2,b.width*bs,b.height*bs);x.fillStyle='rgba(4,20,26,.38)';x.fillRect(0,0,W,H)}else scBgFlat(x,W,H)}
+  x.drawImage(im,c.cx-w/2,c.cy-h/2,w,h)}
+/* photo cropped into a box (cover), used by B and C */
+function scPhotoBox(x,im,X,Y,w,h,r){const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;x.save();scRR(x,X,Y,w,h,r);x.clip();x.drawImage(im,X+(w-iw)/2,Y+(h-ih)/2,iw,ih);x.restore()}
+function scLogoAt(x,X,Y,tw){const L=scLogo;if(L){const k=tw/L.w,ox=X-L.sx*k,oy=Y-L.it*k;x.save();x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=10;x.shadowOffsetY=2;
+    x.font=L.wt+' '+(L.f*k)+'px '+L.fam;x.textAlign='left';x.fillStyle='#FFFFFF';x.fillText('Spearo',ox+L.sx*k,oy+L.base*k);x.fillStyle=SCK.sea;x.fillText('Diary',ox+L.dx*k,oy+L.base*k);
+    if(L.img)x.drawImage(L.img,ox+L.il*k,oy+L.it*k,L.iw*k,L.ih*k);x.restore();return (L.base-L.it)*k+(L.f*k*.3)}
+  x.font='700 46px Unbounded,"Arial Black",sans-serif';x.fillStyle='#fff';x.fillText('Spearo',X,Y+46);const sw=x.measureText('Spearo ').width;x.fillStyle=SCK.sea;x.fillText('Diary',X+sw,Y+46);return 60}
+function scFishLine(c){const o=SC.o,d=[];if(o.w&&c.weight!=null)d.push(scKg(c.weight)+' kg');if(o.l&&c.len!=null)d.push(fmt(c.len)+' cm');return d.join(' · ')}
+function scName(c){return catchLabel(c)+((c.count||1)>1?' ×'+c.count:'')}
+function scDateTxt(e){return e.monthOnly?new Date(e.date+'T12:00').toLocaleDateString(locale(),{month:'long',year:'numeric'}):fmtDate(e.date)}
+function scWhoLines(e){const a=[];if(e.byU)a.push({t:t('scBy')+' @'+e.byU,c:SCK.warm});const wi=scWith();if(wi.length)a.push({t:t('scWithT')+' '+wi.join(', '),c:SCK.sea});return a}
+function scConds(e){const x=e.wx||{},a=[],n=v=>String(Math.round(v*10)/10).replace('.',locale().startsWith('en')?'.':',');
+  if(x.wave!=null)a.push(t('sxWave')+' '+n(x.wave)+' m');if(x.wind!=null)a.push(t('sxWindW')+' '+Math.round(x.wind)+' km/h');
+  const w=e.temp!=null?e.temp:x.sst;if(w!=null)a.push(t('sxWater')+' '+n(w)+' °C');
+  const td=tidesOf(e).filter(Boolean)[0];if(td)a.push(t('tide_'+td));return a}
+function scFoot(x,W,y,P){x.font='500 26px "Golos Text",system-ui,sans-serif';x.fillStyle='rgba(214,232,233,.6)';x.textAlign='left';x.fillText('spearodiary.github.io',P,y)}
+/* text with the latin name under it, both clipped to width */
+function scNameBlock(x,c,X,Y,w,big){const D='Unbounded,"Arial Black",sans-serif',B='"Golos Text",system-ui,sans-serif';
+  x.font='700 '+big+'px '+D;x.fillStyle=SCK.ink;x.fillText(scFit(x,scName(c),w),X,Y);
+  const lat=latinOf(c.name,c.sub);if(lat){x.font='italic 400 '+Math.round(big*.5)+'px '+B;x.fillStyle=SCK.mut;x.fillText(scFit(x,lat,w),X,Y+big*.78)}}
+
+/* ---------- A · Troféu ---------- */
+function scPaintA(x,W,H,story,e,cs,im){const B='"Golos Text",system-ui,sans-serif',P=60;
+  if(im)scBgPhoto(x,W,H,im);else{scBgFlat(x,W,H);const f=cs[0]&&scFI(cs[0]);if(f){const fw=W*.74,fh=fw*36/64;x.save();x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=40;x.shadowOffsetY=18;x.drawImage(f,(W-fw)/2,H*(story?.33:.28)-fh/2,fw,fh);x.restore()}}
+  scLogoAt(x,P,story?120:56,story?380:330);
+  /* panel content measured first, drawn upwards from the bottom */
+  const many=cs.length>1,maxR=story?6:4,show=cs.slice(0,maxR),more=cs.length-show.length;
+  const rows=[];
+  if(!many&&cs[0]){rows.push({k:'hero',h:150})}
+  else{show.forEach(c=>rows.push({k:'row',c,h:96}));if(more>0)rows.push({k:'more',h:56})}
+  const kg=cs.reduce((a,c)=>a+(+c.weight||0),0);if(SC.o.tot&&kg&&many)rows.push({k:'tot',h:70});
+  const [ma,mb]=scMeta(e);x.font='500 32px '+B;const mlines=scWrapLines(x,ma,W-2*P-56,2).concat(scWrapLines(x,mb,W-2*P-56,2));
+  const who=scWhoLines(e);
+  let ph=48+rows.reduce((a,r)=>a+r.h,0)+(mlines.length?24+mlines.length*48:0)+(who.length?14+who.length*48:0)+28;
+  const PX=40,pw=W-2*PX,py=H-(story?230:70)-ph;
+  x.save();x.fillStyle='rgba(6,22,28,.86)';scRR(x,PX,py,pw,ph,44);x.fill();x.strokeStyle=SCK.line;x.lineWidth=2;x.stroke();x.restore();
+  let y=py+48;const X=PX+40,R=PX+pw-40,w=R-X;
+  rows.forEach(r=>{
+    if(r.k==='hero'){const c=cs[0],d=scFishLine(c);x.font='700 44px '+B;const dw=d?x.measureText(d).width:0;
+      if(d){x.fillStyle=SCK.acc;x.textAlign='right';x.fillText(d,R,y+52);x.textAlign='left'}
+      scNameBlock(x,c,X,y+58,w-(d?dw+28:0),68)}
+    else if(r.k==='row'){const c=r.c,f=scFI(c),FW=120,FH=FW*36/64;if(f)x.drawImage(f,X-6,y+(r.h-FH)/2-8,FW,FH);
+      const d=scFishLine(c);x.font='600 38px '+B;const dw=d?x.measureText(d).width:0;if(d){x.fillStyle=SCK.warm;x.textAlign='right';x.fillText(d,R,y+56);x.textAlign='left'}
+      x.font='700 40px Unbounded,"Arial Black",sans-serif';x.fillStyle=SCK.ink;x.fillText(scFit(x,scName(c),w-FW-12-(d?dw+24:0)),X+FW+12,y+56)}
+    else if(r.k==='more'){x.font='600 32px '+B;x.fillStyle=SCK.mut;x.fillText('+'+more+' '+t('scMore'),X,y+38)}
+    else if(r.k==='tot'){x.fillStyle=SCK.line;x.fillRect(X,y+6,w,2);x.font='700 40px '+B;x.fillStyle=SCK.acc;x.fillText(t('totL')+': '+scKg(kg)+' kg',X,y+56)}
+    y+=r.h});
+  if(mlines.length){y+=24;x.font='500 32px '+B;x.fillStyle=SCK.mut;mlines.forEach(l=>{y+=40;scDrawLine(x,l,X,y,SCK.mut);y+=8})}
+  if(who.length){y+=14;x.font='600 32px '+B;who.forEach(l=>{y+=40;x.fillStyle=l.c;x.fillText(scFit(x,l.t,w),X,y);y+=8})}
+  if(story)scFoot(x,W,H-150,P)}
+
+/* ---------- B · Cartão ---------- */
+function scPaintB(x,W,H,story,e,cs,im){const B='"Golos Text",system-ui,sans-serif',D='Unbounded,"Arial Black",sans-serif',P=72;
+  scBgFlat(x,W,H);
+  let y=(story?110:60);y+=scLogoAt(x,P,y,story?340:300)+(story?56:34);
+  const top=[scDateTxt(e),scLocText(e)].filter(Boolean).join('  ·  ').toUpperCase();
+  if(SC.o.dt&&top){x.font='600 30px '+B;x.fillStyle=SCK.mut;x.fillText(scFit(x,top,W-2*P),P,y);y+=34}
+  const foot=story?H-150:H-56,bottomPad=story?70:40;
+  if(cs.length<=1){const c=cs[0];if(!c)return;
+    y+=story?96:78;scNameBlock(x,c,P,y,W-2*P,story?96:78);y+=story?90:70;
+    /* tiles */
+    const md=c.depth!=null?c.depth:entryMaxDepth(e),o=SC.o,tl=[];
+    if(o.w&&c.weight!=null)tl.push([t('sxTW'),scKg(c.weight)+' kg',1]);if(o.l&&c.len!=null)tl.push([t('sxTL'),fmt(c.len)+' cm']);
+    if(o.md&&md!=null)tl.push([t('sxTD'),fmt(md)+' m']);if(o.ap&&e.apnea!=null)tl.push([t('sxTA'),apneaF(e.apnea)]);
+    const cols=tl.length>2?2:Math.max(1,tl.length),TH=story?150:124,G=20,rowsN=Math.ceil(tl.length/cols),tilesH=tl.length?rowsN*TH+(rowsN-1)*G:0;
+    const cond=scConds(e).slice(0,3),condH=cond.length?60:0;
+    const tilesY=foot-bottomPad-condH-tilesH;
+    /* picture between the name and the tiles: user's photo or the fish drawing */
+    const bx=P,by=y,bw=W-2*P,bh=Math.max(120,tilesY-40-y);
+    if(im)scPhotoBox(x,im,bx,by,bw,bh,36);else{const f=scFI(c);if(f){let fw=bw*.92,fh=fw*36/64;if(fh>bh){fh=bh;fw=fh*64/36}x.save();x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=36;x.shadowOffsetY=14;x.drawImage(f,(W-fw)/2,by+(bh-fh)/2,fw,fh);x.restore()}}
+    const tw=(W-2*P-(cols-1)*G)/cols;tl.forEach((v,i)=>{const cx=P+(i%cols)*(tw+G),cy=tilesY+Math.floor(i/cols)*(TH+G);
+      x.fillStyle=SCK.tile;scRR(x,cx,cy,tw,TH,26);x.fill();x.font='500 '+(story?28:26)+'px '+B;x.fillStyle=SCK.mut;x.fillText(v[0],cx+28,cy+(story?48:40));
+      x.font='700 '+(story?56:44)+'px '+B;x.fillStyle=v[2]?SCK.acc:SCK.ink;x.fillText(scFit(x,v[1],tw-56),cx+28,cy+TH-(story?32:22))});
+    if(cond.length){x.font='500 28px '+B;x.fillStyle=SCK.mut;x.fillText(scFit(x,cond.join('  ·  '),W-2*P),P,foot-bottomPad-12)}
+  }else{
+    /* several fish: a grid of fish cards */
+    y+=story?40:24;const kg=cs.reduce((a,c)=>a+(+c.weight||0),0);
+    x.font='700 '+(story?84:68)+'px '+D;x.fillStyle=SCK.ink;x.fillText(t('sxFishN')(cs.reduce((a,c)=>a+(c.count||1),0)),P,y+(story?84:68));
+    if(SC.o.w&&kg){x.font='700 '+(story?60:50)+'px '+B;x.fillStyle=SCK.acc;x.textAlign='right';x.fillText(scKg(kg)+' kg',W-P,y+(story?80:64));x.textAlign='left'}
+    y+=(story?84:68)+(story?50:30);
+    const cols=2,G=20,cw=(W-2*P-G)/cols,availH=foot-bottomPad-y,maxN=story?8:4,show=cs.slice(0,cs.length>maxN?maxN-1:maxN),more=cs.length-show.length;
+    const n=show.length+(more>0?1:0),rowsN=Math.ceil(n/cols),ch=Math.min(story?330:300,(availH-(rowsN-1)*G)/rowsN);
+    show.forEach((c,i)=>{const cx=P+(i%cols)*(cw+G),cy=y+Math.floor(i/cols)*(ch+G);x.fillStyle=SCK.tile;scRR(x,cx,cy,cw,ch,28);x.fill();
+      const f=scFI(c),fw=Math.min(cw*.78,(ch-130)*64/36),fh=fw*36/64;if(f&&fh>20)x.drawImage(f,cx+(cw-fw)/2,cy+20,fw,fh);
+      x.font='700 34px '+D;x.fillStyle=SCK.ink;x.fillText(scFit(x,scName(c),cw-48),cx+24,cy+ch-62);
+      const d=scFishLine(c);if(d){x.font='600 30px '+B;x.fillStyle=SCK.warm;x.fillText(scFit(x,d,cw-48),cx+24,cy+ch-22)}});
+    if(more>0){const i=show.length,cx=P+(i%cols)*(cw+G),cy=y+Math.floor(i/cols)*(ch+G);x.strokeStyle=SCK.line;x.lineWidth=2;scRR(x,cx,cy,cw,ch,28);x.stroke();x.font='700 56px '+D;x.fillStyle=SCK.mut;x.textAlign='center';x.fillText('+'+more,cx+cw/2,cy+ch/2+20);x.textAlign='left'}
+  }
+  const who=scWhoLines(e);if(who.length){let wy=foot-(story?28:4)-(who.length-1)*44;if(!story)wy=60+44;x.font='600 30px '+B;who.forEach(l=>{x.fillStyle=l.c;x.textAlign=story?'left':'right';x.fillText(scFit(x,l.t,W-2*P),story?P:W-P,wy);wy+=44});x.textAlign='left'}
+  if(story)scFoot(x,W,H-150+56,P)}
+
+/* ---------- C · Resumo ---------- */
+function scPaintC(x,W,H,story,e,cs,im){const B='"Golos Text",system-ui,sans-serif',D='Unbounded,"Arial Black",sans-serif',P=72;
+  scBgFlat(x,W,H);
+  let y=(story?110:56);y+=scLogoAt(x,P,y,story?320:280)+(story?60:30);
+  const title=scLocText(e)||scDateTxt(e);x.font='700 '+(story?76:60)+'px '+D;x.fillStyle=SCK.ink;y+=story?76:60;x.fillText(scFit(x,title,W-2*P),P,y);
+  const sub=[scLocText(e)&&SC.o.dt?scDateTxt(e):'',[e.timeIn,e.timeOut].filter(Boolean).join('–')].filter(Boolean).join('  ·  ');
+  if(sub){y+=52;x.font='500 34px '+B;x.fillStyle=SCK.mut;x.fillText(sub,P,y)}
+  y+=story?48:32;
+  /* totals */
+  const nF=cs.reduce((a,c)=>a+(c.count||1),0),kg=cs.reduce((a,c)=>a+(+c.weight||0),0),md=entryMaxDepth(e);
+  const tl=[[String(nF),t('sxTF'),1]];if(kg)tl.push([scKg(kg),t('sxTK')]);if(md!=null&&SC.o.md)tl.push([fmt(md),t('sxTM')]);else if(e.apnea!=null&&SC.o.ap)tl.push([apneaF(e.apnea),t('sxTA')]);
+  const G=20,tw=(W-2*P-(tl.length-1)*G)/tl.length,TH=story?160:132;
+  tl.forEach((v,i)=>{const cx=P+i*(tw+G);x.fillStyle=SCK.tile;scRR(x,cx,y,tw,TH,26);x.fill();x.textAlign='center';x.font='700 '+(story?62:50)+'px '+B;x.fillStyle=v[2]?SCK.acc:SCK.ink;x.fillText(v[0],cx+tw/2,y+(story?84:70));x.font='500 28px '+B;x.fillStyle=SCK.mut;x.fillText(v[1],cx+tw/2,y+TH-(story?26:22));x.textAlign='left'});
+  y+=TH+(story?40:26);
+  const foot=story?H-150:H-50,cond=scConds(e),condH=cond.length?(story?90:64):0,who=scWhoLines(e),whoH=who.length*44;
+  /* optional photo band */
+  if(im&&story){const bh=Math.min(520,(foot-condH-whoH-y)*.45);scPhotoBox(x,im,P,y,W-2*P,bh,32);y+=bh+34}
+  /* fish list */
+  const avail=foot-condH-whoH-24-y,RH=story?104:84,maxN=Math.max(1,Math.floor(avail/RH)),show=cs.slice(0,cs.length>maxN?maxN-1:maxN),more=cs.length-show.length;
+  show.forEach(c=>{const f=scFI(c),FW=story?120:100,FH=FW*36/64;if(f)x.drawImage(f,P-6,y+(RH-FH)/2-4,FW,FH);
+    const d=scFishLine(c);x.font='600 36px '+B;const dw=d?x.measureText(d).width:0;if(d){x.fillStyle=SCK.warm;x.textAlign='right';x.fillText(d,W-P,y+RH/2+12);x.textAlign='left'}
+    x.font='600 '+(story?40:36)+'px '+B;x.fillStyle=SCK.ink;x.fillText(scFit(x,scName(c),W-2*P-FW-16-(d?dw+24:0)),P+FW+14,y+RH/2+12);
+    y+=RH;x.fillStyle=SCK.line;x.fillRect(P,y-2,W-2*P,2)});
+  if(more>0){x.font='600 32px '+B;x.fillStyle=SCK.mut;x.fillText('+'+more+' '+t('scMore'),P,y+44);y+=60}
+  if(!cs.length){x.font='600 40px '+B;x.fillStyle=SCK.mut;x.fillText(t('noCatch'),P,y+50)}
+  /* conditions as chips */
+  if(cond.length){let cx=P,cy=foot-condH-whoH+(story?10:0);x.font='500 30px '+B;cond.forEach(s=>{const w=x.measureText(s).width+44;if(cx+w>W-P){cx=P;cy+=58}x.fillStyle=SCK.tile;scRR(x,cx,cy,w,48,24);x.fill();x.fillStyle=SCK.ink;x.fillText(s,cx+22,cy+34);cx+=w+12})}
+  if(who.length){let wy=foot-whoH+30;x.font='600 32px '+B;who.forEach(l=>{x.fillStyle=l.c;x.fillText(scFit(x,l.t,W-2*P),P,wy);wy+=44})}
+  if(story)scFoot(x,W,H-80,P)}
+
+scPaint=function(){const e=scE;if(!e)return;const W=1080,H=SC.fmt==='story'?1920:1350,story=SC.fmt==='story';
+  const cv=$('scCv');if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}const x=cv.getContext('2d');x.clearRect(0,0,W,H);x.textAlign='left';
+  const cs=(e.catches||[]).filter(c=>c&&c.name&&!c.lost).filter((c,i)=>!scSkip.has(i));const im=SC.photo?scImgs[scPi]:null;
+  (SC.tpl==='b'?scPaintB:SC.tpl==='c'?scPaintC:scPaintA)(x,W,H,story,e,cs,im)};
+
+/* window: template switch above the format, «Mostrar» as chips */
+setTimeout(function(){if(!SC.tpl)SC.tpl='a';const fmtEl=$('scFmt');if(!fmtEl)return;const tp=document.createElement('div');tp.className='so-tabs sc-tpl';tp.id='scTpl';
+  tp.innerHTML=['a','b','c'].map(k=>'<button type="button" data-v="'+k+'"><span data-i="scTpl'+k.toUpperCase()+'"></span></button>').join('');
+  fmtEl.parentNode.insertBefore(tp,fmtEl);tp.querySelectorAll('[data-i]').forEach(s=>{s.textContent=t(s.dataset.i)});
+  const mark=()=>tp.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.v===SC.tpl);b.setAttribute('aria-pressed',b.dataset.v===SC.tpl)});mark();
+  tp.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;SC.tpl=b.dataset.v;mark();scSave();scQueue()});
+  {const u=scUi;scUi=function(){u();mark();tp.querySelectorAll('[data-i]').forEach(s=>{s.textContent=t(s.dataset.i)})}}
+  /* «Partilhar» primary, «Guardar» secondary already; move the long hint to the end in small type */
+  const st=document.createElement('style');st.textContent='#scD .sc-tpl{margin-bottom:8px}#scD .sc-tpl button.on{background:var(--accent);color:#1b0d03}#scD #scChk{display:flex;flex-wrap:wrap;gap:8px}#scD #scChk label.chk{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);user-select:none}#scD #scChk label.chk[hidden]{display:none}#scD #scChk label.chk input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}#scD #scChk label.chk:has(input:checked){border-color:var(--sea);background:color-mix(in srgb,var(--sea) 16%,transparent);color:var(--ink)}#scD #scChk label.chk:has(input:focus-visible){outline:2px solid var(--sea);outline-offset:2px}#scD #scChk .ic,#scD #scChk svg{width:16px;height:16px}';
+  document.head.appendChild(st)},0);
+
 const inDef=(md,d)=>d.from<=d.to?(md>=d.from&&md<=d.to):(md>=d.from||md<=d.to);
 const isSpecies=lat=>/^[A-Z][a-z]+ [a-z]+$/.test(lat||'')&&!/ spp$/.test(lat);
 const genusOf=lat=>(lat||'').split(' ')[0];
@@ -6389,7 +6544,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795823484';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795824619';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
