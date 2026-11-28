@@ -6198,8 +6198,10 @@ const sw=document.createElement('div');sw.className='ap-sw';sw.innerHTML='<butto
 const view0=document.createElement('section');view0.id='apView';const anchor=$('quickForm');av.insertBefore(view0,anchor);
 const h1s=hd.querySelector('h1 span');
 /* «Spearo» stays put when the second word changes: the word box is as wide as the wider of Diary / FREE */
-const h1w=()=>{if(!h1s)return;const cs=getComputedStyle(h1s),c=document.createElement('canvas').getContext('2d');c.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
-  const w=Math.ceil(Math.max(c.measureText('Diary').width,c.measureText('FREE').width)+parseFloat(cs.letterSpacing||0)*5);if(w>0){h1s.style.display='inline-block';h1s.style.textAlign='left';h1s.style.minWidth=w+'px'}};
+const h1w=()=>{if(!h1s)return;const h1=h1s.parentNode;h1.style.whiteSpace='nowrap';h1s.style.minWidth='';h1s.style.display='inline-block';h1s.style.textAlign='left';
+  const probe=h1s.cloneNode(false);probe.style.cssText='position:absolute;visibility:hidden;display:inline-block;white-space:nowrap;min-width:0';h1.appendChild(probe);
+  let w=0;['Diary','FREE'].forEach(x=>{probe.textContent=x;w=Math.max(w,probe.getBoundingClientRect().width)});probe.remove();if(w>0)h1s.style.minWidth=Math.ceil(w)+'px'};
+try{document.fonts&&document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',()=>setTimeout(h1w,30))}catch(_){}
 addEventListener('resize',()=>setTimeout(h1w,60));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(h1w);
 const tcSync=()=>{const tc=document.querySelector('meta[name="theme-color"]');if(tc)requestAnimationFrame(()=>{const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();if(v)tc.content=v})};window.__tcSync=tcSync;
 const setMode=m=>{if(m!=='apnea'&&window.__apFrMark){window.__apFrMark(false);if(view==='fr')view='diary'}mode=m;LSs(AM,m);document.documentElement.classList.toggle('apnea',m==='apnea');if(h1s)h1s.textContent=m==='apnea'?'FREE':'Diary';h1w();{const hs=document.querySelector('#bnav [data-bn="home"] span');if(hs)hs.textContent=t(m==='apnea'?'apDiary':'bnHome')}try{if(window.__bnApply)window.__bnApply()}catch(_){}try{if($('checklist').open||document.querySelector('#bsBody #checklist'))ckDraw()}catch(_){}if(window.__apIco)window.__apIco();setTimeout(fdDraw,30);
@@ -6929,7 +6931,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795832620';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795832705';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
