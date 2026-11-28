@@ -6133,6 +6133,8 @@ html.apnea header h1 span{color:var(--sea)}
 @media (max-width:760px){.ap-tabs [data-v="fr"]{display:none}.ap-tabs{max-width:280px!important}}@media (min-width:761px){.ap-tabs{max-width:360px!important}}
 @media (max-width:760px){#apView.ap-isfr .ap-top{display:none}}
 #bnav [data-apfr]{display:none}html.apnea #bnav [data-apfr]{display:flex}
+.ap-shb{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:30px;height:30px;color:var(--sea);order:-1}
+.ap-shd .ap-shw{display:flex;justify-content:center;margin:6px 0 12px}.ap-shd canvas{width:auto;max-width:100%;max-height:52vh;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.35)}.ap-shd .ap-shf{margin-bottom:12px}.ap-shd .ap-shf button.on{background:var(--surface);color:var(--ink)}
 .ap-blk{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--sea) 5%,transparent)}
 .ap-blk-h{display:flex;align-items:center;justify-content:space-between}
 .ap-rmb{all:unset;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:0 4px}
@@ -6227,7 +6229,7 @@ function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
   if(view==='diary'){
     const keys=DISC.map(d=>d[0]).filter(k=>P[k]);if(keys.length)h+='<div class="ap-pb">'+keys.slice(0,4).map(k=>'<div><b>'+esc(fmtV(k,P[k].v))+'</b><small>'+esc(dOf(k)[1])+'</small></div>').join('')+'</div>';
     h+=a.length?a.map(s=>{const bl=blocksOf(s),many=bl.length>1,tags=[...new Set(bl.map(b=>dOf(b.disc)[1]))];
-      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||tags.join(' + '))+'<span class="ap-tags">'+tags.map(x=>'<span class="ap-tag">'+esc(x)+'</span>').join('')+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(coachesOf(s).length?' · '+esc(t('apCoach').toLowerCase())+' '+esc(coachesOf(s).join(', ')):'')+'</div>'
+      return '<article class="ap-card" data-id="'+esc(s.id)+'"><h3>'+esc(s.place||tags.join(' + '))+'<span class="ap-tags">'+'<button type="button" class="ap-shb" data-sh="'+esc(s.id)+'" aria-label="'+esc(t('share'))+'" title="'+esc(t('share'))+'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3.5"/><path d="M7.5 8 12 3.5 16.5 8"/><path d="M5 12.5V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6.5"/></svg></button>'+tags.map(x=>'<span class="ap-tag">'+esc(x)+'</span>').join('')+'</span></h3><div class="ap-meta">'+esc(fmtDate(s.date))+(coachesOf(s).length?' · '+esc(t('apCoach').toLowerCase())+' '+esc(coachesOf(s).join(', ')):'')+'</div>'
         +bl.map(b=>{const v=bestAtt(b.att),pb=P[b.disc]&&v!=null&&v===P[b.disc].v;const vals=(b.att||[]).filter(x=>x.v!=null);if(!vals.length)return'';
           return '<div class="ap-att">'+(many?'<span class="ap-bl">'+esc(dOf(b.disc)[1])+'</span>':'')+vals.map(x=>x.v===v?'<b>'+esc(fmtV(b.disc,x.v))+'</b>':esc(fmtV(b.disc,x.v))).join(' · ')+(pb?' <span class="ap-tag ap-pbt">'+esc(t('apPb'))+'</span>':'')+'</div>'}).join('')
         +(s.notes?'<div class="ap-note">'+esc(s.notes)+'</div>':'')+'</article>'}).join(''):'<div class="ap-empty">'+esc(t('apEmpty'))+'</div>'}
@@ -6270,6 +6272,32 @@ async function apShareSync(){try{if(!shMe||!sb||!shProf)return;const on=shCfg().
     want.set(s.id,{kind:'apnea',date:s.date||'',place:s.place||'',coaches:coachesOf(s),blocks:bl})});
   for(const k of H.keys())if(!want.has(k))await sb.from('shared_catches').delete().eq('user_id',shMe).eq('entry_id',k);
   for(const [id,p] of want){if(JSON.stringify(H.get(id))===JSON.stringify(p))continue;await sb.from('shared_catches').upsert({user_id:shMe,entry_id:id,data:p,updated_at:new Date().toISOString()},{onConflict:'user_id,entry_id'})}}catch(e){console.warn('apnea share',e)}}
+/* ---------- share a session as an image: plain, Strava-like ---------- */
+let apShS=null,apShFmt='story';
+function apShPaint(){const s=apShS;if(!s)return;const cv=$('apShCv'),W=1080,H=apShFmt==='story'?1920:1350;if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}const x=cv.getContext('2d');
+  const D='Unbounded,"Arial Black",sans-serif',B='"Golos Text",system-ui,sans-serif',LIME='#8DCB2F',INK='#F2F6EE',MUT='#A9B3A2';
+  const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#141A11');g.addColorStop(1,'#070806');x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.textAlign='left';x.font='700 54px '+D;x.fillStyle=INK;x.fillText('Spearo',80,140);const sw=x.measureText('Spearo ').width;x.fillStyle=LIME;x.fillText('FREE',80+sw,140);
+  /* stats: one line per discipline with its best attempt, then the count of attempts */
+  const bl=blocksOf(s).map(b=>({d:b.disc,v:bestAtt(b.att),n:(b.att||[]).filter(a=>a.v!=null).length})).filter(b=>b.v!=null);
+  const items=bl.slice(0,3).map(b=>[dOf(b.d)[1],fmtV(b.d,b.v)]);const nAtt=bl.reduce((a,b)=>a+b.n,0);if(nAtt)items.push([t('apTries'),String(nAtt)]);
+  const big=apShFmt==='story'?150:120,gap=apShFmt==='story'?70:44,lab=34,blockH=lab+16+big;const tot=items.length*blockH+(items.length-1)*gap;let y=(H-tot)/2+ (apShFmt==='story'?20:30);
+  x.textAlign='center';items.forEach(([l,v],i)=>{x.font='600 '+lab+'px '+B;x.fillStyle=MUT;x.fillText(l.toUpperCase().split('').join(String.fromCharCode(8202)),W/2,y+lab);
+    x.font='700 '+big+'px '+B;x.fillStyle=i<bl.length?LIME:INK;x.fillText(v,W/2,y+lab+16+big*.82);y+=blockH+gap});
+  /* footer: date, place, coaches */
+  const foot=[s.date?fmtDate(s.date):'',s.place||''].filter(Boolean).join('  ·  '),co=coachesOf(s);let fy=H-(apShFmt==='story'?230:175);
+  x.font='600 38px '+B;x.fillStyle=INK;x.fillText(scFit(x,foot,W-160),W/2,fy);if(co.length){x.font='500 32px '+B;x.fillStyle=MUT;x.fillText(scFit(x,t('apCoach')+': '+co.join(', '),W-160),W/2,fy+52)}
+  x.font='500 26px '+B;x.fillStyle='rgba(242,246,238,.45)';x.fillText('spearodiary.github.io',W/2,H-(apShFmt==='story'?90:44));x.textAlign='left'}
+function apShOpen(s){apShS=s;let d=$('apShD');if(!d){d=document.createElement('dialog');d.id='apShD';d.className='sheet ap-shd';
+    d.innerHTML='<div class="sheet-in"><div class="sheet-head"><h2>'+esc(t('scTitle'))+'</h2><button type="button" class="x-close ap-shx" aria-label="×"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div><div class="ap-shw"><canvas id="apShCv" width="1080" height="1920"></canvas></div><div class="so-tabs ap-shf"><button type="button" data-f="story">'+esc(t('scStory'))+'</button><button type="button" data-f="post">'+esc(t('scPost'))+'</button></div><div class="sc-btns"><button type="button" class="primary ap-shgo">'+esc(t('share'))+'</button><button type="button" class="ap-shsv">'+esc(t('scSaveB'))+'</button></div></div>';
+    document.body.appendChild(d);
+    const file=()=>new Promise(r=>$('apShCv').toBlob(b=>r(new File([b],'spearo-free-'+(apShS.date||'session')+'.jpg',{type:'image/jpeg'})),'image/jpeg',.92));
+    d.addEventListener('click',async e=>{if(e.target===d||e.target.closest('.ap-shx')){d.close();return}const fb=e.target.closest('[data-f]');if(fb){apShFmt=fb.dataset.f;mk();apShPaint();return}
+      const go=e.target.closest('.ap-shgo'),sv=e.target.closest('.ap-shsv');if(!go&&!sv)return;try{const f=await file();const mob=matchMedia('(pointer:coarse)').matches;
+        if((go||mob)&&navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});toast(t(go?'scDone':'scSavedT'))}catch(err){if(err&&err.name!=='AbortError')scDownload(f)}}else{scDownload(f);toast(t('scDl'))}}catch(_){toast(t('frErr'))}});
+  }
+  const mk=()=>d.querySelectorAll('[data-f]').forEach(b=>b.classList.toggle('on',b.dataset.f===apShFmt));mk();
+  const show=()=>{apShPaint();if(!d.open)d.showModal()};try{Promise.all(['700 60px Unbounded','600 40px "Golos Text"','700 120px "Golos Text"'].map(f=>document.fonts.load(f))).then(()=>{apShPaint()}).catch(()=>{})}catch(_){}show()}
 const valTxt=(k,v)=>v==null?'':dOf(k)[2]==='t'?fmtT(v):String(v).replace('.',lang==='en'?'.':',');
 function blockHtml(b,bi,n){const u=dOf(b.disc)[2];
   return '<div class="ap-blk" data-b="'+bi+'">'+(n>1?'<div class="ap-blk-h"><span class="ap-lab">'+esc(t('apDisc'))+' '+(bi+1)+'</span><button type="button" class="ap-rmb" aria-label="'+esc(t('apRmD'))+'" title="'+esc(t('apRmD'))+'">×</button></div>':'<span class="ap-lab">'+esc(t('apDisc'))+'</span>')
@@ -6319,6 +6347,7 @@ function wire(f){let delArm=false,delT=0;
       const id=editing.id;editing=null;apDel(id).then(()=>{draw();apShareSoon()});draw()}})}
 view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]');if(tb){view=tb.dataset.v;draw();return}
   if(e.target.closest('.ap-new')){editing={date:today(),place:'',coaches:[],blocks:[{disc:'STA',att:[{}]}],notes:''};draw();view0.scrollIntoView({block:'start',behavior:'smooth'});return}
+  const shb=e.target.closest('[data-sh]');if(shb){const ss=all().find(x=>x.id===shb.dataset.sh);if(ss)apShOpen(ss);return}
   const c=e.target.closest('.ap-card');if(c&&!editing){const s=all().find(x=>x.id===c.dataset.id);if(s){editing=JSON.parse(JSON.stringify(s));editing.coaches=coachesOf(s).slice();editing.blocks=JSON.parse(JSON.stringify(blocksOf(s))).map(b=>({disc:b.disc,att:b.att&&b.att.length?b.att:[{}]}));draw();view0.scrollIntoView({block:'start',behavior:'smooth'})}}});
 /* phone: Amigos is a page in the bottom bar, like on the hunting side */
 {const nav=$('bnav'),fb=nav&&nav.querySelector('[data-bn="feed"]'),more=nav&&nav.querySelector('[data-bn="more"]');
