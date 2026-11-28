@@ -6111,7 +6111,7 @@ html.apnea #bnav [data-bn="mt"],html.apnea #defNow,html.apnea #fcNow,html.apnea 
 html.apnea #settings .sg-row:has(.sg-fw),html.apnea #setRegion,html.apnea #setRegion~*,html.apnea .sg-lang-in .reg-hint{display:none!important}
 html.apnea .tl-ext,html.apnea #bsBody .tl-ext,html.apnea #bsBody nav.tools .tl-ext,html.apnea nav.tools .tl-sep{display:none!important}
 html.apnea #bsBody .tools-sc:has(#ckBtn.bn-in)::before{display:none}
-html.apnea #tagline,html.apnea #bsBody #tagline{display:none!important}html:not(.apnea) .ap-safe2{display:none!important}.ap-safe2{margin:0 0 14px}
+html.apnea #tagline,html.apnea #bsBody #tagline{display:none!important}html:not(.apnea) .ap-safe2,html.apnea .ap-safe2:not(#bsheet .ap-safe2){display:none!important}.ap-safe2{margin:0 0 14px}
 html.apnea #tagline::after{content:attr(data-ap);display:block}
 html.apnea #tagline{color:var(--sea)!important;background:color-mix(in srgb,#8DCB2F 13%,var(--surface))!important;border-color:color-mix(in srgb,#8DCB2F 45%,transparent)!important}
 html.apnea #tagline{display:block!important;width:auto!important;max-width:none!important;margin-left:0!important;margin-right:0!important;padding:10px 12px!important;border-radius:12px!important;text-align:center!important;white-space:nowrap;overflow:hidden;font-size:clamp(11.5px,3.4vw,14px)!important;font-weight:600!important;line-height:1.4!important;min-height:0!important}html.apnea #tagline::before{display:none!important;filter:hue-rotate(260deg) saturate(.8) brightness(1.3)}
@@ -6278,6 +6278,9 @@ function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
   view0.innerHTML=h;view0.classList.toggle('ap-isfr',view==='fr');document.documentElement.classList.toggle('ap-fr',view==='fr'&&mode==='apnea');
   if(editing){const f=view0.querySelector('.ap-form');if(f)wire(f)}
   if(view==='fr'&&!editing)frLoad()}
+/* coaches as ready chips: remembered on this device, plus every coach from your sessions (oldest first) */
+const coachList=()=>{let L=[];try{L=JSON.parse(localStorage.getItem('sn-ap-coaches')||'[]')}catch(_){}if(!Array.isArray(L))L=[];all().slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(x=>coachesOf(x).forEach(c=>{if(c&&!L.includes(c))L.push(c)}));return L};
+const coachKeep=cs=>{try{const L=coachList();let ch=0;cs.forEach(c=>{if(c&&!L.includes(c)){L.push(c);ch=1}});localStorage.setItem('sn-ap-coaches',JSON.stringify(L))}catch(_){}};
 const POOLS=()=>[t('apPool')+' 50 m',t('apPool')+' 25 m',t('apSea')];
 /* ---------- friends: their FREE sessions (shared_catches rows with data.kind='apnea'); same follows as the hunting side ---------- */
 let FR={rows:null,busy:false,at:0,q:''};
@@ -6346,7 +6349,7 @@ function formHtml(){const s=editing;
   return '<div class="ap-form"><h3>'+esc(t(s.id?'apEdit':'apNew'))+'</h3>'
     +'<div class="ap-row2"><label><span class="ap-lab">'+esc(t('apDate'))+'</span><input type="date" name="date" value="'+esc(s.date||'')+'"></label></div>'
     +'<div><span class="ap-lab">'+esc(t('apWhere'))+'</span><div class="ap-chips ap-pl">'+POOLS().map(p=>'<button type="button" data-pl="'+esc(p)+'" class="'+(s.place===p?'on':'')+'">'+esc(p)+'</button>').join('')+'</div><input name="place" class="ap-plin" value="'+esc(POOLS().includes(s.place)?'':(s.place||''))+'" placeholder="'+esc(t('apOther'))+'"></div>'
-    +'<div><span class="ap-lab">'+esc(t('apCoach'))+'</span>'+(s.coaches.length?'<div class="ap-chips ap-cos">'+s.coaches.map((c,i)=>'<span class="ap-co">'+esc(c)+'<button type="button" data-ci="'+i+'" aria-label="×">×</button></span>').join('')+'</div>':'')+'<div class="ap-coadd"><input name="coach" placeholder="'+esc(t('apCoachPh'))+'" enterkeyhint="done"><button type="button" class="ap-coa">'+esc(t('apCoachAdd'))+'</button></div></div>'
+    +'<div><span class="ap-lab">'+esc(t('apCoach'))+'</span>'+(()=>{const L=coachList();s.coaches.forEach(c=>{if(!L.includes(c))L.push(c)});return L.length?'<div class="ap-chips ap-pl ap-cpl">'+L.map(c=>'<button type="button" data-cp="'+esc(c)+'" class="'+(s.coaches.includes(c)?'on':'')+'">'+esc(c)+'</button>').join('')+'</div>':''})()+'<div class="ap-coadd"><input name="coach" placeholder="'+esc(t('apCoachPh'))+'" enterkeyhint="done"><button type="button" class="ap-coa">'+esc(t('apCoachAdd'))+'</button></div></div>'
     +s.blocks.map((b,i)=>blockHtml(b,i,s.blocks.length)).join('')
     +'<button type="button" class="ap-addb">'+esc(t('apAddD'))+'</button>'
     +'<label><span class="ap-lab">'+esc(t('apNotes'))+'</span><textarea name="notes" placeholder="'+esc(t('apNotesPh'))+'">'+esc(s.notes||'')+'</textarea></label>'
@@ -6366,11 +6369,11 @@ function wire(f){let delArm=false,delT=0;
         return{v:dOf(b.disc)[2]==='t'?(dur!=null?Math.round(dur):null):(x.max?Math.round(x.max*10)/10:null),r:rest!=null&&rest>0&&rest<3600?rest:null}}).filter(a=>a.v!=null);
       b.att=b.att.filter(a=>a.v!=null||a.r!=null).concat(att);if(!b.att.length)b.att=[{}];if(day)editing.date=day;draw();toast(t('apImpOk')(att.length))}
     catch(err){toast(t('impErr'))}});
-  f.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.name==='coach'){e.preventDefault();readForm(f);draw();const i=view0.querySelector('[name="coach"]');if(i)i.focus()}});
+  f.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.name==='coach'){e.preventDefault();readForm(f);coachKeep(editing.coaches);draw();const i=view0.querySelector('[name="coach"]');if(i)i.focus()}});
   f.addEventListener('input',e=>{if(e.target.name==='place'&&e.target.value.trim())f.querySelectorAll('[data-pl]').forEach(b=>b.classList.remove('on'))});
   f.addEventListener('click',e=>{const pl=e.target.closest('[data-pl]');if(pl){readForm(f);editing.place=editing.place===pl.dataset.pl?'':pl.dataset.pl;draw();return}
-    const ci=e.target.closest('[data-ci]');if(ci){readForm(f);editing.coaches.splice(+ci.dataset.ci,1);draw();return}
-    if(e.target.closest('.ap-coa')){readForm(f);draw();const i=view0.querySelector('[name="coach"]');if(i)i.focus();return}
+    const cp=e.target.closest('[data-cp]');if(cp){readForm(f);const c=cp.dataset.cp,i=editing.coaches.indexOf(c);if(i>=0)editing.coaches.splice(i,1);else editing.coaches.push(c);draw();return}
+    if(e.target.closest('.ap-coa')){readForm(f);coachKeep(editing.coaches);draw();const i=view0.querySelector('[name="coach"]');if(i)i.focus();return}
   });
   f.addEventListener('click',e=>{const bl=e.target.closest('.ap-blk'),bi=bl?+bl.dataset.b:-1;const d=e.target.closest('[data-d]');
     if(d&&bi>=0){readForm(f);editing.blocks[bi].disc=d.dataset.d;draw();return}
@@ -6380,7 +6383,7 @@ function wire(f){let delArm=false,delT=0;
     if(e.target.closest('.ap-addb')){readForm(f);const lastD=editing.blocks[editing.blocks.length-1].disc;editing.blocks.push({disc:lastD==='STA'?'DYN':'STA',att:[{}]});draw();const bs=view0.querySelectorAll('.ap-blk');if(bs.length)bs[bs.length-1].scrollIntoView({block:'nearest',behavior:'smooth'});return}
     if(e.target.closest('.ap-imp')){const fi=f.querySelector('.ap-impf');if(fi){fi.value='';fi.click()}return}
     if(e.target.closest('.ap-x')){editing=null;draw();scrollTo({top:0,behavior:'smooth'});return}
-    if(e.target.closest('.ap-ok')){readForm(f);const s=clean(editing);if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>{draw();apShareSoon()});draw();scrollTo({top:0,behavior:'smooth'});return}
+    if(e.target.closest('.ap-ok')){readForm(f);coachKeep(editing.coaches);const s=clean(editing);if(!s.id)s.ts=Date.now();editing=null;view='diary';apPut(s).then(()=>{draw();apShareSoon()});draw();scrollTo({top:0,behavior:'smooth'});return}
     const del=e.target.closest('.ap-del');if(del){if(!delArm){delArm=true;del.dataset.ic=del.innerHTML;del.innerHTML='<span class="ap-q">?</span>';clearTimeout(delT);delT=setTimeout(()=>{delArm=false;del.innerHTML=del.dataset.ic},4000);return}
       const id=editing.id;editing=null;apDel(id).then(()=>{draw();apShareSoon()});draw();scrollTo({top:0,behavior:'smooth'})}})}
 view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]');if(tb){view=tb.dataset.v;draw();return}
@@ -6394,7 +6397,7 @@ view0.addEventListener('click',e=>{const tb=e.target.closest('.ap-tabs [data-v]'
   window.__apHome=()=>{if(mode==='apnea'&&view==='fr'){view='diary';draw()}};
   window.__apFrMark=()=>{}}
 /* the same safety strip replaces the GPS note wherever that note sits (Mais, settings) */
-const safe2=()=>{const tg=$('tagline');if(!tg)return;let d=tg.previousElementSibling;if(!d||!d.classList.contains('ap-safe2')){d=document.createElement('div');d.className='ap-safe ap-safe2';tg.before(d)}d.innerHTML='<span>'+esc(t('apSafe'))+'</span>'};
+const safe2=()=>{const tg=$('tagline');if(!tg)return;document.querySelectorAll('.ap-safe2').forEach(x=>{if(x!==tg.previousElementSibling)x.remove()});let d=tg.previousElementSibling;if(!d||!d.classList.contains('ap-safe2')){d=document.createElement('div');d.className='ap-safe ap-safe2';tg.before(d)}d.innerHTML='<span>'+esc(t('apSafe'))+'</span>'};
 try{new MutationObserver(()=>{const tg=$('tagline');if(tg&&!(tg.previousElementSibling&&tg.previousElementSibling.classList.contains('ap-safe2')))safe2()}).observe(document.body,{childList:true,subtree:true})}catch(_){}
 /* FREE: the title stays on top of every page, exactly where it is on Treinos */
 {const bs=$('bsheet');if(bs&&!bs.querySelector('.ap-hdw')){const w=document.createElement('div');w.className='wrap ap-hdw';w.innerHTML='<header><h1>Spearo <span>FREE</span></h1></header>';bs.insertBefore(w,bs.firstChild);setTimeout(h1w,0)}}
@@ -6950,7 +6953,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795882281';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795891328';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
