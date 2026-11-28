@@ -6087,6 +6087,9 @@ let mode=LSg(AM,'hunt'),view='diary',editing=null;
 
 /* ---------- styles ---------- */
 const st=document.createElement('style');st.textContent=`
+/* hunting mode, dark theme (navy) */
+@media (prefers-color-scheme:dark){html:not(.apnea):not([data-theme="light"]){--bg:#0A1422;--surface:#122136;--ink:#E6EDF5;--muted:#94A5BA;--line:#243A58;--accent:#4C9CF0;--on-accent:#08121F;--sea:#7DB6F2;--sea-soft:#1A3354;--uw:#4FB6F0;--mark:#5A4520;--danger:#FF8A80;--good:#A6D14A;--amber:#D8B272;color-scheme:dark}}
+html:not(.apnea)[data-theme="dark"]{--bg:#0A1422;--surface:#122136;--ink:#E6EDF5;--muted:#94A5BA;--line:#243A58;--accent:#4C9CF0;--on-accent:#08121F;--sea:#7DB6F2;--sea-soft:#1A3354;--uw:#4FB6F0;--mark:#5A4520;--danger:#FF8A80;--good:#A6D14A;--amber:#D8B272;color-scheme:dark}
 /* hunting mode, light theme */
 @media (prefers-color-scheme:light){html:not(.apnea):not([data-theme="dark"]){--bg:#EEF2F6;--surface:#FFFFFF;--ink:#14233A;--muted:#5A6A7E;--line:#D2DBE5;--accent:#2B4C74;--on-accent:#FFFFFF;--sea:#1F6DB0;--sea-soft:#E0EBF6;--uw:#1E7FC8;--mark:#F0E2C6;--danger:#C42B20;--good:#5E9A1E;--amber:#9A7438;color-scheme:light}}
 html:not(.apnea)[data-theme="light"]{--bg:#EEF2F6;--surface:#FFFFFF;--ink:#14233A;--muted:#5A6A7E;--line:#D2DBE5;--accent:#2B4C74;--on-accent:#FFFFFF;--sea:#1F6DB0;--sea-soft:#E0EBF6;--uw:#1E7FC8;--mark:#F0E2C6;--danger:#C42B20;--good:#5E9A1E;--amber:#9A7438;color-scheme:light}
@@ -6933,7 +6936,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795854926';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795854995';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
