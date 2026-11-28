@@ -6076,7 +6076,10 @@ const st=document.createElement('style');st.textContent=`
 html:not(.apnea)[data-theme="light"]{--bg:#F3F6F7;--surface:#FFFFFF;--ink:#0B2530;--muted:#587079;--line:#D5E1E5;--accent:#EE6A1F;--on-accent:#FFFFFF;--sea:#0B7A8A;--sea-soft:#E0F0F2;--uw:#1C86CF;--mark:#FFE2CF;--danger:#C42B20;--good:#178A52;--amber:#B07800;color-scheme:light}
 html.apnea:not(.ap-light){--bg:#0D0F0C;--surface:#191D17;--ink:#F2F6EE;--muted:#A9B3A2;--line:#2F3829;--accent:#8DCB2F;--on-accent:#0D0F0C;--sea:#8DCB2F;--sea-soft:#22301A;--uw:#8DCB2F;color-scheme:dark}
 html.apnea.ap-light{--bg:#F1F4EE;--surface:#FFFFFF;--ink:#121411;--muted:#566150;--line:#D3DCCB;--accent:#6FAF1A;--on-accent:#0D0F0C;--sea:#4F8A12;--sea-soft:#E4F1D2;--uw:#4F8A12;color-scheme:light}
-html.apnea:not(.bs-on) #appView{min-height:100lvh;align-content:start}
+html.apnea:not(.bs-on) #appView{min-height:100lvh;display:flex;flex-direction:column}
+html.apnea:not(.bs-on) #appView>.site-foot{margin-top:auto}
+html.apnea #bsheet .bs-hd{display:none!important}html.apnea #bsheet .bs-body{padding-top:calc(env(safe-area-inset-top,0px) + 14px)!important}
+@media (max-width:760px){html.apnea.ap-fr #appView>header,html.apnea.ap-fr .ap-sw,html.apnea.ap-fr #apView .ap-safe{display:none!important}html.apnea.ap-fr #apView{margin-top:calc(env(safe-area-inset-top,0px) + 14px)}}
 header h1 svg.diver,header h1 svg.fdiver{display:none!important}header h1{padding-top:.35em!important}
 .ap-th{all:unset;cursor:pointer;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:var(--muted);margin-left:6px}.ap-th:hover{color:var(--ink)}
 html.apnea #trio,html.apnea #quickForm,html.apnea #srCard,html.apnea #exampleNotice,html.apnea #appView>.count-row,html.apnea #list{display:none!important}
@@ -6253,7 +6256,7 @@ function draw(){if(mode!=='apnea'){view0.innerHTML='';return}
   else{const keys=DISC.map(d=>d[0]).filter(k=>P[k]);
     h+=keys.length?keys.map(k=>{const ss=a.filter(s=>bestIn(s,k)!=null).sort((x,y)=>(x.date||'').localeCompare(y.date||''));let m=-Infinity;const line=ss.map(s=>m=Math.max(m,bestIn(s,k)));const first=ss[0];
       return '<div class="ap-rec"><div class="ap-rec-h"><strong>'+esc(dOf(k)[1])+'</strong><span class="ap-meta">'+esc(t('apSessions')(ss.length))+'</span><b>'+esc(fmtV(k,P[k].v))+'</b></div>'+spark(line)+'<div class="ap-meta">'+(first?esc(t('apSince'))+' '+esc(fmtDate(first.date))+(line.length>1&&line[0]!==line[line.length-1]?' · +'+esc(fmtV(k,line[line.length-1]-line[0])):''):'')+'</div></div>'}).join(''):'<div class="ap-empty">'+esc(t('apNoRec'))+'</div>'}
-  view0.innerHTML=h;view0.classList.toggle('ap-isfr',view==='fr');
+  view0.innerHTML=h;view0.classList.toggle('ap-isfr',view==='fr');document.documentElement.classList.toggle('ap-fr',view==='fr'&&mode==='apnea');
   if(editing){const f=view0.querySelector('.ap-form');if(f)wire(f)}
   if(view==='fr'&&!editing)frLoad()}
 const POOLS=()=>[t('apPool')+' 50 m',t('apPool')+' 25 m',t('apSea')];
@@ -6910,7 +6913,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795832142';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795832505';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
