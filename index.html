@@ -5902,7 +5902,7 @@ function scConds(e){const x=e.wx||{},a=[],n=v=>String(Math.round(v*10)/10).repla
   if(x.wave!=null)a.push(t('sxWave')+' '+n(x.wave)+' m');if(x.wind!=null)a.push(t('sxWindW')+' '+Math.round(x.wind)+' km/h');
   const w=e.temp!=null?e.temp:x.sst;if(w!=null)a.push(t('sxWater')+' '+n(w)+' °C');
   const td=tidesOf(e).filter(Boolean)[0];if(td)a.push(t('tide_'+td));return a}
-function scFoot(x,W,y,P){x.font='500 26px "Golos Text",system-ui,sans-serif';x.fillStyle='rgba(214,232,233,.6)';x.textAlign='left';x.fillText('spearodiary.github.io',P,y)}
+function scFoot(x,W,y,P){return;x.font='500 26px "Golos Text",system-ui,sans-serif';x.fillStyle='rgba(214,232,233,.6)';x.textAlign='left';x.fillText('spearodiary.github.io',P,y)}
 /* text with the latin name under it, both clipped to width */
 function scNameBlock(x,c,X,Y,w,big){const D='Unbounded,"Arial Black",sans-serif',B='"Golos Text",system-ui,sans-serif';
   x.font='700 '+big+'px '+D;x.fillStyle=SCK.ink;x.fillText(scFit(x,scName(c),w),X,Y);
@@ -6306,7 +6306,7 @@ function apShPaint(){const s=apShS;if(!s)return;const cv=$('apShCv'),W=1080,H=ap
   /* footer: date, place, coaches */
   const foot=[s.date?fmtDate(s.date):'',s.place||''].filter(Boolean).join('  ·  '),co=coachesOf(s);let fy=H-(apShFmt==='story'?230:175);
   x.font='600 38px '+B;x.fillStyle=INK;x.fillText(scFit(x,foot,W-160),W/2,fy);if(co.length){x.font='500 32px '+B;x.fillStyle=MUT;x.fillText(scFit(x,t('apCoach')+': '+co.join(', '),W-160),W/2,fy+52)}
-  x.font='500 26px '+B;x.fillStyle='rgba(242,246,238,.45)';x.fillText('spearodiary.github.io',W/2,H-(apShFmt==='story'?90:44));x.textAlign='left'}
+  x.textAlign='left'}
 function apShOpen(s){apShS=s;let d=$('apShD');if(!d){d=document.createElement('dialog');d.id='apShD';d.className='sheet ap-shd';
     d.innerHTML='<div class="sheet-in"><div class="sheet-head"><h2>'+esc(t('scTitle'))+'</h2><button type="button" class="x-close ap-shx" aria-label="×"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div><div class="ap-shw"><canvas id="apShCv" width="1080" height="1920"></canvas></div><div class="so-tabs ap-shf"><button type="button" data-f="story">'+esc(t('scStory'))+'</button><button type="button" data-f="post">'+esc(t('scPost'))+'</button></div><div class="sc-btns"><button type="button" class="primary ap-shgo">'+esc(t('share'))+'</button><button type="button" class="ap-shsv">'+esc(t('scSaveB'))+'</button></div></div>';
     document.body.appendChild(d);
@@ -6913,7 +6913,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795831959';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795832022';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
