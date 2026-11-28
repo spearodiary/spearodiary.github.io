@@ -6166,7 +6166,7 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-pl{margin:6px 0 8px}.ap-plin{margin-top:0}
 .ap-cos{margin:6px 0}.ap-co{display:inline-flex;align-items:center;gap:6px;padding:5px 6px 5px 12px;border-radius:999px;background:var(--sea-soft);color:var(--ink);font-weight:600;font-size:14px}
 .ap-co button{all:unset;cursor:pointer;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;color:var(--muted);font-size:16px}
-.ap-coadd{display:flex;gap:8px;margin-top:6px}.ap-coadd input{flex:1;min-width:0}.ap-coa{min-height:42px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--sea);font-weight:700;cursor:pointer}
+.ap-coadd{display:flex;gap:8px;margin-top:6px}.ap-coadd input{flex:1;min-width:0}.ap-coa{min-height:42px;width:52px;display:grid;place-items:center;padding:0;flex:none;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--sea);font-weight:700;cursor:pointer}
 .ap-frf{display:flex;flex-direction:column;gap:8px}.ap-frq{width:100%;box-sizing:border-box;min-height:42px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:8px 12px;font:inherit;font-size:16px}
 .ap-frl{display:flex;flex-direction:column;gap:10px}.ap-frc{cursor:default}.ap-frh{display:flex;align-items:center;gap:10px;margin-bottom:4px}.ap-frh .ap-tags{margin-left:auto}
 @media (max-width:760px){.ap-tabs [data-v="fr"]{display:none}.ap-tabs{max-width:280px!important}}@media (min-width:761px){.ap-tabs{max-width:360px!important}}
@@ -6352,7 +6352,7 @@ function formHtml(){const s=editing;
   return '<div class="ap-form"><h3>'+esc(t(s.id?'apEdit':'apNew'))+'</h3>'
     +'<div class="ap-row2"><label><span class="ap-lab">'+esc(t('apDate'))+'</span><input type="date" name="date" value="'+esc(s.date||'')+'"></label></div>'
     +'<div><span class="ap-lab">'+esc(t('apWhere'))+'</span><div class="ap-chips ap-pl">'+POOLS().map(p=>'<button type="button" data-pl="'+esc(p)+'" class="'+(s.place===p?'on':'')+'">'+esc(p)+'</button>').join('')+'</div><input name="place" class="ap-plin" value="'+esc(POOLS().includes(s.place)?'':(s.place||''))+'" placeholder="'+esc(t('apOther'))+'"></div>'
-    +'<div><span class="ap-lab">'+esc(t('apCoach'))+'</span>'+(()=>{const L=coachList();s.coaches.forEach(c=>{if(!L.includes(c))L.push(c)});return L.length?'<div class="ap-chips ap-pl ap-cpl">'+L.map(c=>'<button type="button" data-cp="'+esc(c)+'" class="'+(s.coaches.includes(c)?'on':'')+'">'+esc(c)+'</button>').join('')+'</div>':''})()+'<div class="ap-coadd"><input name="coach" placeholder="'+esc(t('apCoachPh'))+'" enterkeyhint="done"><button type="button" class="ap-coa">'+esc(t('apCoachAdd'))+'</button></div></div>'
+    +'<div><span class="ap-lab">'+esc(t('apCoach'))+'</span>'+(()=>{const L=coachList();s.coaches.forEach(c=>{if(!L.includes(c))L.push(c)});return L.length?'<div class="ap-chips ap-pl ap-cpl">'+L.map(c=>'<button type="button" data-cp="'+esc(c)+'" class="'+(s.coaches.includes(c)?'on':'')+'">'+esc(c)+'</button>').join('')+'</div>':''})()+'<div class="ap-coadd"><input name="coach" placeholder="'+esc(t('apCoachPh'))+'" enterkeyhint="done"><button type="button" class="ap-coa" aria-label="'+esc(t('apCoachAdd'))+'" title="'+esc(t('apCoachAdd'))+'"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5v7a3 3 0 0 1-3 3H6"/><path d="M10 11l-4 4 4 4"/></svg></button></div></div>'
     +s.blocks.map((b,i)=>blockHtml(b,i,s.blocks.length)).join('')
     +'<button type="button" class="ap-addb">'+esc(t('apAddD'))+'</button>'
     +'<label><span class="ap-lab">'+esc(t('apNotes'))+'</span><textarea name="notes" placeholder="'+esc(t('apNotesPh'))+'">'+esc(s.notes||'')+'</textarea></label>'
@@ -6956,7 +6956,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795892121';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795892185';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
