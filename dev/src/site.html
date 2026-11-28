@@ -6077,7 +6077,7 @@ html.apnea #tagline>*,html.apnea #bsBody #tagline>*,html.apnea #settings #taglin
 html.apnea #tagline::after{content:attr(data-ap);display:block}
 html.apnea #tagline{color:#B8E07A!important;background:color-mix(in srgb,#8DCB2F 13%,var(--surface))!important;border-color:color-mix(in srgb,#8DCB2F 45%,transparent)!important}
 html.apnea #tagline::before{filter:hue-rotate(260deg) saturate(.8) brightness(1.3)}
-html.apnea body::before{background:#0D0F0C!important}
+body::before{background:var(--bg)!important}
 html.apnea #bnav [data-bn="st"],html.apnea #bnav [data-bn="g"],html.apnea #bnav [data-bn="feed"],html.apnea #bnav [data-bn="sz"],html.apnea #bnav [data-bn="lib"],html.apnea #bnav [data-bn="rl"]{display:none!important}
 html.apnea .tools-sc>.bn-tool,html.apnea #sizesBtn,html.apnea #libBtn,html.apnea #rulesBtn{display:none!important}
 html.apnea #bsBody #ckBtn{border-radius:16px!important;border-top:0!important}
@@ -6147,7 +6147,7 @@ const sw=document.createElement('div');sw.className='ap-sw';sw.innerHTML='<butto
   const R=document.documentElement,huntLight=()=>{const d=R.dataset.theme;return d?d==='light':!matchMedia('(prefers-color-scheme: dark)').matches};
   {const sv=LSg('sn-theme',null);if(sv==='light'||sv==='dark')R.dataset.theme=sv}
   R.classList.toggle('ap-light',!!LSg('sn-apnea-light',false));
-  const ico=()=>{const light=R.classList.contains('apnea')?R.classList.contains('ap-light'):huntLight();th.innerHTML=light?SUN:MOON};window.__apIco=ico;ico();
+  const ico=()=>{const light=R.classList.contains('apnea')?R.classList.contains('ap-light'):huntLight();th.innerHTML=light?SUN:MOON;if(window.__tcSync)window.__tcSync()};window.__apIco=ico;ico();
   try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',ico)}catch(_){}
   const go=e=>{e.stopPropagation();if(R.classList.contains('apnea')){const v=!R.classList.contains('ap-light');R.classList.toggle('ap-light',v);LSs('sn-apnea-light',v)}else{const v=huntLight()?'dark':'light';R.dataset.theme=v;LSs('sn-theme',v)}ico()};th.addEventListener('click',go);th.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(e)}})}hd.after(sw);
 const view0=document.createElement('section');view0.id='apView';const anchor=$('quickForm');av.insertBefore(view0,anchor);
@@ -6156,8 +6156,9 @@ const h1s=hd.querySelector('h1 span');
 const h1w=()=>{if(!h1s)return;const cs=getComputedStyle(h1s),c=document.createElement('canvas').getContext('2d');c.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
   const w=Math.ceil(Math.max(c.measureText('Diary').width,c.measureText('FREE').width)+parseFloat(cs.letterSpacing||0)*5);if(w>0){h1s.style.display='inline-block';h1s.style.textAlign='left';h1s.style.minWidth=w+'px'}};
 addEventListener('resize',()=>setTimeout(h1w,60));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(h1w);
+const tcSync=()=>{const tc=document.querySelector('meta[name="theme-color"]');if(tc)requestAnimationFrame(()=>{const v=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();if(v)tc.content=v})};window.__tcSync=tcSync;
 const setMode=m=>{mode=m;LSs(AM,m);document.documentElement.classList.toggle('apnea',m==='apnea');if(h1s)h1s.textContent=m==='apnea'?'FREE':'Diary';h1w();if(window.__apIco)window.__apIco();setTimeout(fdDraw,30);
-  document.title=m==='apnea'?'Spearo FREE':'Spearo Diary';{const lh=document.querySelector('.sg-lang summary [data-i]');if(lh)lh.textContent=t(m==='apnea'?'setLang':'sgLangH')}{const tc=document.querySelector('meta[name="theme-color"]');if(tc){if(!tc.dataset.hunt)tc.dataset.hunt=tc.content;tc.content=m==='apnea'?'#0D0F0C':tc.dataset.hunt}}
+  document.title=m==='apnea'?'Spearo FREE':'Spearo Diary';{const lh=document.querySelector('.sg-lang summary [data-i]');if(lh)lh.textContent=t(m==='apnea'?'setLang':'sgLangH')}tcSync();
   /* leaving a hunting page that is hidden in FREE */if(m==='apnea'){const sh=$('bsheet');try{if(sh&&!sh.hidden&&typeof window.__bnShow==='function')window.__bnShow('home')}catch(_){}}sw.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));draw()};
 sw.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
 if(h1s){h1s.style.cursor='pointer';h1s.title='Diary ⇄ FREE';h1s.addEventListener('click',()=>setMode(mode==='apnea'?'hunt':'apnea'))}
