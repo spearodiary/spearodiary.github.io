@@ -6153,6 +6153,9 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-chips{display:flex;flex-wrap:wrap;gap:6px}
 .ap-chips button{all:unset;box-sizing:border-box;padding:7px 13px;border-radius:999px;border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--muted);cursor:pointer}
 .ap-chips button.on{background:var(--sea);border-color:var(--sea);color:var(--surface)}
+.ap-chips.ap-cpl{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.ap-cpl::-webkit-scrollbar{display:none}
+.ap-chips.ap-cpl button{flex:none;background:none;border:1px dashed color-mix(in srgb,var(--sea) 50%,transparent);color:var(--sea)}
+.ap-chips.ap-cpl button.on{background:color-mix(in srgb,var(--sea) 50%,transparent);border:1px solid color-mix(in srgb,var(--sea) 50%,transparent);color:var(--ink)}
 .ap-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .ap-form input,.ap-form textarea{width:100%;box-sizing:border-box;min-height:42px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);padding:8px 10px;font:inherit;font-size:16px}
 .ap-form textarea{min-height:70px;resize:vertical}
