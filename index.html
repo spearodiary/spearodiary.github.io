@@ -6142,7 +6142,7 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-tag{margin-left:auto;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--sea-soft);color:var(--sea)}
 .ap-meta{color:var(--muted);font-size:13px;margin-top:2px}.ap-coname{color:var(--sea);font-weight:400}
 .ap-att{margin-top:6px;font-size:15px;font-variant-numeric:tabular-nums}.ap-att b{color:var(--accent)}
-.ap-note{margin-top:6px;color:var(--muted);font-size:13px;white-space:pre-wrap}
+.ap-note{margin-top:6px;color:var(--ink);font-size:13px;white-space:pre-wrap}
 .ap-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--muted)}
 .ap-safe{display:flex;justify-content:center;text-align:center;white-space:nowrap;overflow:hidden;font-size:clamp(11.5px,3.4vw,14px)!important;gap:10px;align-items:center;background:color-mix(in srgb,var(--sea) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--sea) 40%,transparent);border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:600;color:var(--sea);margin-top:-4px}
 .ap-safe svg{flex:none;color:var(--sea)}
@@ -6936,7 +6936,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795854995';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795855129';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
