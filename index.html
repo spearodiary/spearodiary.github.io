@@ -6068,7 +6068,7 @@ Object.assign(T.es,{apHunt:'Pesca',apApnea:'Apnea',apNew:'Nueva sesión',apEdit:
 const DISC=[['STA','STA','t'],['DYN','DYN','m'],['DYNB','DYNB','m'],['DNF','DNF','m'],['CWT','CWT','m'],['CWTB','CWTB','m'],['CNF','CNF','m'],['FIM','FIM','m'],['DRY','STA seco','t']];
 const dOf=k=>DISC.find(d=>d[0]===k)||DISC[0];
 const fmtT=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-const fmtV=(k,v)=>v==null?'—':dOf(k)[2]==='t'?fmtT(v):(Math.round(v*10)/10).toString().replace('.',lang==='en'?'.':',')+' m';
+const fmtTD=s=>{s=Math.round(s);return Math.floor(s/60)+"'"+String(s%60).padStart(2,'0')+'"'};const fmtV=(k,v)=>v==null?'—':dOf(k)[2]==='t'?fmtTD(v):(Math.round(v*10)/10).toString().replace('.',lang==='en'?'.':',')+' m';
 const parseV=(k,s)=>{s=String(s||'').trim().replace(',','.');if(!s)return null;if(dOf(k)[2]==='t'){const m=s.match(/^(\d+)\s*[:'.m\s]\s*(\d{1,2})/);if(m)return +m[1]*60+ +m[2];const n=+s;return isFinite(n)?(n<15?n*60:n):null}const n=parseFloat(s);return isFinite(n)?n:null};
 const all=()=>apDocs.map(d=>({...d}));
 const body=x=>{const o={...x};delete o.id;o.type='apnea';return o};
@@ -6131,7 +6131,7 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-tabs button.on{background:var(--surface);color:var(--ink)}
 .ap-new{margin-left:auto;min-height:42px;padding:0 16px;border:0;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:15px;cursor:pointer}
 .ap-pb{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
-.ap-pb div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.ap-pb div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}html.apnea:not(.ap-light) .ap-pb div,html.apnea:not(.ap-light) .ap-card{background:color-mix(in srgb,var(--surface),var(--ink) 4%)}
 .ap-pb b{display:block;font-size:20px;font-weight:700;color:var(--ink)}.ap-pb div:first-child b{color:var(--accent)}
 .ap-pb small{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.04em}
 .ap-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
@@ -6933,7 +6933,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795854648';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795854926';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
