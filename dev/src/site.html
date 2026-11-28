@@ -5870,12 +5870,12 @@ if(T.fr)Object.assign(T.fr,{fwNext:'Prochaines sorties',fwRow:'Sortie',fwMin:'So
   try{split()}catch(_){}})();
 
 /* ===== Share: three templates — A Troféu (photo + panel), B Cartão (card with tiles), C Resumo (whole session) ===== */
-Object.assign(T.pt,{scTplA:'Troféu',scTplB:'Cartão',scTplC:'Resumo',sxTW:'Peso',sxTL:'Comprimento',sxTD:'Fundo',sxTA:'Apneia',sxTF:'peixes',sxTK:'kg',sxTM:'m máx.',sxWave:'Ondas',sxWindW:'Vento',sxWater:'Água',sxFishN:n=>n===1?'1 peixe':n+' peixes'});
-Object.assign(T.en,{scTplA:'Trophy',scTplB:'Card',scTplC:'Summary',sxTW:'Weight',sxTL:'Length',sxTD:'Depth',sxTA:'Breath-hold',sxTF:'fish',sxTK:'kg',sxTM:'m max',sxWave:'Waves',sxWindW:'Wind',sxWater:'Water',sxFishN:n=>n===1?'1 fish':n+' fish'});
-Object.assign(T.es,{scTplA:'Trofeo',scTplB:'Tarjeta',scTplC:'Resumen',sxTW:'Peso',sxTL:'Longitud',sxTD:'Fondo',sxTA:'Apnea',sxTF:'peces',sxTK:'kg',sxTM:'m máx.',sxWave:'Olas',sxWindW:'Viento',sxWater:'Agua',sxFishN:n=>n===1?'1 pez':n+' peces'});
-if(T.it)Object.assign(T.it,{scTplA:'Trofeo',scTplB:'Scheda',scTplC:'Riepilogo',sxTW:'Peso',sxTL:'Lunghezza',sxTD:'Fondo',sxTA:'Apnea',sxTF:'pesci',sxTK:'kg',sxTM:'m max',sxWave:'Onde',sxWindW:'Vento',sxWater:'Acqua',sxFishN:n=>n===1?'1 pesce':n+' pesci'});
-if(T.fr)Object.assign(T.fr,{scTplA:'Trophée',scTplB:'Fiche',scTplC:'Résumé',sxTW:'Poids',sxTL:'Longueur',sxTD:'Fond',sxTA:'Apnée',sxTF:'poissons',sxTK:'kg',sxTM:'m max',sxWave:'Vagues',sxWindW:'Vent',sxWater:'Eau',sxFishN:n=>n===1?'1 poisson':n+' poissons'});
-{const sv=scSave;scSave=function(){sv();try{const v=JSON.parse(localStorage.getItem('sn-sc')||'{}');v.tpl=SC.tpl;localStorage.setItem('sn-sc',JSON.stringify(v))}catch(_){}}}
+Object.assign(T.pt,{scTplS:'Simples',scTplA:'Troféu',scTplB:'Cartão',scTplC:'Resumo',sxTW:'Peso',sxTL:'Comprimento',sxTD:'Fundo',sxTA:'Apneia',sxTF:'peixes',sxTK:'kg',sxTM:'m máx.',sxWave:'Ondas',sxWindW:'Vento',sxWater:'Água',sxFishN:n=>n===1?'1 peixe':n+' peixes'});
+Object.assign(T.en,{scTplS:'Simple',scTplA:'Trophy',scTplB:'Card',scTplC:'Summary',sxTW:'Weight',sxTL:'Length',sxTD:'Depth',sxTA:'Breath-hold',sxTF:'fish',sxTK:'kg',sxTM:'m max',sxWave:'Waves',sxWindW:'Wind',sxWater:'Water',sxFishN:n=>n===1?'1 fish':n+' fish'});
+Object.assign(T.es,{scTplS:'Simple',scTplA:'Trofeo',scTplB:'Tarjeta',scTplC:'Resumen',sxTW:'Peso',sxTL:'Longitud',sxTD:'Fondo',sxTA:'Apnea',sxTF:'peces',sxTK:'kg',sxTM:'m máx.',sxWave:'Olas',sxWindW:'Viento',sxWater:'Agua',sxFishN:n=>n===1?'1 pez':n+' peces'});
+if(T.it)Object.assign(T.it,{scTplS:'Semplice',scTplA:'Trofeo',scTplB:'Scheda',scTplC:'Riepilogo',sxTW:'Peso',sxTL:'Lunghezza',sxTD:'Fondo',sxTA:'Apnea',sxTF:'pesci',sxTK:'kg',sxTM:'m max',sxWave:'Onde',sxWindW:'Vento',sxWater:'Acqua',sxFishN:n=>n===1?'1 pesce':n+' pesci'});
+if(T.fr)Object.assign(T.fr,{scTplS:'Simple',scTplA:'Trophée',scTplB:'Fiche',scTplC:'Résumé',sxTW:'Poids',sxTL:'Longueur',sxTD:'Fond',sxTA:'Apnée',sxTF:'poissons',sxTK:'kg',sxTM:'m max',sxWave:'Vagues',sxWindW:'Vent',sxWater:'Eau',sxFishN:n=>n===1?'1 poisson':n+' poissons'});
+{const sv=scSave;scSave=function(){sv();try{const v=JSON.parse(localStorage.getItem('sn-sc')||'{}');v.tpl=SC.tpl;v.tplV2=1;localStorage.setItem('sn-sc',JSON.stringify(v))}catch(_){}}}
 
 const SCK={bg0:'#0D3440',bg1:'#061A21',ink:'#EEF6F7',mut:'#93B8BF',acc:'#FF8A3D',warm:'#FFD9BF',tile:'rgba(255,255,255,.07)',line:'rgba(255,255,255,.12)',sea:'#57C4D1'};
 const scFI=c=>scFish.get((fishSvg(c.name,c.sub).match(/#f-([^"]+)/)||[])[1]);
@@ -6005,14 +6005,30 @@ function scPaintC(x,W,H,story,e,cs,im){const B='"Golos Text",system-ui,sans-seri
   if(who.length){let wy=foot-whoH+30;x.font='600 32px '+B;who.forEach(l=>{x.fillStyle=l.c;x.fillText(scFit(x,l.t,W-2*P),P,wy);wy+=44})}
   if(story)scFoot(x,W,H-80,P)}
 
+
+/* ---------- S · Simples (Strava-like): a few big numbers in the middle ---------- */
+function scPaintS(x,W,H,story,e,cs,im){const B='"Golos Text",system-ui,sans-serif',P=72;
+  if(im){scBgPhoto(x,W,H,im);x.fillStyle='rgba(4,16,20,.55)';x.fillRect(0,0,W,H)}else scBgFlat(x,W,H);
+  scLogoAt(x,P,story?100:60,story?340:300);
+  const o=SC.o,nF=cs.reduce((a,c)=>a+(c.count||1),0),kg=cs.reduce((a,c)=>a+(+c.weight||0),0),md=entryMaxDepth(e),items=[];
+  items.push([t('sxTF'),String(nF),1]);if(o.w&&kg)items.push([t('scTW'.replace('sc','sx')),scKg(kg)+' kg',1]);
+  if(o.md&&md!=null)items.push([t('sxTD'),fmt(md)+' m']);else if(o.ap&&e.apnea!=null)items.push([t('sxTA'),apneaF(e.apnea)]);
+  if(cs.length===1&&cs[0]){if(nF===1)items.shift();items.unshift([t('fish')||'',scName(cs[0]),2])}
+  const big=story?140:112,lab=32,gap=story?64:40,bh=lab+16+big,tot=items.length*bh+(items.length-1)*gap;let y=(H-tot)/2+(story?20:30);
+  x.textAlign='center';items.forEach(([l,v,k])=>{x.font='600 '+lab+'px '+B;x.fillStyle=SCK.mut;x.fillText(String(l).toUpperCase().split('').join(String.fromCharCode(8202)),W/2,y+lab);
+    const fs=k===2?Math.round(big*.62):big;x.font='700 '+fs+'px '+B;x.fillStyle=k===1?SCK.acc:SCK.ink;x.fillText(scFit(x,v,W-2*P),W/2,y+lab+16+fs*.82+(k===2?(big-fs)*.5:0));y+=bh+gap});
+  const foot=[o.dt?scDateTxt(e):'',scLocText(e)].filter(Boolean).join('  ·  ');let fy=H-(story?230:150);
+  x.font='600 38px '+B;x.fillStyle=SCK.ink;if(foot)x.fillText(scFit(x,foot,W-2*P),W/2,fy);
+  const who=scWhoLines(e);who.forEach((l,i)=>{x.font='600 32px '+B;x.fillStyle=l.c;x.fillText(scFit(x,l.t,W-2*P),W/2,fy+52*(i+1))});x.textAlign='left'}
+
 scPaint=function(){const e=scE;if(!e)return;const W=1080,H=SC.fmt==='story'?1920:1350,story=SC.fmt==='story';
   const cv=$('scCv');if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}const x=cv.getContext('2d');x.clearRect(0,0,W,H);x.textAlign='left';
   const cs=(e.catches||[]).filter(c=>c&&c.name&&!c.lost).filter((c,i)=>!scSkip.has(i));const im=SC.photo?scImgs[scPi]:null;
-  (SC.tpl==='b'?scPaintB:SC.tpl==='c'?scPaintC:scPaintA)(x,W,H,story,e,cs,im)};
+  (SC.tpl==='s'?scPaintS:SC.tpl==='b'?scPaintB:SC.tpl==='c'?scPaintC:scPaintA)(x,W,H,story,e,cs,im)};
 
 /* window: template switch above the format, «Mostrar» as chips */
-setTimeout(function(){if(!SC.tpl)SC.tpl='a';const fmtEl=$('scFmt');if(!fmtEl)return;const tp=document.createElement('div');tp.className='so-tabs sc-tpl';tp.id='scTpl';
-  tp.innerHTML=['a','b','c'].map(k=>'<button type="button" data-v="'+k+'"><span data-i="scTpl'+k.toUpperCase()+'"></span></button>').join('');
+setTimeout(function(){if(!SC.tpl||!SC.tplV2){SC.tpl='s';SC.tplV2=1}const fmtEl=$('scFmt');if(!fmtEl)return;const tp=document.createElement('div');tp.className='so-tabs sc-tpl';tp.id='scTpl';
+  tp.innerHTML=['s','a','b','c'].map(k=>'<button type="button" data-v="'+k+'"><span data-i="scTpl'+k.toUpperCase()+'"></span></button>').join('');
   fmtEl.parentNode.insertBefore(tp,fmtEl);tp.querySelectorAll('[data-i]').forEach(s=>{s.textContent=t(s.dataset.i)});
   const mark=()=>tp.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.v===SC.tpl);b.setAttribute('aria-pressed',b.dataset.v===SC.tpl)});mark();
   tp.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;SC.tpl=b.dataset.v;mark();scSave();scQueue()});
