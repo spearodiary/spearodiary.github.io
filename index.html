@@ -6087,12 +6087,9 @@ let mode=LSg(AM,'hunt'),view='diary',editing=null;
 
 /* ---------- styles ---------- */
 const st=document.createElement('style');st.textContent=`
-/* hunting mode, dark theme: lime-yellow accent */
-@media (prefers-color-scheme:dark){html:not(.apnea):not([data-theme="light"]){--accent:#E3E64F;--on-accent:#08222B;--mark:#4E5214}}
-html:not(.apnea)[data-theme="dark"]{--accent:#E3E64F;--on-accent:#08222B;--mark:#4E5214}
 /* hunting mode, light theme */
-@media (prefers-color-scheme:light){html:not(.apnea):not([data-theme="dark"]){--bg:#F3F6F7;--surface:#FFFFFF;--ink:#0B2530;--muted:#587079;--line:#D5E1E5;--accent:#D9DD2E;--on-accent:#0B2530;--sea:#0B7A8A;--sea-soft:#E0F0F2;--uw:#1C86CF;--mark:#F3F5C2;--danger:#C42B20;--good:#178A52;--amber:#B07800;color-scheme:light}}
-html:not(.apnea)[data-theme="light"]{--bg:#F3F6F7;--surface:#FFFFFF;--ink:#0B2530;--muted:#587079;--line:#D5E1E5;--accent:#D9DD2E;--on-accent:#0B2530;--sea:#0B7A8A;--sea-soft:#E0F0F2;--uw:#1C86CF;--mark:#F3F5C2;--danger:#C42B20;--good:#178A52;--amber:#B07800;color-scheme:light}
+@media (prefers-color-scheme:light){html:not(.apnea):not([data-theme="dark"]){--bg:#F3F6F7;--surface:#FFFFFF;--ink:#0B2530;--muted:#587079;--line:#D5E1E5;--accent:#EE6A1F;--on-accent:#FFFFFF;--sea:#0B7A8A;--sea-soft:#E0F0F2;--uw:#1C86CF;--mark:#FFE2CF;--danger:#C42B20;--good:#178A52;--amber:#B07800;color-scheme:light}}
+html:not(.apnea)[data-theme="light"]{--bg:#F3F6F7;--surface:#FFFFFF;--ink:#0B2530;--muted:#587079;--line:#D5E1E5;--accent:#EE6A1F;--on-accent:#FFFFFF;--sea:#0B7A8A;--sea-soft:#E0F0F2;--uw:#1C86CF;--mark:#FFE2CF;--danger:#C42B20;--good:#178A52;--amber:#B07800;color-scheme:light}
 html.apnea:not(.ap-light){--bg:#0D0F0C;--surface:#191D17;--ink:#F2F6EE;--muted:#A9B3A2;--line:#2F3829;--accent:#8DCB2F;--on-accent:#0D0F0C;--sea:#8DCB2F;--sea-soft:#22301A;--uw:#8DCB2F;color-scheme:dark}
 html.apnea.ap-light{--bg:#F1F4EE;--surface:#FFFFFF;--ink:#121411;--muted:#566150;--line:#D3DCCB;--accent:#6FAF1A;--on-accent:#0D0F0C;--sea:#4F8A12;--sea-soft:#E4F1D2;--uw:#4F8A12;color-scheme:light}
 html.apnea:not(.bs-on) #appView{min-height:100lvh;display:flex;flex-direction:column}
@@ -6158,7 +6155,8 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-chips button.on{background:var(--sea);border-color:var(--sea);color:var(--surface)}
 .ap-chips.ap-cpl{padding:8px 8px 2px 0;margin-top:-2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.ap-cpl::-webkit-scrollbar{display:none}
 .ap-chips.ap-cpl button{flex:none;background:none;border:1px dashed color-mix(in srgb,var(--sea) 50%,transparent);color:color-mix(in srgb,var(--sea) 50%,transparent)}
-.ap-chips.ap-cpl button{position:relative;overflow:visible}.ap-cx{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:13px;line-height:1;font-weight:700;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.ap-chips.ap-cpl button{position:relative;overflow:visible;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.ap-cx{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:13px;line-height:1;font-weight:700;background:var(--surface);color:var(--muted);border:1px solid var(--sea)}
+.ap-chips.ap-cpl button.drag{opacity:.85;transform:scale(1.06);box-shadow:0 4px 14px rgba(0,0,0,.35);z-index:2}.ap-cpl.dragging{scroll-behavior:auto}
 .ap-chips.ap-cpl button.on{background:var(--sea);border:1px solid var(--sea);color:var(--surface)}
 .ap-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .ap-form input,.ap-form textarea{width:100%;box-sizing:border-box;min-height:42px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);padding:8px 10px;font:inherit;font-size:16px}
@@ -6311,6 +6309,24 @@ let frT=0;async function frFind(q){const el=view0.querySelector('.ap-frres');if(
   if(error){el.innerHTML='<p class="ap-hint">'+esc(t('frErr'))+'</p>';return}(data||[]).forEach(p=>SO.cards.set(p.id,{id:p.id,username:p.username,name:p.name}));try{await soAvLoad((data||[]).map(p=>p.id))}catch(_){}
   el.innerHTML=(data||[]).length?'<ul class="so-list">'+data.map(p=>soPerson(p.id,p,soFBtn(p.id,p.status,true))).join('')+'</ul>':'<p class="ap-hint">'+esc(t('soFindNone'))+'</p>'}
 view0.addEventListener('input',e=>{if(e.target.classList.contains('ap-frq')){FR.q=e.target.value;clearTimeout(frT);const q=e.target.value.trim();frT=setTimeout(()=>frFind(q),300)}});
+/* coach chips: long-press a chip, then drag it left/right to reorder; the order is remembered */
+{let tm=0,drag=null,sx=0,sy=0,skip=false,ar=0;
+ const stop=()=>{clearTimeout(tm);tm=0;cancelAnimationFrame(ar);if(drag){const row=drag.parentElement;drag.classList.remove('drag');row&&row.classList.remove('dragging');
+   const names=[...row.querySelectorAll('[data-cp]')].map(b=>b.dataset.cp);try{const L=coachList();localStorage.setItem('sn-ap-coaches',JSON.stringify(names.concat(L.filter(c=>!names.includes(c)))))}catch(_){}
+   drag=null;skip=true;setTimeout(()=>{skip=false},400)}};
+ view0.addEventListener('pointerdown',e=>{const b=e.target.closest('.ap-cpl [data-cp]');if(!b||e.target.closest('[data-cx]'))return;sx=e.clientX;sy=e.clientY;clearTimeout(tm);
+   tm=setTimeout(()=>{tm=0;drag=b;b.classList.add('drag');b.parentElement.classList.add('dragging');try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}},300)});
+ view0.addEventListener('pointermove',e=>{if(tm&&(Math.abs(e.clientX-sx)>8||Math.abs(e.clientY-sy)>8)){clearTimeout(tm);tm=0}
+   if(!drag)return;e.preventDefault();const row=drag.parentElement,x=e.clientX;
+   const sibs=[...row.querySelectorAll('[data-cp]')].filter(z=>z!==drag);
+   for(const z of sibs){const r=z.getBoundingClientRect(),mid=r.left+r.width/2,dr=drag.getBoundingClientRect();
+     if(x<mid&&r.left<dr.left&&x<r.right){row.insertBefore(drag,z);break}
+     if(x>mid&&r.left>dr.left&&x>r.left){row.insertBefore(drag,z.nextSibling);break}}
+   const rr=row.getBoundingClientRect();cancelAnimationFrame(ar);const edge=()=>{if(!drag)return;const v=x<rr.left+36?-6:x>rr.right-36?6:0;if(v){row.scrollLeft+=v;ar=requestAnimationFrame(edge)}};edge()},{passive:false});
+ ['pointerup','pointercancel'].forEach(t=>view0.addEventListener(t,stop));
+ document.addEventListener('touchmove',e=>{if(drag)e.preventDefault()},{passive:false});
+ view0.addEventListener('contextmenu',e=>{if(e.target.closest('.ap-cpl'))e.preventDefault()});
+ view0.addEventListener('click',e=>{if(skip&&e.target.closest('.ap-cpl')){e.stopPropagation();e.preventDefault();skip=false}},true)}
 view0.addEventListener('click',e=>{const fb=e.target.closest('.ap-frres [data-f]');if(fb){e.stopPropagation();Promise.resolve(soFollowClick(fb)).then(()=>{setTimeout(()=>frLoad(true),800)})}},true);
 /* my sessions shared with friends, kept in step with the diary (only when sharing is on in the profile) */
 let apShT=0;function apShareSoon(){clearTimeout(apShT);apShT=setTimeout(apShareSync,3000)}
@@ -6963,7 +6979,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795892613';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795892833';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
