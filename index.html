@@ -6155,7 +6155,7 @@ html.apnea header h1 span{color:var(--sea)}
 .ap-blk-h{display:flex;align-items:center;justify-content:space-between}
 .ap-rmb{all:unset;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:0 4px}
 .ap-addb{all:unset;cursor:pointer;align-self:stretch;text-align:center;padding:10px;border:1px dashed var(--sea);border-radius:12px;color:var(--sea);font-weight:700}
-.ap-tags{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.ap-tags .ap-tag{margin-left:0}
+.ap-tags{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;align-items:center}.ap-tag{display:inline-flex;align-items:center;line-height:1.35}.ap-tags .ap-tag{margin-left:0}
 .ap-bl{display:inline-block;min-width:44px;margin-right:6px;font-size:12px;font-weight:700;color:var(--sea)}
 .ap-pbt{margin-left:6px!important;background:color-mix(in srgb,var(--accent) 18%,transparent)!important;color:var(--accent)!important}
 .ap-addt{all:unset;cursor:pointer;color:var(--sea);font-weight:700;align-self:flex-start;padding:4px 0}
@@ -6910,7 +6910,7 @@ Object.assign(T.pt,{delAcc:'Apagar a conta',delAccWarn:'Isto apaga para sempre t
 Object.assign(T.en,{delAcc:'Delete account',delAccWarn:'This permanently deletes all your entries, photos, previous versions and the account itself. It cannot be undone. To keep a copy, use “Download backup” under Your data first.',delAccType:'To confirm, type DELETE',delAccWord:'DELETE',delAccGo:'Delete everything for good',delAccWorking:'Deleting…',delAccNoFn:'Account deletion is not installed in the database yet.',delAccDone:'The account has been deleted.'});
 
 /* GitHub Pages lets browsers cache the page for 10 minutes: look for a newer build and reload when it is safe */
-(function(){const B='1795832081';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
+(function(){const B='1795832142';if(B.indexOf('BUILD')>0||DEMO)return;let last=0;
   const busy=()=>{const q=document.getElementById('quick');if(q&&q.value.trim())return true;return !!openDlg()||(document.activeElement&&document.activeElement.matches('input,textarea,select'))};
   async function check(){if(Date.now()-last<60000)return;last=Date.now();
     try{const r=await fetch(location.pathname,{cache:'reload'});const s=await r.text();const m=s.match(/const B='(\d+)'/);
